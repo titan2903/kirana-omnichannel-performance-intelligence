@@ -12,21 +12,23 @@
 --    / b2b_net_sales_idr tersedia agar dapat dikeluarkan).
 
 -- ============================ Referensi ambang status ============================
--- Satu sumber untuk warna status di semua kartu Metabase. basis: 'ASUMSI' = usulan analis, perlu disetujui pemilik metrik.
+-- Satu sumber untuk warna status di semua kartu Metabase (palet status tetap skill dataviz: good/warning/critical; selalu dipasangkan
+-- dengan label teks Hijau/Kuning/Merah agar warna tidak menjadi satu-satunya pembawa makna). basis: 'ASUMSI' = usulan analis, perlu disetujui pemilik metrik.
 CREATE OR REPLACE TABLE metrics.ref_status_threshold AS
 SELECT * FROM (VALUES
-  ('ACHIEVEMENT_PCT', 'Hijau',  100.0, 1, '#2E7D32', 'Net Sales >= target', 'ASUMSI'),
-  ('ACHIEVEMENT_PCT', 'Kuning',  90.0, 2, '#F9A825', '90% sampai <100% dari target', 'ASUMSI'),
-  ('ACHIEVEMENT_PCT', 'Merah',   NULL, 3, '#C62828', '<90% dari target', 'ASUMSI'),
-  ('MARGIN_GAP_PT',   'Hijau',     0.0, 1, '#2E7D32', 'Margin >= target', 'ASUMSI'),
-  ('MARGIN_GAP_PT',   'Kuning',   -2.0, 2, '#F9A825', 'Di bawah target hingga 2 poin persentase', 'ASUMSI'),
-  ('MARGIN_GAP_PT',   'Merah',    NULL, 3, '#C62828', 'Lebih dari 2 poin persentase di bawah target', 'ASUMSI')
+  ('ACHIEVEMENT_PCT', 'Hijau',  100.0, 1, '#0ca30c', 'Net Sales >= target', 'ASUMSI'),
+  ('ACHIEVEMENT_PCT', 'Kuning',  90.0, 2, '#fab219', '90% sampai <100% dari target', 'ASUMSI'),
+  ('ACHIEVEMENT_PCT', 'Merah',   NULL, 3, '#d03b3b', '<90% dari target', 'ASUMSI'),
+  ('MARGIN_GAP_PT',   'Hijau',     0.0, 1, '#0ca30c', 'Margin >= target', 'ASUMSI'),
+  ('MARGIN_GAP_PT',   'Kuning',   -2.0, 2, '#fab219', 'Di bawah target hingga 2 poin persentase', 'ASUMSI'),
+  ('MARGIN_GAP_PT',   'Merah',    NULL, 3, '#d03b3b', 'Lebih dari 2 poin persentase di bawah target', 'ASUMSI')
 ) v(kpi, status, min_value, sort_order, color_hex, meaning, basis);
 
 -- ============================ Penjualan & margin ============================
--- Grain: bulan x channel x region (as-of) x toko x kategori x flag B2B. Filter dashboard: periode, channel, region, kategori.
+-- Grain: bulan x channel x region x toko x kategori x flag B2B. Filter dashboard: periode, channel, region (= region_target_basis), kategori.
+-- region_target_basis = peta region awal tahun (dasar penetapan target); region_asof = region saat transaksi; region_current = saat ini.
 CREATE OR REPLACE VIEW metrics.v_sales_monthly AS
-SELECT d.month_start, c.channel_name, f.region_asof, f.region_current, s.store_code, p.category, f.is_b2b_bulk,
+SELECT d.month_start, c.channel_name, f.region_target_basis, f.region_asof, f.region_current, s.store_code, p.category, f.is_b2b_bulk,
        count(*) AS lines, sum(f.qty)::BIGINT AS qty,
        sum(f.gross_sales)::BIGINT AS gross_sales_idr, sum(f.discount)::BIGINT AS discount_idr, sum(f.net_sales)::BIGINT AS net_sales_idr,
        sum(f.cogs)::BIGINT AS cogs_idr, sum(f.gross_margin)::BIGINT AS gross_margin_idr,
@@ -39,7 +41,7 @@ GROUP BY ALL;
 
 -- Grain: bulan x channel x region x toko x member x B2B. Tanpa kategori/promo supaya transactions aditif -> AOV = SUM(net)/SUM(transactions).
 CREATE OR REPLACE VIEW metrics.v_txn_monthly AS
-SELECT d.month_start, c.channel_name, f.region_asof, s.store_code, f.is_member, f.is_b2b_bulk,
+SELECT d.month_start, c.channel_name, f.region_target_basis, s.store_code, f.is_member, f.is_b2b_bulk,
        count(DISTINCT (f.source_system, f.txn_id)) AS transactions, count(*) AS lines, sum(f.qty)::BIGINT AS qty,
        sum(f.net_sales)::BIGINT AS net_sales_idr
 FROM dw.fact_sales f
@@ -47,10 +49,11 @@ JOIN dw.dim_date d USING (date_key) JOIN dw.dim_channel c USING (channel_key) JO
 GROUP BY ALL;
 
 -- ============================ Achievement vs target ============================
--- Grain target: Store = bulan x region (as-of); online = bulan x channel nasional. Kategori tidak berlaku (target tidak per kategori).
+-- Grain target: Store = bulan x region (peta region AWAL TAHUN = dasar penetapan target, bukan region saat transaksi); online = bulan x channel
+-- nasional. Kategori tidak berlaku (target tidak per kategori).
 CREATE OR REPLACE VIEW metrics.v_target_achievement AS
 WITH actual AS (
-  SELECT d.month_start, c.channel_name, CASE WHEN c.channel_name = 'Store' THEN f.region_asof ELSE 'Nasional' END AS region,
+  SELECT d.month_start, c.channel_name, CASE WHEN c.channel_name = 'Store' THEN f.region_target_basis ELSE 'Nasional' END AS region,
          sum(f.net_sales)::BIGINT AS net_sales_idr,
          coalesce(sum(f.net_sales) FILTER (WHERE f.is_b2b_bulk), 0)::BIGINT AS b2b_net_sales_idr
   FROM dw.fact_sales f JOIN dw.dim_date d USING (date_key) JOIN dw.dim_channel c USING (channel_key)
@@ -76,7 +79,7 @@ FROM j;
 
 -- Achievement per toko. Target hanya ada per region, jadi target toko = ALOKASI (ASUMSI, bukan target resmi):
 -- target region bulan itu x pangsa toko dalam region. Pangsa = penjualan toko (tanpa B2B) pada bulan yang sama tahun lalu dibagi total
--- penjualan seluruh toko yang menjadi anggota region pada akhir bulan target (SCD2, sehingga perpindahan BGR-01 diperlakukan benar).
+-- penjualan seluruh toko yang menjadi anggota region menurut peta awal tahun target (SCD2: BGR-01 di Jawa Barat sepanjang 2025, Jabodetabek 2026).
 -- Bila region tidak punya penjualan tahun lalu (toko baru) -> dibagi rata (alloc_basis = MERATA).
 CREATE OR REPLACE VIEW metrics.v_store_target_alloc AS
 WITH store_month AS (
@@ -87,7 +90,8 @@ WITH store_month AS (
 months AS (SELECT DISTINCT month_start FROM dw.fact_target WHERE target_scope = 'REGION'),
 member AS (
   SELECT m.month_start, s.store_code, s.region
-  FROM months m JOIN dw.dim_store s ON s.store_key > 0 AND last_day(m.month_start) BETWEEN s.valid_from AND s.valid_to),
+  FROM months m JOIN dw.dim_store s ON s.store_key > 0 AND s.open_date <= last_day(m.month_start)
+   AND greatest(make_date(year(m.month_start), 1, 1), s.open_date) BETWEEN s.valid_from AND s.valid_to),
 basis AS (
   SELECT mb.month_start, mb.store_code, mb.region, coalesce(py.net_sales_ex_b2b_idr, 0) AS basis_idr
   FROM member mb LEFT JOIN store_month py ON py.store_code = mb.store_code AND py.month_start = (mb.month_start - INTERVAL 1 YEAR)::DATE),
@@ -134,24 +138,24 @@ LEFT JOIN fee ON fee.channel_name = m.channel_name AND last_day(m.month_start) B
 -- Return Rate (Rp) = refund / Net Sales; Return Rate (unit) = qty retur / qty terjual. Net Sales sendiri TIDAK dikurangi retur.
 CREATE OR REPLACE VIEW metrics.v_return_rate_monthly AS
 WITH s AS (
-  SELECT month_start, channel_name, region_asof, category, sum(net_sales_idr)::BIGINT AS net_sales_idr, sum(qty)::BIGINT AS qty_sold
+  SELECT month_start, channel_name, region_target_basis, category, sum(net_sales_idr)::BIGINT AS net_sales_idr, sum(qty)::BIGINT AS qty_sold
   FROM metrics.v_sales_monthly GROUP BY ALL),
 r AS (
-  SELECT d.month_start, c.channel_name, r.region_asof, p.category, count(*) AS returns, sum(r.return_qty)::BIGINT AS return_qty,
+  SELECT d.month_start, c.channel_name, r.region_target_basis, p.category, count(*) AS returns, sum(r.return_qty)::BIGINT AS return_qty,
          sum(r.refund_amount)::BIGINT AS refund_idr
   FROM dw.fact_returns r JOIN dw.dim_date d ON d.date_key = r.return_date_key
   JOIN dw.dim_channel c ON c.channel_key = r.channel_key JOIN dw.dim_product p USING (product_key)
   GROUP BY ALL)
-SELECT month_start, channel_name, region_asof, category,
+SELECT month_start, channel_name, region_target_basis, category,
        coalesce(s.net_sales_idr, 0) AS net_sales_idr, coalesce(s.qty_sold, 0) AS qty_sold,
        coalesce(r.returns, 0) AS returns, coalesce(r.return_qty, 0) AS return_qty, coalesce(r.refund_idr, 0) AS refund_idr,
        round(100.0 * r.refund_idr / NULLIF(s.net_sales_idr, 0), 2) AS return_rate_pct,
        round(100.0 * r.return_qty / NULLIF(s.qty_sold, 0), 2) AS return_rate_qty_pct
-FROM s FULL OUTER JOIN r USING (month_start, channel_name, region_asof, category);
+FROM s FULL OUTER JOIN r USING (month_start, channel_name, region_target_basis, category);
 
 -- Alasan retur (label sudah dibakukan, DQ-22). Pangsa alasan = SUM(refund_idr) alasan / SUM(refund_idr) total pada filter yang sama.
 CREATE OR REPLACE VIEW metrics.v_return_reason_monthly AS
-SELECT d.month_start, c.channel_name, r.region_asof, p.category, r.return_reason,
+SELECT d.month_start, c.channel_name, r.region_target_basis, p.category, r.return_reason,
        count(*) AS returns, sum(r.return_qty)::BIGINT AS return_qty, sum(r.refund_amount)::BIGINT AS refund_idr
 FROM dw.fact_returns r JOIN dw.dim_date d ON d.date_key = r.return_date_key
 JOIN dw.dim_channel c ON c.channel_key = r.channel_key JOIN dw.dim_product p USING (product_key)
@@ -162,18 +166,18 @@ GROUP BY ALL;
 -- (Rp penjualan valid + Rp yang di-void). Baris void itu sendiri (negatif) tidak dihitung agar tidak mengurangi dua kali.
 CREATE OR REPLACE VIEW metrics.v_cancellation_void_monthly AS
 WITH v AS (
-  SELECT month_start, channel_name, region_asof, sum(net_sales_idr)::BIGINT AS valid_net_sales_idr FROM metrics.v_sales_monthly GROUP BY ALL),
+  SELECT month_start, channel_name, region_target_basis, sum(net_sales_idr)::BIGINT AS valid_net_sales_idr FROM metrics.v_sales_monthly GROUP BY ALL),
 x AS (
-  SELECT d.month_start, c.channel_name, e.region_asof,
+  SELECT d.month_start, c.channel_name, e.region_target_basis,
          coalesce(sum(e.net_sales) FILTER (WHERE e.exclude_reason = 'CANCELLED'), 0)::BIGINT AS cancelled_net_sales_idr,
          coalesce(sum(e.net_sales) FILTER (WHERE e.exclude_reason = 'VOIDED_ORIGINAL'), 0)::BIGINT AS voided_net_sales_idr
   FROM dw.fact_sales_excluded e JOIN dw.dim_date d USING (date_key) JOIN dw.dim_channel c USING (channel_key)
   GROUP BY ALL)
-SELECT month_start, channel_name, region_asof, coalesce(v.valid_net_sales_idr, 0) AS valid_net_sales_idr,
+SELECT month_start, channel_name, region_target_basis, coalesce(v.valid_net_sales_idr, 0) AS valid_net_sales_idr,
        coalesce(x.cancelled_net_sales_idr, 0) AS cancelled_net_sales_idr, coalesce(x.voided_net_sales_idr, 0) AS voided_net_sales_idr,
        round(100.0 * x.cancelled_net_sales_idr / NULLIF(v.valid_net_sales_idr + x.cancelled_net_sales_idr, 0), 2) AS cancellation_rate_pct,
        round(100.0 * x.voided_net_sales_idr / NULLIF(v.valid_net_sales_idr + x.voided_net_sales_idr, 0), 2) AS void_rate_pct
-FROM v FULL OUTER JOIN x USING (month_start, channel_name, region_asof);
+FROM v FULL OUTER JOIN x USING (month_start, channel_name, region_target_basis);
 
 -- ============================ Member: Active Members & Repeat Rate ============================
 -- Active Members = member (customer_key > 0) dengan >= 1 struk pada periode. Repeat = member dengan >= 2 struk DISTINCT pada periode
@@ -360,7 +364,7 @@ SELECT * FROM (VALUES
   'Finance Controller', 'Target bulanan FP&A per channel/region (FY2025 Rp 44,181 miliar; H1 2026 Rp 23,820 miliar, semua channel). Tidak ada target 2024.'),
  (2, 'Achievement vs Target %', 'Net Sales aktual dibagi target Net Sales pada grain target (Store per region, online per channel nasional).',
   '100 * SUM(net_sales_idr) / NULLIF(SUM(target_net_sales_idr), 0)', 'bulan x channel x region (Store) atau nasional (online)', 'metrics.v_target_achievement',
-  'Aktual memakai region as-of tanggal transaksi (SCD2). B2B bulk termasuk (net_sales_ex_b2b_idr tersedia). Kategori tidak berlaku karena target tidak per kategori. NULL = tidak ada target. Per toko: v_store_target_alloc dengan target ALOKASI (asumsi).',
+  'Aktual dikelompokkan menurut peta region AWAL TAHUN (dasar penetapan target; BGR-01 di Jawa Barat sepanjang 2025, di Jabodetabek mulai 2026), bukan region saat transaksi: target FY2025 tidak disesuaikan saat BGR-01 pindah (Jul 2025), sehingga region saat transaksi menciptakan lonjakan palsu. B2B bulk termasuk (net_sales_ex_b2b_idr tersedia). Kategori tidak berlaku karena target tidak per kategori. NULL = tidak ada target. Per toko: v_store_target_alloc dengan target ALOKASI (asumsi).',
   'Direktur Komersial', 'Hijau >= 100%; Kuning 90 sampai <100%; Merah < 90% (ASUMSI analis, ref_status_threshold).'),
  (3, 'Gross Margin %', '(Net Sales - COGS) / Net Sales. COGS = qty x HPP yang berlaku pada tanggal transaksi.',
   '100 * SUM(gross_margin_idr) / NULLIF(SUM(net_sales_idr), 0)', 'bulan x channel x region x toko x kategori', 'metrics.v_sales_monthly',
@@ -403,3 +407,39 @@ SELECT * FROM (VALUES
   'Diskon = jumlah discount pada baris yang memakai kode promo (POS promo_code, online voucher). Anggaran dari promotions.csv; biaya non-diskon (iklan, dll.) tidak tersedia.',
   'Finance Controller; Direktur Komersial (Marketing)', 'Batas atas 100% dari anggaran promo.')
 ) v(kpi_id, kpi_name, business_definition, sql_formula, grain, source_view, inclusion_exclusion, owner, target_threshold);
+
+-- Kinerja toko bulanan = achievement (target ALOKASI) + status kelengkapan data pada grain yang sama (bulan x toko), supaya satu filter
+-- periode di dashboard berlaku untuk keduanya. Hasil join harus 1 baris per bulan x toko (diuji T52).
+CREATE OR REPLACE VIEW metrics.v_store_performance_monthly AS
+SELECT a.month_start, a.store_code, a.region, a.alloc_basis, a.alloc_share, a.region_target_idr, a.store_target_idr,
+       a.net_sales_idr, a.net_sales_ex_b2b_idr,
+       round(100.0 * a.net_sales_idr / NULLIF(a.store_target_idr, 0), 2) AS achievement_pct,
+       c.days_logged, c.failed_days, c.closed_days, c.completeness_status, c.note AS completeness_note
+FROM metrics.v_store_target_alloc a
+LEFT JOIN metrics.v_data_completeness c ON c.month_start = a.month_start AND c.store_code = a.store_code;
+
+
+-- ============================ Akses per region (Task 6) ============================
+-- Store Manager hanya boleh melihat region-nya. Metabase OSS tidak punya row-level sandbox, jadi pembatasan dibuat di data:
+-- satu schema acc_<region> per region berisi view yang sudah difilter (region = region_target_basis, konsisten dengan dashboard).
+-- Group Metabase "Store Manager <region>" diberi izin data HANYA pada schema itu (lihat reports/C2_tata_kelola.md). Tanpa kolom PII.
+-- Region 'Lainnya' (pesanan online di luar 6 region resmi) sengaja tidak punya schema: hanya Finance dan Direktur Komersial.
+-- Kelengkapan diuji T54: tiap view hanya memuat regionnya dan gabungan semua region = view induk.
+CREATE SCHEMA IF NOT EXISTS acc_jabodetabek;
+CREATE OR REPLACE VIEW acc_jabodetabek.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis = 'Jabodetabek';
+CREATE OR REPLACE VIEW acc_jabodetabek.v_store_performance_monthly AS SELECT * FROM metrics.v_store_performance_monthly WHERE region = 'Jabodetabek';
+CREATE SCHEMA IF NOT EXISTS acc_jawa_barat;
+CREATE OR REPLACE VIEW acc_jawa_barat.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis = 'Jawa Barat';
+CREATE OR REPLACE VIEW acc_jawa_barat.v_store_performance_monthly AS SELECT * FROM metrics.v_store_performance_monthly WHERE region = 'Jawa Barat';
+CREATE SCHEMA IF NOT EXISTS acc_jateng_diy;
+CREATE OR REPLACE VIEW acc_jateng_diy.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis = 'Jateng & DIY';
+CREATE OR REPLACE VIEW acc_jateng_diy.v_store_performance_monthly AS SELECT * FROM metrics.v_store_performance_monthly WHERE region = 'Jateng & DIY';
+CREATE SCHEMA IF NOT EXISTS acc_jawa_timur;
+CREATE OR REPLACE VIEW acc_jawa_timur.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis = 'Jawa Timur';
+CREATE OR REPLACE VIEW acc_jawa_timur.v_store_performance_monthly AS SELECT * FROM metrics.v_store_performance_monthly WHERE region = 'Jawa Timur';
+CREATE SCHEMA IF NOT EXISTS acc_bali_nusra;
+CREATE OR REPLACE VIEW acc_bali_nusra.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis = 'Bali & Nusa Tenggara';
+CREATE OR REPLACE VIEW acc_bali_nusra.v_store_performance_monthly AS SELECT * FROM metrics.v_store_performance_monthly WHERE region = 'Bali & Nusa Tenggara';
+CREATE SCHEMA IF NOT EXISTS acc_sumatera;
+CREATE OR REPLACE VIEW acc_sumatera.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis = 'Sumatera';
+CREATE OR REPLACE VIEW acc_sumatera.v_store_performance_monthly AS SELECT * FROM metrics.v_store_performance_monthly WHERE region = 'Sumatera';

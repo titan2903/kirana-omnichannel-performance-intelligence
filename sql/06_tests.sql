@@ -22,8 +22,9 @@ UNION ALL SELECT 'T03', 'Channel, toko, dan region hanya bernilai resmi (POS=Sto
        (SELECT count(*) FROM query_table(tbl) f WHERE f.channel_key IS NULL OR f.channel_key NOT BETWEEN 1 AND 4
           OR (f.source_system = 'POS' AND (f.channel_key <> 1 OR f.store_key = -1))
           OR (f.source_system = 'ONLINE' AND (f.channel_key = 1 OR f.store_key <> -1))
-          OR f.region_asof IS NULL
-          OR f.region_asof NOT IN ('Jabodetabek', 'Jawa Barat', 'Jateng & DIY', 'Jawa Timur', 'Bali & Nusa Tenggara', 'Sumatera', 'Lainnya'))::BIGINT,
+          OR f.region_asof IS NULL OR f.region_target_basis IS NULL
+          OR f.region_asof NOT IN ('Jabodetabek', 'Jawa Barat', 'Jateng & DIY', 'Jawa Timur', 'Bali & Nusa Tenggara', 'Sumatera', 'Lainnya')
+          OR f.region_target_basis NOT IN ('Jabodetabek', 'Jawa Barat', 'Jateng & DIY', 'Jawa Timur', 'Bali & Nusa Tenggara', 'Sumatera', 'Lainnya'))::BIGINT,
        'Nilai di luar domain memecah agregat per channel, toko, dan region (DQ-01, DQ-08)'
 UNION ALL SELECT 'T04', 'Tiap baris punya tepat satu HPP as-of tanggal transaksi dan sama dengan nilai di fakta', 'BLOCKING',
        (SELECT count(*) FROM (
@@ -50,9 +51,9 @@ FROM (
   UNION ALL SELECT 'T11', 'Jembatan Net Sales dari nilai mentah ke fact_sales menutup (selisih 0)', 'BLOCKING',
     (SELECT count(*) FROM dq.net_sales_bridge WHERE step_no = 9 AND rp <> 0)::BIGINT,
     'Net Sales di laporan harus dapat ditelusuri ke nilai mentah'
-  UNION ALL SELECT 'T12', 'Tidak ada kolom PII langsung di schema stg/dw/dq/metrics', 'BLOCKING',
+  UNION ALL SELECT 'T12', 'Tidak ada kolom PII langsung di schema stg/dw/dq/metrics/acc_*', 'BLOCKING',
     (SELECT count(*) FROM information_schema.columns
-      WHERE table_schema IN ('stg', 'dw', 'dq', 'metrics')
+      WHERE (table_schema IN ('stg', 'dw', 'dq', 'metrics') OR table_schema LIKE 'acc\_%' ESCAPE '\')
         AND (lower(column_name) IN ('full_name', 'phone', 'email', 'birth_date', 'gender')
              OR (table_name LIKE '%customer%' AND lower(column_name) = 'city')))::BIGINT,
     'PII member tidak boleh sampai ke dashboard'
@@ -195,6 +196,26 @@ FROM (
         (SELECT count(*) FILTER (WHERE sync_status = 'FAILED') f, count(*) FILTER (WHERE sync_status = 'STORE_CLOSED') c FROM dw.fact_pos_sync) s
       WHERE v.f <> s.f OR v.c <> s.c)::BIGINT,
     'Penanda data tidak lengkap di dashboard harus sama dengan sumber sync POS'
+  UNION ALL SELECT 'T52', 'v_store_performance_monthly: satu baris per bulan x toko; Net Sales dan target = v_store_target_alloc', 'BLOCKING',
+    ((SELECT CASE WHEN (SELECT count(*) FROM metrics.v_store_performance_monthly) = (SELECT count(*) FROM metrics.v_store_target_alloc) THEN 0 ELSE 1 END)
+     + (SELECT count(*) FROM (SELECT sum(net_sales_idr) n, sum(store_target_idr) t FROM metrics.v_store_performance_monthly) a,
+          (SELECT sum(net_sales_idr) n, sum(store_target_idr) t FROM metrics.v_store_target_alloc) b WHERE a.n <> b.n OR a.t <> b.t)
+     + (SELECT count(*) FROM metrics.v_store_performance_monthly WHERE completeness_status IS NULL))::BIGINT,
+    'Join kelengkapan data yang menggandakan atau menghilangkan baris membuat achievement toko dan penanda data tidak lengkap salah'
+  UNION ALL SELECT 'T53', 'region_target_basis = region toko pada awal tahun transaksi (dihitung ulang dari dim_store); tanpa lonjakan palsu pada pergantian region', 'BLOCKING',
+    ((SELECT count(*) FROM dw.fact_sales f JOIN dw.dim_store s ON s.store_key = f.store_key
+       JOIN dw.dim_store b ON b.store_code = s.store_code AND greatest(make_date(year(f.sale_date), 1, 1), b.open_date) BETWEEN b.valid_from AND b.valid_to
+       WHERE f.source_system = 'POS' AND f.region_target_basis IS DISTINCT FROM b.region)
+     + (SELECT count(*) FROM dw.fact_sales WHERE source_system = 'ONLINE' AND region_target_basis IS DISTINCT FROM region_asof))::BIGINT,
+    'Target FY2025 tidak disesuaikan saat BGR-01 pindah region (Jul 2025); region saat transaksi membuat achievement Jawa Barat anjlok 98,1% -> 73,4% dan Jabodetabek naik 94,9% -> 109,7% secara palsu'
+  UNION ALL SELECT 'T54', 'Schema acc_<region>: tiap view hanya memuat regionnya; gabungan semua region (+ Lainnya untuk online) = view induk', 'BLOCKING',
+    ((SELECT count(*) FROM (SELECT net_sales_idr, region_target_basis = 'Jabodetabek' AS ok FROM acc_jabodetabek.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Jawa Barat' AS ok FROM acc_jawa_barat.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Jateng & DIY' AS ok FROM acc_jateng_diy.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Jawa Timur' AS ok FROM acc_jawa_timur.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Bali & Nusa Tenggara' AS ok FROM acc_bali_nusra.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Sumatera' AS ok FROM acc_sumatera.v_sales_monthly) WHERE NOT ok)
+     + (SELECT count(*) FROM (SELECT net_sales_idr, store_target_idr, region = 'Jabodetabek' AS ok FROM acc_jabodetabek.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jawa Barat' AS ok FROM acc_jawa_barat.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jateng & DIY' AS ok FROM acc_jateng_diy.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jawa Timur' AS ok FROM acc_jawa_timur.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Bali & Nusa Tenggara' AS ok FROM acc_bali_nusra.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Sumatera' AS ok FROM acc_sumatera.v_store_performance_monthly) WHERE NOT ok)
+     + (SELECT CASE WHEN (SELECT sum(net_sales_idr) FROM (SELECT net_sales_idr, region_target_basis = 'Jabodetabek' AS ok FROM acc_jabodetabek.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Jawa Barat' AS ok FROM acc_jawa_barat.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Jateng & DIY' AS ok FROM acc_jateng_diy.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Jawa Timur' AS ok FROM acc_jawa_timur.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Bali & Nusa Tenggara' AS ok FROM acc_bali_nusra.v_sales_monthly UNION ALL SELECT net_sales_idr, region_target_basis = 'Sumatera' AS ok FROM acc_sumatera.v_sales_monthly)) + (SELECT coalesce(sum(net_sales_idr), 0) FROM metrics.v_sales_monthly WHERE region_target_basis = 'Lainnya')
+                     = (SELECT sum(net_sales_idr) FROM metrics.v_sales_monthly) THEN 0 ELSE 1 END)
+     + (SELECT CASE WHEN (SELECT sum(net_sales_idr) FROM (SELECT net_sales_idr, store_target_idr, region = 'Jabodetabek' AS ok FROM acc_jabodetabek.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jawa Barat' AS ok FROM acc_jawa_barat.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jateng & DIY' AS ok FROM acc_jateng_diy.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jawa Timur' AS ok FROM acc_jawa_timur.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Bali & Nusa Tenggara' AS ok FROM acc_bali_nusra.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Sumatera' AS ok FROM acc_sumatera.v_store_performance_monthly)) = (SELECT sum(net_sales_idr) FROM metrics.v_store_performance_monthly)
+                     AND (SELECT sum(store_target_idr) FROM (SELECT net_sales_idr, store_target_idr, region = 'Jabodetabek' AS ok FROM acc_jabodetabek.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jawa Barat' AS ok FROM acc_jawa_barat.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jateng & DIY' AS ok FROM acc_jateng_diy.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Jawa Timur' AS ok FROM acc_jawa_timur.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Bali & Nusa Tenggara' AS ok FROM acc_bali_nusra.v_store_performance_monthly UNION ALL SELECT net_sales_idr, store_target_idr, region = 'Sumatera' AS ok FROM acc_sumatera.v_store_performance_monthly)) = (SELECT sum(store_target_idr) FROM metrics.v_store_performance_monthly) THEN 0 ELSE 1 END))::BIGINT,
+    'Pembatasan akses per region yang bocor (baris region lain) atau menghilangkan baris membuat Store Manager melihat data yang bukan haknya atau angka yang tidak cocok dengan dashboard pusat'
 ) ORDER BY test_id;
 
 -- ============================ Uji yang SENGAJA gagal ============================

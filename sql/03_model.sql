@@ -11,8 +11,11 @@
 --
 -- KEPUTUSAN SCD
 --   (a) HPP: COGS memakai HPP as-of tanggal transaksi (dim_product_cost, SCD2). products.current_unit_cost TIDAK dipakai.
---   (b) Region toko: dim_store SCD2 (region as-of tanggal transaksi); region_current disimpan untuk pembanding.
---       Toko tanpa riwayat memakai stores.region sejak open_date (DQ-15).
+--   (b) Region toko: dim_store SCD2. Tiga kolom region di fakta: region_asof (region saat transaksi, deskriptif), region_current (saat ini),
+--       dan region_target_basis = peta region pada AWAL TAHUN transaksi (Jan 1, atau open_date bila toko buka belakangan). Achievement vs target
+--       dan filter Region dashboard memakai region_target_basis: target FP&A ditetapkan per tahun dan tidak disesuaikan saat BGR-01 pindah
+--       Jawa Barat -> Jabodetabek pada 1 Jul 2025 (target Jawa Barat baru turun pada Jan 2026). Memakai region saat transaksi menciptakan
+--       lonjakan palsu pada Jul 2025. Toko tanpa riwayat memakai stores.region sejak open_date (DQ-15).
 --   (c) Tarif biaya channel: as-of tanggal transaksi (ref_channel_fee); fee dihitung per baris di fakta.
 
 -- ============================ Dimensi ============================
@@ -103,9 +106,12 @@ SELECT row_number() OVER (ORDER BY s.src_order, s.src_rid) AS sales_key,
        fee.fee_pct AS channel_fee_pct, (s.net * fee.fee_pct / 100)::DECIMAL(18, 4) AS channel_fee,
        CASE WHEN s.source_system = 'POS' THEN st.region ELSE s.online_region END AS region_asof,
        CASE WHEN s.source_system = 'POS' THEN st.region_current ELSE s.online_region END AS region_current,
+       CASE WHEN s.source_system = 'POS' THEN sb.region ELSE s.online_region END AS region_target_basis,
        s.customer_id IS NOT NULL AS is_member, s.is_b2b_bulk, s.key_collision, s.province_source
 FROM src s
 LEFT JOIN dw.dim_store st ON s.source_system = 'POS' AND st.store_code = s.store_code AND s.sale_date BETWEEN st.valid_from AND st.valid_to
+LEFT JOIN dw.dim_store sb ON s.source_system = 'POS' AND sb.store_code = s.store_code
+       AND greatest(make_date(year(s.sale_date), 1, 1), sb.open_date) BETWEEN sb.valid_from AND sb.valid_to
 LEFT JOIN dw.dim_product p ON p.sku = s.sku
 LEFT JOIN dw.dim_customer cu ON cu.customer_id = s.customer_id
 LEFT JOIN dw.dim_promo pm ON pm.promo_code = s.promo_code
@@ -127,9 +133,12 @@ SELECT row_number() OVER (ORDER BY s.src_order, s.src_rid) AS excluded_key, s.so
        CASE WHEN s.source_system = 'ONLINE' THEN -1 ELSE st.store_key END AS store_key, s.channel_key, p.product_key,
        CASE WHEN s.customer_id IS NULL THEN -1 ELSE cu.customer_key END AS customer_key,
        s.qty, s.gross AS gross_sales, s.discount, s.net AS net_sales,
-       CASE WHEN s.source_system = 'POS' THEN st.region ELSE s.online_region END AS region_asof, s.exclude_reason
+       CASE WHEN s.source_system = 'POS' THEN st.region ELSE s.online_region END AS region_asof,
+       CASE WHEN s.source_system = 'POS' THEN sb.region ELSE s.online_region END AS region_target_basis, s.exclude_reason
 FROM src s
 LEFT JOIN dw.dim_store st ON s.source_system = 'POS' AND st.store_code = s.store_code AND s.sale_date BETWEEN st.valid_from AND st.valid_to
+LEFT JOIN dw.dim_store sb ON s.source_system = 'POS' AND sb.store_code = s.store_code
+       AND greatest(make_date(year(s.sale_date), 1, 1), sb.open_date) BETWEEN sb.valid_from AND sb.valid_to
 LEFT JOIN dw.dim_product p ON p.sku = s.sku
 LEFT JOIN dw.dim_customer cu ON cu.customer_id = s.customer_id;
 
@@ -137,13 +146,13 @@ LEFT JOIN dw.dim_customer cu ON cu.customer_id = s.customer_id;
 -- Atribut penjualan (toko, region as-of, pelanggan, tanggal jual) diambil dari penjualan asal pada grain (txn, produk).
 CREATE OR REPLACE TABLE dw.fact_returns AS
 WITH sale_ref AS (
-  SELECT txn_id, product_key, min(sale_date) AS sale_date, min(store_key) AS store_key, min(region_asof) AS region_asof,
+  SELECT txn_id, product_key, min(sale_date) AS sale_date, min(store_key) AS store_key, min(region_asof) AS region_asof, min(region_target_basis) AS region_target_basis,
          min(customer_key) AS customer_key, min(channel_key) AS sale_channel_key
   FROM dw.fact_sales GROUP BY txn_id, product_key)
 SELECT row_number() OVER (ORDER BY r.return_id) AS return_key, r.return_id,
        year(r.return_date) * 10000 + month(r.return_date) * 100 + day(r.return_date) AS return_date_key, r.return_date,
        sr.sale_date, date_diff('day', sr.sale_date, r.return_date) AS days_to_return,
-       c.channel_key, sr.sale_channel_key, sr.store_key, sr.region_asof, p.product_key, sr.customer_key,
+       c.channel_key, sr.sale_channel_key, sr.store_key, sr.region_asof, sr.region_target_basis, p.product_key, sr.customer_key,
        r.original_trx_id AS original_txn_id, r.return_qty, r.refund_amount, r.return_reason
 FROM stg.return_line r
 LEFT JOIN dw.dim_channel c ON c.channel_name = r.channel
