@@ -1,3 +1,4 @@
 *.zip
 raw_data/
 docs/*.md
+.claude/
