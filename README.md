@@ -209,10 +209,11 @@ Folder ditambahkan seiring pekerjaan berjalan.
 
 - Kolom PII member (nama, telepon, email, tanggal lahir) tidak masuk model analitik maupun dashboard;
   `birth_date` hanya dipakai untuk turunan seperti kelompok usia.
-- Public sharing dan embedding Metabase dinonaktifkan; akses dibatasi per grup (Finance melihat semua,
-  Store Manager hanya region masing-masing).
-- Lineage dari sumber ke dashboard, pemilik data, jadwal refresh, monitoring, dan retensi
-  didokumentasikan pada lampiran tata kelola.
+- Public sharing dan embedding Metabase dinonaktifkan. Pembatasan per region diimplementasikan sebagai view
+  `acc_<region>` (diuji T54); penerapan group Finance, Komersial, dan Store Manager di Metabase masih usulan.
+- Lineage, pemilik data, klasifikasi PII, hak akses, jadwal refresh, monitoring, dan retensi ada di
+  [lampiran tata kelola](reports/C2_tata_kelola.md); penilaian solusi dan keputusan soal machine learning ada di
+  [memo evaluasi](reports/C1_memo_evaluasi.md).
 
 ## Status
 
@@ -222,10 +223,20 @@ Folder ditambahkan seiring pekerjaan berjalan.
 - [x] Metric views dan kamus metrik ([kamus metrik](reports/A7_kamus_metrik.md), [number registry](reports/number_registry.md))
 - [x] Dashboard Metabase ([panduan dashboard](dashboard/README.md), [wireframe](dashboard/wireframe/wireframe.md)); halaman Storyline diisi pada Task 5
 - [x] Insight brief (5 hlm) dan rekomendasi: angka dihitung `reports/insights/facts.sql`, dirender `python3 scripts/build_insights.py` (brief, grafik, halaman Storyline, registri angka)
-- [ ] Evaluasi dan tata kelola
+- [x] Evaluasi dan tata kelola ([memo evaluasi](reports/C1_memo_evaluasi.md), [lampiran tata kelola](reports/C2_tata_kelola.md))
 
-Hasil kuantitatif (angka pencapaian, margin, efektivitas promo) ditambahkan setelah pipeline selesai
-dan tervalidasi.
+Ringkasan hasil (semua dari `kirana.duckdb`, rinci di [insight brief](reports/B_insight_brief.md)): Net Sales mencapai
+99,5% target FY2025 dan 105,8% target H1 2026, tetapi margin kotor turun dari 46,11% (FY2024) menjadi 43,05% (H1 2026).
+
+### Merakit paket pengumpulan
+
+```bash
+python3 scripts/build_insights.py                      # brief, grafik, storyline (setelah build.sh)
+KIRANA_NIM=<NIM> KIRANA_NAMA="<Nama Lengkap>" python3 scripts/build_report.py   # dist/UAS_BI_<NIM>_<Nama>_Laporan.pdf
+KIRANA_NIM=<NIM> KIRANA_NAMA="<Nama Lengkap>" bash scripts/package_submission.sh # dist/..._SQL.zip dan ..._Dashboard.pdf
+```
+
+`build_report.py` memeriksa batas 25 halaman di luar lampiran dan butuh internet untuk merender diagram Mermaid.
 
 ## Penggunaan AI
 

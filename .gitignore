@@ -1,8 +1,32 @@
-*.zip
+# data mentah dan panduan (read-only, bukan milik repo)
 raw_data/
-docs/*.md
-docs/*.png
+docs/
+*.zip
+
+# lokal: skills/rules Claude, kredensial
 .claude/
 .env
+
+# artefak build DuckDB
 *.duckdb
 *.duckdb.wal
+*.duckdb.building*
+*.duckdb.tmp
+
+# hasil generate (dibuat ulang oleh skrip; PDF/PNG dikumpulkan lewat zip, bukan GitHub)
+dashboard/export/
+reports/*.pdf
+reports/insights/img/
+reports/insights/brief.html
+
+# python / OS / editor
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+.vscode/
+.idea/
+
+# keluaran pengumpulan (dibuat oleh scripts/build_report.py dan package_submission.sh)
+dist/
