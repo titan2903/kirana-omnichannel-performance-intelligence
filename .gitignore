@@ -2,3 +2,6 @@
 raw_data/
 docs/*.md
 .claude/
+.env
+*.duckdb
+*.duckdb.wal

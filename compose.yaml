@@ -1,0 +1,86 @@
+# Stack dashboard KIRANA: Metabase (driver DuckDB) + PostgreSQL untuk metadata Metabase.
+# Pipeline SQL dijalankan di host dengan DuckDB CLI, bukan di container:
+#   duckdb kirana.duckdb < sql/00_main.sql
+#
+#   docker compose up -d                          # Metabase di http://localhost:3000
+#   docker compose --profile fallback up -d       # + PostgreSQL untuk model (bila driver DuckDB bermasalah)
+#   docker compose stop metabase                  # WAJIB sebelum rebuild kirana.duckdb (satu penulis)
+
+name: kirana-bi
+
+services:
+  metabase:
+    # Image Debian resmi dari MotherDuck; image Metabase default (Alpine) tidak bisa memuat driver DuckDB.
+    # Versi dipin agar reproducible. Tag lain: ghcr.io/motherduckdb/metabase-duckdb
+    image: ghcr.io/motherduckdb/metabase-duckdb:0.63.17-duckdb1.5.6.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${METABASE_PORT:-3000}:3000" # hanya localhost; data bisnis tidak dibuka ke LAN
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: metabase-db
+      MB_DB_PORT: 5432
+      MB_DB_DBNAME: metabase
+      MB_DB_USER: metabase
+      MB_DB_PASS: ${METABASE_DB_PASSWORD:?isi METABASE_DB_PASSWORD di .env}
+      # Syarat UAS: dashboard tidak boleh dibagikan lewat public link.
+      MB_ENABLE_PUBLIC_SHARING: "false"
+    volumes:
+      # Di Metabase: Admin > Databases > DuckDB, path /data/kirana.duckdb, centang "read-only connection".
+      # create_host_path: false -> gagal jelas bila file belum dibangun (bukan membuat folder kosong).
+      - type: bind
+        source: ./kirana.duckdb
+        target: /data/kirana.duckdb
+        read_only: true
+        bind:
+          create_host_path: false
+    depends_on:
+      metabase-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+  metabase-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: metabase
+      POSTGRES_USER: metabase
+      POSTGRES_PASSWORD: ${METABASE_DB_PASSWORD:?isi METABASE_DB_PASSWORD di .env}
+    volumes:
+      - metabase-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metabase -d metabase"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Opsional: alternatif sah bila driver DuckDB tidak dapat dipasang. Jelaskan pilihan ini di laporan.
+  # Isi dari DuckDB (extension postgres: ATTACH ... (TYPE postgres)), lalu tambahkan sebagai database
+  # PostgreSQL di Metabase (host: warehouse-db, DB: kirana).
+  warehouse-db:
+    profiles: ["fallback"]
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${WAREHOUSE_PORT:-5433}:5432"
+    environment:
+      POSTGRES_DB: kirana
+      POSTGRES_USER: kirana
+      # Tanpa ":?" karena compose meng-interpolasi service berprofil juga; kosong -> postgres menolak start.
+      POSTGRES_PASSWORD: ${WAREHOUSE_DB_PASSWORD:-}
+    volumes:
+      - warehouse-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kirana -d kirana"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  metabase-db-data:
+  warehouse-db-data:

@@ -160,6 +160,7 @@ indikator kesegaran data dan status sinkronisasi POS, serta penanda periode/toko
 
 ```text
 .
+├── compose.yaml  # Metabase + driver DuckDB (+ PostgreSQL opsional)
 ├── sql/          # pipeline berurutan: load → staging → model → tests → reconciliation → metrics
 ├── dashboard/    # wireframe dan SQL tiap kartu Metabase
 ├── reports/      # laporan teknis, insight brief, evaluasi & tata kelola
@@ -170,7 +171,7 @@ Folder ditambahkan seiring pekerjaan berjalan.
 
 ## Cara Menjalankan
 
-**Prasyarat:** DuckDB CLI ≥ 1.4; Docker atau Java 21 untuk Metabase.
+**Prasyarat:** DuckDB CLI ≥ 1.4 dan Docker dengan Compose v2.
 
 1. Letakkan paket data (13 file CSV/XLSX) di folder `raw_data/`. Data tidak dibagikan di repo ini
    karena merupakan materi mata kuliah.
@@ -187,8 +188,19 @@ Folder ditambahkan seiring pekerjaan berjalan.
    SELECT * FROM dq.reconciliation;
    ```
 
-4. Pasang driver DuckDB di folder `plugins` Metabase, lalu tambahkan `kirana.duckdb` sebagai database
-   **read-only** (DuckDB hanya mengizinkan satu penulis; hentikan Metabase sebelum rebuild).
+4. Jalankan Metabase (image dengan driver DuckDB sudah terpasang):
+
+   ```bash
+   cp .env.example .env        # isi METABASE_DB_PASSWORD
+   docker compose up -d        # http://localhost:3000
+   ```
+
+   Di Metabase: **Admin → Databases → DuckDB**, path `/data/kirana.duckdb`, centang
+   *read-only connection*. DuckDB hanya mengizinkan satu penulis, jadi jalankan
+   `docker compose stop metabase` sebelum rebuild database.
+
+   Bila driver DuckDB bermasalah, `docker compose --profile fallback up -d` menyalakan PostgreSQL
+   sebagai alternatif koneksi.
 
 ## Tata Kelola dan Privasi
 
