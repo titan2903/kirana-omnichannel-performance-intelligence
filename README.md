@@ -161,7 +161,7 @@ indikator kesegaran data dan status sinkronisasi POS, serta penanda periode/toko
 ```text
 .
 ├── compose.yaml  # Metabase + driver DuckDB (+ PostgreSQL opsional)
-├── sql/          # pipeline berurutan: load → staging → model → tests → reconciliation → metrics
+├── sql/          # pipeline berurutan: load → staging → model → reconciliation → metrics → tests
 ├── dashboard/    # wireframe dan SQL tiap kartu Metabase
 ├── reports/      # laporan teknis, insight brief, evaluasi & tata kelola
 └── raw_data/     # data mentah (tidak disertakan di repo)
@@ -171,14 +171,16 @@ Folder ditambahkan seiring pekerjaan berjalan.
 
 ## Cara Menjalankan
 
-**Prasyarat:** DuckDB CLI ≥ 1.4 dan Docker dengan Compose v2.
+**Prasyarat:** DuckDB CLI ≥ 1.4, Docker dengan Compose v2, dan Bash.
 
 1. Letakkan paket data (13 file CSV/XLSX) di folder `raw_data/`. Data tidak dibagikan di repo ini
    karena merupakan materi mata kuliah.
-2. Bangun database dari root repo:
+2. Bangun database dari root repo. Skrip membangun ke file sementara dan menggantikan `kirana.duckdb`
+   hanya bila semua uji kualitas BLOCKING lolos (pertama kali butuh internet untuk memasang ekstensi
+   `excel` DuckDB):
 
    ```bash
-   duckdb kirana.duckdb < sql/00_main.sql
+   bash scripts/build.sh
    ```
 
 3. Periksa hasil uji kualitas dan rekonsiliasi:
@@ -213,10 +215,10 @@ Folder ditambahkan seiring pekerjaan berjalan.
 
 ## Status
 
-- [ ] Decision framing dan data profiling
-- [ ] Pipeline SQL idempoten dan star schema
-- [ ] Uji kualitas data dan rekonsiliasi
-- [ ] Metric views dan kamus metrik
+- [x] Decision framing dan data profiling ([decision statement](reports/A1_decision_statement.md), [profiling](reports/A2_profiling.md), [issue log](reports/A3_issue_log.md))
+- [x] Pipeline SQL idempoten dan star schema ([model, grain, SCD](reports/A4_data_model.md))
+- [x] Uji kualitas data dan rekonsiliasi ([hasil uji dan rekonsiliasi](reports/A5_quality_reconciliation.md))
+- [x] Metric views dan kamus metrik ([kamus metrik](reports/A7_kamus_metrik.md), [number registry](reports/number_registry.md))
 - [ ] Dashboard Metabase
 - [ ] Insight brief dan rekomendasi
 - [ ] Evaluasi dan tata kelola

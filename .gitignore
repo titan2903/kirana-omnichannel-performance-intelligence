@@ -1,6 +1,7 @@
 *.zip
 raw_data/
 docs/*.md
+docs/*.png
 .claude/
 .env
 *.duckdb
