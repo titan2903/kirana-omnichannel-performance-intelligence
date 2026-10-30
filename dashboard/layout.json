@@ -1,0 +1,328 @@
+{
+  "collection": "KIRANA BI",
+  "parameters": {
+    "period": {
+      "id": "period",
+      "name": "Periode",
+      "slug": "periode",
+      "type": "date/all-options"
+    },
+    "channel": {
+      "id": "channel",
+      "name": "Channel",
+      "slug": "channel",
+      "type": "string/=",
+      "sectionId": "string"
+    },
+    "region": {
+      "id": "region",
+      "name": "Region",
+      "slug": "region",
+      "type": "string/=",
+      "sectionId": "string"
+    },
+    "category": {
+      "id": "category",
+      "name": "Kategori",
+      "slug": "kategori",
+      "type": "string/=",
+      "sectionId": "string"
+    },
+    "store": {
+      "id": "store",
+      "name": "Toko",
+      "slug": "toko",
+      "type": "string/=",
+      "sectionId": "string"
+    }
+  },
+  "shared_cards": {
+    "kesegaran_data": {
+      "tabs": "all"
+    },
+    "peringatan_kelengkapan": {
+      "executive": [
+        18,
+        12,
+        12,
+        5
+      ],
+      "channel_region_store": [
+        24,
+        12,
+        12,
+        6
+      ]
+    }
+  },
+  "dashboards": {
+    "kirana": {
+      "name": "KIRANA Omnichannel Performance Intelligence",
+      "description": "Dashboard keputusan H2 2026: realokasi promo dan program perbaikan toko/region. Semua kartu membaca schema metrics (semantic layer) di kirana.duckdb. Data 1 Jan 2024 - 30 Jun 2026.",
+      "parameters": [
+        "period",
+        "channel",
+        "region",
+        "category"
+      ],
+      "tabs": [
+        {
+          "key": "executive",
+          "name": "1. Executive Overview",
+          "texts": [
+            {
+              "row": 0,
+              "col": 0,
+              "w": 24,
+              "h": 1,
+              "type": "heading",
+              "text": "Executive Overview: apakah penjualan dan margin berada di jalur target?"
+            },
+            {
+              "row": 23,
+              "col": 0,
+              "w": 24,
+              "h": 2,
+              "type": "text",
+              "text": "**Cara membaca.** Filter *Periode, Channel, Region, Kategori* berlaku untuk semua kartu yang memiliki atribut itu. Achievement hanya dihitung untuk bulan bertarget (2025-01 s.d. 2026-06); *Kategori* tidak berlaku pada Achievement dan Transaksi (target tidak per kategori, satu struk dapat memuat banyak kategori). Net Sales sebelum retur dan termasuk B2B bulk. Ambang status (Hijau >=100%, Kuning 90 s.d. <100%, Merah <90%) adalah asumsi analis."
+            }
+          ]
+        },
+        {
+          "key": "channel_region_store",
+          "name": "2. Channel, Region & Store",
+          "texts": [
+            {
+              "row": 0,
+              "col": 0,
+              "w": 24,
+              "h": 1,
+              "type": "heading",
+              "text": "Channel, Region & Store: di mana kinerja berada di bawah target?"
+            },
+            {
+              "row": 30,
+              "col": 0,
+              "w": 24,
+              "h": 2,
+              "type": "text",
+              "text": "**Drill-down.** Klik baris pada tabel *Achievement Store per region* untuk mengisi filter Region, lalu klik toko pada tabel *Kinerja per toko* untuk membuka dashboard *Detail Toko*. Target toko adalah **alokasi** (target region x pangsa penjualan tahun lalu), bukan target resmi. Toko bertanda *Tidak lengkap* kehilangan data karena sync POS gagal; toko bertanda *Toko tutup* sedang renovasi."
+            }
+          ]
+        },
+        {
+          "key": "margin_promo",
+          "name": "3. Margin & Promosi",
+          "texts": [
+            {
+              "row": 0,
+              "col": 0,
+              "w": 24,
+              "h": 1,
+              "type": "heading",
+              "text": "Margin & Promosi: promo mana yang menguntungkan dan mana yang menggerus margin?"
+            },
+            {
+              "row": 30,
+              "col": 0,
+              "w": 24,
+              "h": 2,
+              "type": "text",
+              "text": "**Catatan promo.** Lift dihitung terhadap baseline hari yang sama pada +/-1 s.d. 4 minggu tanpa promo beririsan (Net Sales sudah netto diskon, jadi *Margin kotor tambahan* sudah memuat biaya diskon). Kartu promo hanya menerima filter Periode (tanggal mulai promo); Channel/Region/Kategori tidak berlaku karena tiap promo dinilai pada scope-nya sendiri. Baseline tidak mengendalikan musiman."
+            }
+          ]
+        },
+        {
+          "key": "returns_customers",
+          "name": "4. Retur & Customer",
+          "texts": [
+            {
+              "row": 0,
+              "col": 0,
+              "w": 24,
+              "h": 1,
+              "type": "heading",
+              "text": "Retur & Customer: mengapa barang kembali dan seberapa sering member berbelanja ulang?"
+            },
+            {
+              "row": 27,
+              "col": 0,
+              "w": 24,
+              "h": 2,
+              "type": "text",
+              "text": "**Catatan.** Retur dikelompokkan menurut tanggal retur dan mengikuti atribut penjualan asal. Active Members dan Repeat Rate dihitung per tipe periode (member unik tidak dijumlahkan antar bulan atau channel); struk B2B dikecualikan; bandingkan hanya semester sama panjang. Kartu member tidak menerima filter Region/Kategori."
+            }
+          ]
+        },
+        {
+          "key": "storyline",
+          "name": "5. Storyline",
+          "texts": [
+            {
+              "row": 0,
+              "col": 0,
+              "w": 24,
+              "h": 1,
+              "type": "heading",
+              "text": "Storyline: margin dan promo menentukan H2 2026, bukan volume"
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "w": 24,
+              "h": 2,
+              "type": "text",
+              "text": "**Ringkasan.** Net Sales memenuhi target (99,5% FY2025, 105,8% H1 2026) tetapi margin kotor turun 3,1 pt dan contribution margin 4,2 pt. Keputusan 1 (promo): hentikan atau batasi Mega Sale, hentikan Clearance, ubah Member Day, alihkan ke App Payday. Keputusan 2 (toko): program intensif MDN-01, pantau SBY-02, MLG-01, SOL-01. Angka identik dengan `reports/B_insight_brief.pdf`. *Tanpa filter, kartu menampilkan seluruh periode (FY2025 + H1 2026); angka H1 2026 muncul bila Periode = 1 Jan - 30 Jun 2026.*"
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "w": 9,
+              "h": 5,
+              "type": "text",
+              "text": "### 1. Margin kotor turun 3,1 pt: HPP per unit naik 5,9%, harga neto hanya 1,5%\n\nBila HPP tetap seperti akhir 2024, margin H1 2026 = **46,3%** (aktual 43,0%). Diskon hanya naik 0,43 pt. Setiap 1% harga neto = **Rp 252 juta** margin per semester."
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "w": 9,
+              "h": 5,
+              "type": "text",
+              "text": "### 2. Contribution margin turun 4,2 pt: 3,3 pt margin dalam channel, 0,9 pt pergeseran ke Marketplace\n\nMarketplace 23,3% dari Net Sales dengan CM 30,6% (Store 43,6%). Komisi 9,0% -> 11,5% sejak Apr 2025 menambah biaya **Rp 330 juta**.\n\n*Filter Periode = 1 Jan 2026 - 30 Jun 2026 menampilkan angka H1 2026 di kartu.*"
+            },
+            {
+              "row": 13,
+              "col": 0,
+              "w": 9,
+              "h": 5,
+              "type": "text",
+              "text": "### 3. Target agregat tercapai hanya karena online: Marketplace 127,5% dan Mobile App 124,3% menutup Store (95,6%) dan Website (87,5%)\n\nH1 2026 total 105,8% (+Rp 1,39 miliar); FY2025 99,5%. Website bukan kehilangan pelanggan: dari 7.968 member FY2024, 2.538 pindah ke Mobile App.\n\n*Filter Periode = 1 Jan 2026 - 30 Jun 2026 menampilkan angka H1 2026 di kartu.*"
+            },
+            {
+              "row": 18,
+              "col": 0,
+              "w": 9,
+              "h": 5,
+              "type": "text",
+              "text": "### 4. Mega Sale dan Clearance menggerus margin; App Payday menambahnya di 27 dari 27 kode\n\nMega Sale (45%): margin kotor saat promo −12,0%, CM −Rp 145 juta. Estimasi dampak H2 2026 bila dihentikan dan dialihkan: **+Rp 99,5 juta s.d. +Rp 154 juta** CM."
+            },
+            {
+              "row": 23,
+              "col": 0,
+              "w": 9,
+              "h": 9,
+              "type": "text",
+              "text": "### 5. Hanya MDN-01 konsisten di bawah target tanpa penjelasan lain; SBY-02, MLG-01, SOL-01 memburuk; SBY-01, BDG-02, Jawa Barat bukan masalah kinerja\n\nMDN-01: 79,3% dan 83,5%, penjualan −6,3% YoY. SBY-01 tutup 49 hari (renovasi), BDG-02 sync gagal 7 hari (data), Jawa Barat FY2025 100,8% setelah koreksi region. Target toko = alokasi (asumsi).\n\n*Filter Periode = 1 Jan 2026 - 30 Jun 2026 menampilkan angka H1 2026 di kartu.*"
+            },
+            {
+              "row": 32,
+              "col": 0,
+              "w": 9,
+              "h": 5,
+              "type": "text",
+              "text": "### 6. Fashion online mengembalikan 15,1% penjualannya (Store 2,8%); 57% refund Fashion karena ukuran\n\nFashion = 40,5% dari seluruh refund. Menurunkan Return Rate Fashion online ke level Store menghindari sekitar **Rp 388 juta** refund per tahun."
+            },
+            {
+              "row": 37,
+              "col": 0,
+              "w": 24,
+              "h": 2,
+              "type": "text",
+              "text": "**Anotasi pengukuran.** BGR-01 pindah ke Jabodetabek pada 1 Jul 2025 tetapi target FY2025 tidak disesuaikan; achievement memakai peta region awal tahun target. Dengan region saat transaksi, Jawa Barat tampak anjlok dari 98,1% ke 73,4% (artefak). Estimasi dampak adalah replay H2 2025 dan bersifat indikatif."
+            }
+          ]
+        }
+      ]
+    },
+    "detail_toko": {
+      "name": "KIRANA Detail Toko",
+      "description": "Drill-down satu toko, dibuka dari tabel Kinerja per toko pada dashboard utama.",
+      "parameters": [
+        "period",
+        "store"
+      ],
+      "tabs": [
+        {
+          "key": "detail",
+          "name": "Detail Toko",
+          "texts": [
+            {
+              "row": 0,
+              "col": 0,
+              "w": 24,
+              "h": 1,
+              "type": "heading",
+              "text": "Detail Toko: tren, kategori, dan kelengkapan data satu toko"
+            },
+            {
+              "row": 15,
+              "col": 0,
+              "w": 24,
+              "h": 1,
+              "type": "text",
+              "text": "Kembali ke dashboard utama lewat menu koleksi *KIRANA BI*. Target toko adalah alokasi (asumsi)."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "extra_placements": {
+    "storyline": [
+      {
+        "card": "executive__gm_cm_bulanan",
+        "pos": [
+          3,
+          9,
+          15,
+          5
+        ]
+      },
+      {
+        "card": "margin_promo__margin_bridge_channel",
+        "pos": [
+          8,
+          9,
+          15,
+          5
+        ]
+      },
+      {
+        "card": "executive__achievement_per_channel",
+        "pos": [
+          13,
+          9,
+          15,
+          5
+        ]
+      },
+      {
+        "card": "margin_promo__promo_incremental_gm_bar",
+        "pos": [
+          18,
+          9,
+          15,
+          5
+        ]
+      },
+      {
+        "card": "channel_region_store__store_ranking",
+        "pos": [
+          23,
+          9,
+          15,
+          9
+        ]
+      },
+      {
+        "card": "returns_customers__return_rate_per_kategori",
+        "pos": [
+          32,
+          9,
+          15,
+          5
+        ]
+      }
+    ]
+  }
+}
