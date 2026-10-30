@@ -162,8 +162,9 @@ indikator kesegaran data dan status sinkronisasi POS, serta penanda periode/toko
 .
 ├── compose.yaml  # Metabase + driver DuckDB (+ PostgreSQL opsional)
 ├── sql/          # pipeline berurutan: load → staging → model → reconciliation → metrics → tests
-├── dashboard/    # wireframe dan SQL tiap kartu Metabase
-├── reports/      # laporan teknis, insight brief, evaluasi & tata kelola
+├── dashboard/    # wireframe, SQL tiap kartu Metabase, skrip pembuat dan ekspor dashboard
+├── reports/      # laporan teknis, insight brief (+ insights/: template, fakta SQL), evaluasi & tata kelola
+├── scripts/      # build, uji mutasi, ekspor kamus metrik, pembuat insight brief
 └── raw_data/     # data mentah (tidak disertakan di repo)
 ```
 
@@ -219,8 +220,8 @@ Folder ditambahkan seiring pekerjaan berjalan.
 - [x] Pipeline SQL idempoten dan star schema ([model, grain, SCD](reports/A4_data_model.md))
 - [x] Uji kualitas data dan rekonsiliasi ([hasil uji dan rekonsiliasi](reports/A5_quality_reconciliation.md))
 - [x] Metric views dan kamus metrik ([kamus metrik](reports/A7_kamus_metrik.md), [number registry](reports/number_registry.md))
-- [ ] Dashboard Metabase
-- [ ] Insight brief dan rekomendasi
+- [x] Dashboard Metabase ([panduan dashboard](dashboard/README.md), [wireframe](dashboard/wireframe/wireframe.md)); halaman Storyline diisi pada Task 5
+- [x] Insight brief (5 hlm) dan rekomendasi: angka dihitung `reports/insights/facts.sql`, dirender `python3 scripts/build_insights.py` (brief, grafik, halaman Storyline, registri angka)
 - [ ] Evaluasi dan tata kelola
 
 Hasil kuantitatif (angka pencapaian, margin, efektivitas promo) ditambahkan setelah pipeline selesai
