@@ -55,10 +55,11 @@ cat <<'E'
 
 | View | Grain | Dipakai untuk |
 | --- | --- | --- |
-| `v_sales_monthly` | bulan x channel x region (as-of) x toko x kategori x B2B | Net Sales, Gross/Contribution Margin, tren, kontribusi channel |
+| `v_sales_monthly` | bulan x channel x region (dasar target) x toko x kategori x B2B | Net Sales, Gross/Contribution Margin, tren, kontribusi channel |
 | `v_txn_monthly` | bulan x channel x region x toko x member x B2B | Jumlah Transaksi, AOV |
 | `v_target_achievement` | bulan x channel x region (Store) atau nasional (online) | Achievement vs Target, status warna |
 | `v_store_target_alloc` | bulan x toko | Achievement per toko dengan target ALOKASI (asumsi, lihat KPI 2) |
+| `v_store_performance_monthly` | bulan x toko | Achievement toko + status kelengkapan data (satu filter periode untuk keduanya) |
 | `v_margin_vs_target` | bulan x channel | GM% dan CM% terhadap target dan status |
 | `v_return_rate_monthly` | bulan x channel x region x kategori | Return Rate (Rp dan unit) |
 | `v_return_reason_monthly` | bulan x channel x region x kategori x alasan | Distribusi alasan retur |

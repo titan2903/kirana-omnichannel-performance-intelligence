@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Mutation test untuk uji kualitas data: suntik satu cacat ke SALINAN database, jalankan ulang 04+05, dan pastikan
 # uji yang tepat gagal. Membuktikan uji punya "gigi" (bukan sekadar selalu lolos). Database asli tidak diubah.
-#   bash scripts/mutation_test.sh              (DB=path untuk database lain; default kirana.duckdb). Termasuk 12 mutasi semantic layer.
+#   bash scripts/mutation_test.sh              (DB=path untuk database lain; default kirana.duckdb). Termasuk 13 mutasi semantic layer.
 # Exit 1 bila ada cacat yang tidak terdeteksi.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -49,15 +49,18 @@ wrap() { # $1=nama view  $2=SELECT yang membaca metrics.$1_orig
 run_mut "M21 v_sales_monthly kehilangan 1 kategori"    T41 "$(wrap v_sales_monthly "SELECT * FROM metrics.v_sales_monthly_orig WHERE category <> 'Fashion'")"
 run_mut "M22 v_txn_monthly kehilangan baris B2B"       T42 "$(wrap v_txn_monthly "SELECT * FROM metrics.v_txn_monthly_orig WHERE NOT is_b2b_bulk")"
 run_mut "M23 v_target_achievement kehilangan Website"  T43 "$(wrap v_target_achievement "SELECT * FROM metrics.v_target_achievement_orig WHERE channel_name <> 'Website'")"
-run_mut "M24 alokasi target toko membengkak 10%"       T44 "$(wrap v_store_target_alloc "SELECT * REPLACE (store_target_idr * 1.1 AS store_target_idr) FROM metrics.v_store_target_alloc_orig")"
+run_mut "M24 alokasi target toko membengkak 10%"       T44 "$(wrap v_store_target_alloc "SELECT * REPLACE ((store_target_idr * 1.1)::DECIMAL(18,2) AS store_target_idr) FROM metrics.v_store_target_alloc_orig")"
 run_mut "M25 v_return_reason kehilangan 1 alasan"      T45 "$(wrap v_return_reason_monthly "SELECT * FROM metrics.v_return_reason_monthly_orig WHERE return_reason <> 'Salah kirim'")"
 run_mut "M26 Active Members tahunan salah hitung"      T46 "$(wrap v_members_period "SELECT * REPLACE (CASE WHEN period_type = 'Tahun' THEN active_members + 1 ELSE active_members END AS active_members) FROM metrics.v_members_period_orig")"
 run_mut "M27 tarif channel kosong di v_margin"         T47 "$(wrap v_margin_vs_target "SELECT * REPLACE (NULL::DECIMAL(5,2) AS channel_fee_pct) FROM metrics.v_margin_vs_target_orig")"
 run_mut "M28 pembatalan terhitung dua kali"            T48 "$(wrap v_cancellation_void_monthly "SELECT * REPLACE (cancelled_net_sales_idr * 2 AS cancelled_net_sales_idr) FROM metrics.v_cancellation_void_monthly_orig")"
 run_mut "M29 v_promo_performance kehilangan 1 promo"   T49 "$(wrap v_promo_performance "SELECT * FROM metrics.v_promo_performance_orig WHERE promo_code <> 'RMDN24'")"
 run_mut "M30 baseline promo tidak memadai"             T50 "$(wrap v_promo_performance "SELECT * REPLACE (CASE WHEN promo_code = 'RMDN24' THEN 'TIDAK_CUKUP' ELSE baseline_quality END AS baseline_quality) FROM metrics.v_promo_performance_orig")"
-run_mut "M31 penanda data tidak lengkap hilang"        T51 "$(wrap v_data_completeness "SELECT * REPLACE (0 AS failed_days) FROM metrics.v_data_completeness_orig")"
+run_mut "M31 penanda data tidak lengkap hilang"        T51 "$(wrap v_data_completeness "SELECT * REPLACE (0::BIGINT AS failed_days) FROM metrics.v_data_completeness_orig")"
 run_mut "M32 kamus merujuk view yang tidak ada"        T40 "UPDATE metrics.kpi_dictionary SET source_view = 'metrics.v_tidak_ada' WHERE kpi_id = 1;"
+run_mut "M33 join kelengkapan menggandakan baris toko"   T52 "$(wrap v_store_performance_monthly "SELECT * FROM metrics.v_store_performance_monthly_orig UNION ALL SELECT * FROM metrics.v_store_performance_monthly_orig WHERE store_code = 'JKT-01'")"
+run_mut "M34 region dasar target salah untuk 1 baris POS"  T53 "UPDATE dw.fact_sales SET region_target_basis = 'Sumatera' WHERE sales_key = (SELECT min(sales_key) FROM dw.fact_sales WHERE source_system = 'POS' AND region_target_basis <> 'Sumatera');"
+run_mut "M35 view region memuat baris region lain"       T54 "CREATE OR REPLACE VIEW acc_sumatera.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis IN ('Sumatera', 'Jawa Timur');"
 echo "---"
 echo "$((n - miss)) dari $n cacat terdeteksi"
 [ "$miss" -eq 0 ]
