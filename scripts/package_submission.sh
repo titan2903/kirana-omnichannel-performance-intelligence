@@ -22,6 +22,7 @@ find "$STAGE" -name '__pycache__' -prune -exec rm -rf {} +
 if find "$STAGE" -name '*.duckdb' -o -name '.env' -o -path '*raw_data*' | grep -q .; then echo "GAGAL: berkas terlarang di paket"; exit 1; fi
 rm -f "$OUT/${BASE}_SQL.zip"; (cd "$STAGE" && zip -qr "$OUT/${BASE}_SQL.zip" .)
 [ -f dashboard/export/Dashboard_KIRANA.pdf ] && cp dashboard/export/Dashboard_KIRANA.pdf "$OUT/${BASE}_Dashboard.pdf"
-[ -f "laporan_akhir/${BASE}_Laporan.pdf" ] && cp "laporan_akhir/${BASE}_Laporan.pdf" "$OUT/${BASE}_Laporan.pdf" \
+[ -f "laporan_akhir/${BASE}_Laporan.pdf" ] && python3 scripts/link_pdf.py "laporan_akhir/${BASE}_Laporan.pdf" \
+  && cp "laporan_akhir/${BASE}_Laporan.pdf" "$OUT/${BASE}_Laporan.pdf" \
   || echo "PERINGATAN: laporan_akhir/${BASE}_Laporan.pdf belum ada (cd laporan_akhir && latexmk -pdf ${BASE}_Laporan.tex)"
 ls -la "$OUT" | grep "$BASE"; unzip -l "$OUT/${BASE}_SQL.zip" | tail -1

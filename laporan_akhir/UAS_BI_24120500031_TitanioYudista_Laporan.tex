@@ -12,7 +12,8 @@
 \usepackage{lmodern}\usepackage[scaled=0.95]{helvet}\renewcommand{\familydefault}{\sfdefault}
 \usepackage{longtable,booktabs,array,calc,graphicx,xcolor,etoolbox,pdfpages,fancyhdr,caption,float}
 \floatplacement{figure}{H}\renewcommand{\figurename}{Gambar}
-\usepackage[hidelinks]{hyperref}
+\usepackage[colorlinks=true,urlcolor=aksen,linkcolor=black]{hyperref}
+\newcommand{\gh}[1]{\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/#1}{#1}}  % tautan file repo di dalam blok perintah (Verbatim)
 \usepackage{xurl}\newcounter{none}\usepackage{fvextra}\DefineVerbatimEnvironment{verbatim}{Verbatim}{breaklines,fontsize=\scriptsize}
 \usepackage[normalem]{ulem}
 \definecolor{aksen}{HTML}{2A78D6}
@@ -174,11 +175,11 @@ Tab dashboard
 Profiling dilakukan langsung dari \texttt{raw\_\allowbreak{}data/} dengan DuckDB, tanpa mengubah file. Semua angka dapat
 diulang dengan:
 
-\begin{verbatim}
-duckdb -markdown < sql/profiling/01_file_inventory.sql   # inventaris, keunikan kunci, null per kolom
-duckdb -markdown < sql/profiling/02_issue_impact.sql     # dampak per isu, 53 pengecekan, kontrol sync log
-duckdb -markdown < sql/profiling/03_distributions.sql    # sebaran nilai dan statistik yang dikutip di bawah
-\end{verbatim}
+\begin{Verbatim}[commandchars=\\\{\},breaklines,fontsize=\scriptsize]
+duckdb -markdown < \gh{sql/profiling/01_file_inventory.sql}   # inventaris, keunikan kunci, null per kolom
+duckdb -markdown < \gh{sql/profiling/02_issue_impact.sql}     # dampak per isu, 53 pengecekan, kontrol sync log
+duckdb -markdown < \gh{sql/profiling/03_distributions.sql}    # sebaran nilai dan statistik yang dikutip di bawah
+\end{Verbatim}
 
 Kode \texttt{DQ-xx} merujuk ke Data Quality Issue Log (A3).
 
@@ -479,7 +480,7 @@ DuckDB hanya menangkap baris judul.
 
 \subsection{4. Pengecekan yang lolos (53 pengecekan, 0 pelanggaran)}\label{pengecekan-yang-lolos-53-pengecekan-0-pelanggaran}
 
-Hasil lengkap ada di keluaran \texttt{02\_\allowbreak{}issue\_\allowbreak{}impact.sql} bagian B.
+Hasil lengkap ada di keluaran \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/profiling/02_issue_impact.sql}{\texttt{02\_\allowbreak{}issue\_\allowbreak{}impact.sql}} bagian B.
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -565,8 +566,8 @@ Angka ini bukan Net Sales; hanya titik awal rekonsiliasi (Task 2). Net Sales did
 % ======== A3_issue_log ========
 \section{A3. Data Quality Issue Log}\label{a3.-data-quality-issue-log}
 
-Seluruh angka dihasilkan oleh \texttt{sql/profiling/02\_\allowbreak{}issue\_\allowbreak{}impact.sql} (dapat diulang dari \texttt{raw\_\allowbreak{}data/}).
-Kode \texttt{DQ-xx} dipakai sebagai komentar di \texttt{sql/02\_\allowbreak{}staging.sql}.
+Seluruh angka dihasilkan oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/profiling/02_issue_impact.sql}{\texttt{sql/profiling/02\_\allowbreak{}issue\_\allowbreak{}impact.sql}} (dapat diulang dari \texttt{raw\_\allowbreak{}data/}).
+Kode \texttt{DQ-xx} dipakai sebagai komentar di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/02_staging.sql}{\texttt{sql/02\_\allowbreak{}staging.sql}}.
 
 \textbf{Cara membaca}
 
@@ -872,7 +873,7 @@ Dampak perubahan asumsi ditunjukkan di laporan (Bagian B) bila material.
 % ======== A4_data_model ========
 \section{A4. Pipeline, Star Schema, Grain, dan Keputusan SCD}\label{a4.-pipeline-star-schema-grain-dan-keputusan-scd}
 
-Semua yang ada di dokumen ini dihasilkan oleh \texttt{duckdb\ kirana.duckdb\ \textless{}\ sql/00\_\allowbreak{}main.sql} (sekitar 4 detik,
+Semua yang ada di dokumen ini dihasilkan oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/00_main.sql}{\texttt{duckdb\ kirana.duckdb\ \textless{}\ sql/00\_\allowbreak{}main.sql}} (sekitar 4 detik,
 idempoten) dan dapat diverifikasi ulang. Pengujian dan rekonsiliasi ada di A5.
 
 \subsection{1. Alur data}\label{alur-data}
@@ -903,12 +904,12 @@ Catatan
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-load & \texttt{01\_\allowbreak{}load.sql} & View \texttt{raw\_\allowbreak{}*} atas file CSV/XLSX, semua kolom VARCHAR & \textbf{TEMP}: tidak ikut tersimpan. Raw memuat PII dan path \texttt{raw\_\allowbreak{}data/} yang tidak ada di container Metabase \\
-staging & \texttt{02\_\allowbreak{}staging.sql} & Normalisasi, tipe, dedup, pasangan void, karantina; \texttt{disposition} per baris & Tiap perlakuan diberi komentar \texttt{-\/-\ DQ-xx} \\
-model & \texttt{03\_\allowbreak{}model.sql} & Dimensi dan fakta (star schema) & Tanpa PII \\
-rekonsiliasi & \texttt{04\_\allowbreak{}reconciliation.sql} & \texttt{dq.reconciliation}, \texttt{dq.net\_\allowbreak{}sales\_\allowbreak{}bridge} & Sisi mentah dihitung dari raw, bukan dari stg \\
-semantic layer & \texttt{05\_\allowbreak{}metrics.sql} & \texttt{metrics.v\_\allowbreak{}*}, \texttt{metrics.ref\_\allowbreak{}status\_\allowbreak{}threshold}, \texttt{metrics.kpi\_\allowbreak{}dictionary} & Satu-satunya tempat rumus KPI; lihat A7 \\
-uji & \texttt{06\_\allowbreak{}tests.sql} & \texttt{dq.test\_\allowbreak{}results}, \texttt{dq.test\_\allowbreak{}results\_\allowbreak{}demo} & Gerbang di \texttt{00\_\allowbreak{}main.sql}; 43 uji, termasuk 15 uji semantic layer, region, dan akses (T40--T54) \\
+load & \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/01_load.sql}{\texttt{01\_\allowbreak{}load.sql}} & View \texttt{raw\_\allowbreak{}*} atas file CSV/XLSX, semua kolom VARCHAR & \textbf{TEMP}: tidak ikut tersimpan. Raw memuat PII dan path \texttt{raw\_\allowbreak{}data/} yang tidak ada di container Metabase \\
+staging & \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/02_staging.sql}{\texttt{02\_\allowbreak{}staging.sql}} & Normalisasi, tipe, dedup, pasangan void, karantina; \texttt{disposition} per baris & Tiap perlakuan diberi komentar \texttt{-\/-\ DQ-xx} \\
+model & \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/03_model.sql}{\texttt{03\_\allowbreak{}model.sql}} & Dimensi dan fakta (star schema) & Tanpa PII \\
+rekonsiliasi & \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/04_reconciliation.sql}{\texttt{04\_\allowbreak{}reconciliation.sql}} & \texttt{dq.reconciliation}, \texttt{dq.net\_\allowbreak{}sales\_\allowbreak{}bridge} & Sisi mentah dihitung dari raw, bukan dari stg \\
+semantic layer & \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/05_metrics.sql}{\texttt{05\_\allowbreak{}metrics.sql}} & \texttt{metrics.v\_\allowbreak{}*}, \texttt{metrics.ref\_\allowbreak{}status\_\allowbreak{}threshold}, \texttt{metrics.kpi\_\allowbreak{}dictionary} & Satu-satunya tempat rumus KPI; lihat A7 \\
+uji & \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/06_tests.sql}{\texttt{06\_\allowbreak{}tests.sql}} & \texttt{dq.test\_\allowbreak{}results}, \texttt{dq.test\_\allowbreak{}results\_\allowbreak{}demo} & Gerbang di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/00_main.sql}{\texttt{00\_\allowbreak{}main.sql}}; 43 uji, termasuk 15 uji semantic layer, region, dan akses (T40--T54) \\
 \end{longtable}
 }
 
@@ -995,7 +996,7 @@ Kolom ukuran di \texttt{fact\_\allowbreak{}sales}: \texttt{qty}, \texttt{unit\_\
 \begin{minipage}[b]{\linewidth}\raggedright
 ID
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Perlakuan di \texttt{02\_\allowbreak{}staging.sql}
+Perlakuan di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/02_staging.sql}{\texttt{02\_\allowbreak{}staging.sql}}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Hasil
 \end{minipage} \\
@@ -1028,7 +1029,7 @@ memengaruhi analisis regional online, bukan perhitungan achievement.
 
 \subsection{5. Keputusan SCD dan dampaknya}\label{keputusan-scd-dan-dampaknya}
 
-Dampak dihitung oleh \texttt{sql/analysis/scd\_\allowbreak{}impact.sql}.
+Dampak dihitung oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/analysis/scd_impact.sql}{\texttt{sql/analysis/scd\_\allowbreak{}impact.sql}}.
 
 \subsubsection{\texorpdfstring{(a) HPP: \texttt{product\_\allowbreak{}cost\_\allowbreak{}history} (SCD tipe 2)}{(a) HPP: product\_\allowbreak{}cost\_\allowbreak{}history (SCD tipe 2)}}\label{a-hpp-product_cost_history-scd-tipe-2}
 
@@ -1106,7 +1107,7 @@ Dipakai untuk
 \end{longtable}
 }
 
-Bukti (\texttt{sql/analysis/scd\_\allowbreak{}impact.sql}; uji \texttt{T53} menjaganya): achievement per semester, Store terhadap target region.
+Bukti (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/analysis/scd_impact.sql}{\texttt{sql/analysis/scd\_\allowbreak{}impact.sql}}; uji \texttt{T53} menjaganya): achievement per semester, Store terhadap target region.
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -1172,20 +1173,20 @@ Tarif dipasang per baris menurut tanggal transaksi (\texttt{ref\_\allowbreak{}ch
 
 \subsection{7. Sumber diagram}\label{sumber-diagram}
 
-Diagram star schema dan lineage dibuat sebagai draw.io (\texttt{reports/img/star\_\allowbreak{}schema.drawio}, \texttt{lineage.drawio}) dan diekspor ke PNG oleh \texttt{reports/img/build\_\allowbreak{}star.py} dan \texttt{build\_\allowbreak{}lineage.py}.
+Diagram star schema dan lineage dibuat sebagai draw.io (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/img/star_schema.drawio}{\texttt{reports/img/star\_\allowbreak{}schema.drawio}}, \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/img/lineage.drawio}{\texttt{lineage.drawio}}) dan diekspor ke PNG oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/img/build_star.py}{\texttt{reports/img/build\_\allowbreak{}star.py}} dan \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/img/build_lineage.py}{\texttt{build\_\allowbreak{}lineage.py}}.
 
 % ======== A5_quality_reconciliation ========
 \section{A5. Uji Kualitas Data dan Rekonsiliasi}\label{a5.-uji-kualitas-data-dan-rekonsiliasi}
 
-Dihasilkan oleh \texttt{sql/04\_\allowbreak{}reconciliation.sql} dan \texttt{sql/06\_\allowbreak{}tests.sql}; tabel hasil ada di \texttt{kirana.duckdb}
+Dihasilkan oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/04_reconciliation.sql}{\texttt{sql/04\_\allowbreak{}reconciliation.sql}} dan \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/06_tests.sql}{\texttt{sql/06\_\allowbreak{}tests.sql}}; tabel hasil ada di \texttt{kirana.duckdb}
 (\texttt{dq.reconciliation}, \texttt{dq.net\_\allowbreak{}sales\_\allowbreak{}bridge}, \texttt{dq.test\_\allowbreak{}results}, \texttt{dq.test\_\allowbreak{}results\_\allowbreak{}demo}).
 
-\begin{verbatim}
-bash scripts/build.sh                                          # bangun ke file sementara; kirana.duckdb diganti HANYA bila semua uji BLOCKING lolos
-bash scripts/mutation_test.sh                                  # 35 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
+\begin{Verbatim}[commandchars=\\\{\},breaklines,fontsize=\scriptsize]
+bash \gh{scripts/build.sh}                                          # bangun ke file sementara; kirana.duckdb diganti HANYA bila semua uji BLOCKING lolos
+bash \gh{scripts/mutation_test.sh}                                  # 35 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
 duckdb -readonly kirana.duckdb -markdown -c "SELECT * FROM dq.test_results ORDER BY test_id"
-bash scripts/idempotency_check.sh   # IDEMPOTENT: 62 objek identik di dua run
-\end{verbatim}
+bash \gh{scripts/idempotency_check.sh}   # IDEMPOTENT: 62 objek identik di dua run
+\end{Verbatim}
 
 \subsection{1. Hasil uji produksi}\label{hasil-uji-produksi}
 
@@ -1309,7 +1310,7 @@ Hasil disimpan di \texttt{dq.test\_\allowbreak{}results\_\allowbreak{}demo}. Ini
 
 \subsection{2b. Uji punya gigi: mutation test}\label{b.-uji-punya-gigi-mutation-test}
 
-\texttt{scripts/mutation\_\allowbreak{}test.sh} menyuntik \textbf{satu cacat per percobaan} ke salinan \texttt{kirana.duckdb}, menjalankan ulang rekonsiliasi dan uji,
+\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/mutation_test.sh}{\texttt{scripts/mutation\_\allowbreak{}test.sh}} menyuntik \textbf{satu cacat per percobaan} ke salinan \texttt{kirana.duckdb}, menjalankan ulang rekonsiliasi dan uji,
 lalu memastikan uji yang tepat gagal. Hasil: \textbf{35 dari 35 cacat terdeteksi} (sekitar 1 menit; 20 cacat data/staging dan 15 cacat semantic layer, region, dan akses). Ini menutup celah bahwa hanya
 T01--T05 yang pernah terbukti bisa gagal.
 
@@ -1494,9 +1495,9 @@ memastikan angka ini tetap sama pada setiap build. Transaksi B2B berada di luar 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{idempotency\_\allowbreak{}check.sh}: build dua kali ke database sementara, hash isi tiap tabel dan view dibandingkan → \textbf{IDEMPOTENT: 62 objek identik}.
+  \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/idempotency_check.sh}{\texttt{idempotency\_\allowbreak{}check.sh}}: build dua kali ke database sementara, hash isi tiap tabel dan view dibandingkan → \textbf{IDEMPOTENT: 62 objek identik}.
 \item
-  \texttt{scripts/build.sh}: build ke \texttt{kirana.duckdb.building}, lalu menukar ke \texttt{kirana.duckdb} hanya bila gerbang BLOCKING lolos. Jalur gagal diuji: file yang ada tidak berubah (checksum sama) dan file sementara dihapus.
+  \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/build.sh}{\texttt{scripts/build.sh}}: build ke \texttt{kirana.duckdb.building}, lalu menukar ke \texttt{kirana.duckdb} hanya bila gerbang BLOCKING lolos. Jalur gagal diuji: file yang ada tidak berubah (checksum sama) dan file sementara dihapus.
 \item
   13 file \texttt{raw\_\allowbreak{}data/} dibandingkan dengan ZIP asli (SHA-256): \textbf{13 identik, 0 berbeda}. Pipeline tidak pernah menulis ke \texttt{raw\_\allowbreak{}data/}.
 \end{itemize}
@@ -1558,7 +1559,7 @@ Target / ambang
 \section{C1. Memo Evaluasi Solusi BI}\label{c1.-memo-evaluasi-solusi-bi}
 
 \textbf{Kepada:} Direktur Komersial KIRANA · \textbf{Dari:} BI Analyst · \textbf{Perihal:} Apakah solusi ini cukup untuk keputusan H2 2026, dan apa yang perlu dikembangkan.
-Semua angka sama dengan Bagian B (insight brief) dan registri angka \texttt{reports/insights/insight\_\allowbreak{}registry.md}.
+Semua angka sama dengan Bagian B (insight brief) dan registri angka \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/insight_registry.md}{\texttt{reports/insights/insight\_\allowbreak{}registry.md}}.
 
 \subsection{1. Apakah dashboard menjawab dua keputusan?}\label{apakah-dashboard-menjawab-dua-keputusan}
 
@@ -1586,7 +1587,7 @@ Status
 1. Apakah anggaran menjadi batasan? & Tab 3, \texttt{promo\_\allowbreak{}per\_\allowbreak{}jenis} (kolom Pemakaian anggaran): diskon yang diberikan hanya 9,2\% dari anggaran (Rp 1,94 miliar dari Rp 21,14 miliar) & Terjawab: mekanisme, bukan anggaran, yang menentukan \\
 2. Channel dan region mana di bawah target? & Tab 1 dan 2: \texttt{achievement\_\allowbreak{}per\_\allowbreak{}channel}, \texttt{ach\_\allowbreak{}store\_\allowbreak{}per\_\allowbreak{}region} & Terjawab \\
 2. Toko mana masuk program perbaikan, dan mana yang hanya bermasalah di data? & Tab 2: \texttt{store\_\allowbreak{}ranking} (dengan kolom kelengkapan data), drill-down region → toko → Detail Toko & Terjawab dengan asumsi alokasi target \\
-2. Mengapa MDN-01 turun? & Insight brief (insight 5; angka per kota dari \texttt{facts.sql}, belum ada kartu per kota): bukan kanibalisasi online (Medan online +45,2\%, setara kota lain) & \textbf{Belum terjawab}: penyebab (trafik, harga kompetitor, jam buka) tidak ada di data \\
+2. Mengapa MDN-01 turun? & Insight brief (insight 5; angka per kota dari \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/facts.sql}{\texttt{facts.sql}}, belum ada kartu per kota): bukan kanibalisasi online (Medan online +45,2\%, setara kota lain) & \textbf{Belum terjawab}: penyebab (trafik, harga kompetitor, jam buka) tidak ada di data \\
 \end{longtable}
 }
 
@@ -1610,7 +1611,7 @@ Status
 \item
   \textbf{Biaya di luar data.} Anggaran promo hanya \texttt{budget\_\allowbreak{}idr}; biaya iklan dan biaya operasional toko tidak ada, sehingga contribution margin hanya dikurangi biaya channel dan bukan laba toko.
 \item
-  \textbf{Teknis.} Driver DuckDB dibuka read-only dan DuckDB hanya punya satu penulis; Metabase harus dihentikan saat rebuild. Pembatasan akses per region memakai view \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} dan izin koleksi Metabase (\texttt{dashboard/access.py}), bukan row-level security Metabase (fitur berbayar).
+  \textbf{Teknis.} Driver DuckDB dibuka read-only dan DuckDB hanya punya satu penulis; Metabase harus dihentikan saat rebuild. Pembatasan akses per region memakai view \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} dan izin koleksi Metabase (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/dashboard/access.py}{\texttt{dashboard/access.py}}), bukan row-level security Metabase (fitur berbayar).
 \end{enumerate}
 
 \subsection{3. Yang perlu dikembangkan}\label{yang-perlu-dikembangkan}
@@ -1632,7 +1633,7 @@ Manfaat
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Refresh terjadwal otomatis (lihat C2) & Rebuild kini manual (\texttt{scripts/build.sh}) & Dashboard tidak basi; jam sync POS 01:00--01:49 sudah diketahui \\
+Refresh terjadwal otomatis (lihat C2) & Rebuild kini manual (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/build.sh}{\texttt{scripts/build.sh}}) & Dashboard tidak basi; jam sync POS 01:00--01:49 sudah diketahui \\
 Target resmi per toko dari FP\&A & Menghilangkan asumsi alokasi & Status toko menjadi keputusan, bukan perkiraan \\
 Biaya operasional toko dan biaya marketing di luar diskon & Contribution margin belum mencakup biaya ini & Profitabilitas toko dan ROI promo yang sebenarnya \\
 Uji terkontrol (toko atau kota kontrol, holdout) pada promo & Lift saat ini bersifat observasional & Dampak dan elastisitas yang dapat dipertanggungjawabkan \\
@@ -1683,8 +1684,8 @@ Peran AI
 \endlastfoot
 Persiapan & Membaca panduan UAS dan paket data, lalu membantu menyusun aturan kerja dan daftar langkah per task \\
 Task 1 sampai 3 & Membantu menulis dan men-debug SQL DuckDB (profiling, staging, star schema, uji kualitas, rekonsiliasi, view metrik) \\
-Task 4 & Membantu menulis skrip pembuat dashboard Metabase (\texttt{dashboard/provision.py}, \texttt{export.py}) dan wireframe \\
-Task 5 dan 6 & Membantu menyusun kueri fakta (\texttt{facts.sql}), template dan skrip pembuat brief, serta draf teks brief, memo evaluasi, lampiran tata kelola, dan skrip hak akses Metabase (\texttt{dashboard/access.py}) \\
+Task 4 & Membantu menulis skrip pembuat dashboard Metabase (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/dashboard/provision.py}{\texttt{dashboard/provision.py}}, \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/dashboard/export.py}{\texttt{export.py}}) dan wireframe \\
+Task 5 dan 6 & Membantu menyusun kueri fakta (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/facts.sql}{\texttt{facts.sql}}), template dan skrip pembuat brief, serta draf teks brief, memo evaluasi, lampiran tata kelola, dan skrip hak akses Metabase (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/dashboard/access.py}{\texttt{dashboard/access.py}}) \\
 Peninjauan & Meninjau pekerjaan sebelumnya dan menjalankan pemeriksaan (idempotensi, uji mutasi, pindai PII) \\
 \end{longtable}
 }
@@ -1694,7 +1695,7 @@ Peninjauan & Meninjau pekerjaan sebelumnya dan menjalankan pemeriksaan (idempote
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Angka tidak diketik manual.} Setiap angka di brief dan storyline dihitung oleh \texttt{reports/insights/facts.sql} dari \texttt{kirana.duckdb} dan tercatat di \texttt{reports/insights/insight\_\allowbreak{}registry.md}; kunci angka yang tidak ada membuat build gagal. Angka kamus dan pencapaian tercatat di Lampiran Number Registry.
+  \textbf{Angka tidak diketik manual.} Setiap angka di brief dan storyline dihitung oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/facts.sql}{\texttt{reports/insights/facts.sql}} dari \texttt{kirana.duckdb} dan tercatat di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/insight_registry.md}{\texttt{reports/insights/insight\_\allowbreak{}registry.md}}; kunci angka yang tidak ada membuat build gagal. Angka kamus dan pencapaian tercatat di Lampiran Number Registry.
 \item
   \textbf{Pemeriksaan otomatis.} 43 uji kualitas data (29 BLOCKING, semuanya lolos), rekonsiliasi dengan selisih 0, 35 cacat yang sengaja disuntik (semuanya terdeteksi), dan uji idempotensi (dua build menghasilkan 62 objek identik).
 \item
@@ -1709,7 +1710,7 @@ Peninjauan & Meninjau pekerjaan sebelumnya dan menjalankan pemeriksaan (idempote
 % ======== A7_kamus_metrik ========
 \section{A7. Kamus Metrik}\label{a7.-kamus-metrik}
 
-Dihasilkan otomatis oleh \texttt{scripts/export\_\allowbreak{}reports.sh} dari tabel \texttt{metrics.kpi\_\allowbreak{}dictionary} di \texttt{kirana.duckdb}; definisi di sini
+Dihasilkan otomatis oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/export_reports.sh}{\texttt{scripts/export\_\allowbreak{}reports.sh}} dari tabel \texttt{metrics.kpi\_\allowbreak{}dictionary} di \texttt{kirana.duckdb}; definisi di sini
 sama persis dengan yang dipakai view. Semua kartu Metabase hanya \texttt{SELECT} dari schema \texttt{metrics}; tidak ada rumus KPI di Metabase.
 
 \subsection{Aturan pakai (wajib)}\label{aturan-pakai-wajib}
@@ -2138,7 +2139,7 @@ Status
 \end{longtable}
 }
 
-Pengendali: (1) \texttt{01\_\allowbreak{}load} hanya membuat TEMP view sehingga PII tidak tersimpan di \texttt{kirana.duckdb}; (2) uji \textbf{T12} (BLOCKING) memeriksa \texttt{information\_\allowbreak{}schema.columns} pada \texttt{stg}, \texttt{dw}, \texttt{dq}, \texttt{metrics}, dan \texttt{acc\_\allowbreak{}*} dan sudah terbukti mendeteksi kolom PII yang disuntik (uji mutasi, A5 §2b); (3) \texttt{.env}, \texttt{raw\_\allowbreak{}data/}, dan \texttt{docs/} ada di \texttt{.gitignore} \textbf{{[}Sudah{]}}. Catatan: dua member dapat berbagi email (DQ-19, 491 grup); karena email tidak dibawa, kedua \texttt{customer\_\allowbreak{}id} tetap terpisah dan tidak digabung.
+Pengendali: (1) \texttt{01\_\allowbreak{}load} hanya membuat TEMP view sehingga PII tidak tersimpan di \texttt{kirana.duckdb}; (2) uji \textbf{T12} (BLOCKING) memeriksa \texttt{information\_\allowbreak{}schema.columns} pada \texttt{stg}, \texttt{dw}, \texttt{dq}, \texttt{metrics}, dan \texttt{acc\_\allowbreak{}*} dan sudah terbukti mendeteksi kolom PII yang disuntik (uji mutasi, A5 §2b); (3) \texttt{.env}, \texttt{raw\_\allowbreak{}data/}, dan \texttt{docs/} ada di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/.gitignore}{\texttt{.gitignore}} \textbf{{[}Sudah{]}}. Catatan: dua member dapat berbagi email (DQ-19, 491 grup); karena email tidak dibawa, kedua \texttt{customer\_\allowbreak{}id} tetap terpisah dan tidak digabung.
 
 \subsection{3. Desain hak akses}\label{desain-hak-akses}
 
@@ -2167,9 +2168,9 @@ Siapa pun & Tidak ada akses ke PII (data tidak ada di model) & \textbf{{[}Sudah{
 \end{longtable}
 }
 
-\textbf{Lapisan data.} Enam schema \texttt{acc\_\allowbreak{}jabodetabek}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}barat}, \texttt{acc\_\allowbreak{}jateng\_\allowbreak{}diy}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}timur}, \texttt{acc\_\allowbreak{}bali\_\allowbreak{}nusra}, \texttt{acc\_\allowbreak{}sumatera} (di \texttt{sql/05\_\allowbreak{}metrics.sql}), masing-masing berisi \texttt{v\_\allowbreak{}sales\_\allowbreak{}monthly} dan \texttt{v\_\allowbreak{}store\_\allowbreak{}performance\_\allowbreak{}monthly} yang sudah difilter ke satu region, memakai definisi region yang sama dengan dashboard (\texttt{region\_\allowbreak{}target\_\allowbreak{}basis}). Uji \textbf{T54} (BLOCKING) memastikan tiap view hanya memuat regionnya dan gabungan seluruh region (ditambah \texttt{Lainnya} untuk pesanan online di luar enam region) sama dengan view induk; uji mutasi (A5 §2b) membuktikan uji ini mendeteksi kebocoran. Region \texttt{Lainnya} sengaja tidak punya schema.
+\textbf{Lapisan data.} Enam schema \texttt{acc\_\allowbreak{}jabodetabek}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}barat}, \texttt{acc\_\allowbreak{}jateng\_\allowbreak{}diy}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}timur}, \texttt{acc\_\allowbreak{}bali\_\allowbreak{}nusra}, \texttt{acc\_\allowbreak{}sumatera} (di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/05_metrics.sql}{\texttt{sql/05\_\allowbreak{}metrics.sql}}), masing-masing berisi \texttt{v\_\allowbreak{}sales\_\allowbreak{}monthly} dan \texttt{v\_\allowbreak{}store\_\allowbreak{}performance\_\allowbreak{}monthly} yang sudah difilter ke satu region, memakai definisi region yang sama dengan dashboard (\texttt{region\_\allowbreak{}target\_\allowbreak{}basis}). Uji \textbf{T54} (BLOCKING) memastikan tiap view hanya memuat regionnya dan gabungan seluruh region (ditambah \texttt{Lainnya} untuk pesanan online di luar enam region) sama dengan view induk; uji mutasi (A5 §2b) membuktikan uji ini mendeteksi kebocoran. Region \texttt{Lainnya} sengaja tidak punya schema.
 
-\textbf{Lapisan Metabase.} Metabase edisi OSS tidak punya row-level security, jadi batas baris ada di view \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} dan Metabase membatasi koleksi serta schema yang boleh dibuka. \texttt{dashboard/access.py} (dijalankan setelah \texttt{provision.py}, aman diulang) membuat grup, satu koleksi dan dashboard per region, lalu mengatur izin koleksi dan izin data. Anggota grup ditambahkan admin lewat Admin \textgreater{} People. Hasil uji dengan satu pengguna uji per grup pada instance Metabase uji (konfigurasi sama dengan instance proyek):
+\textbf{Lapisan Metabase.} Metabase edisi OSS tidak punya row-level security, jadi batas baris ada di view \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} dan Metabase membatasi koleksi serta schema yang boleh dibuka. \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/dashboard/access.py}{\texttt{dashboard/access.py}} (dijalankan setelah \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/dashboard/provision.py}{\texttt{provision.py}}, aman diulang) membuat grup, satu koleksi dan dashboard per region, lalu mengatur izin koleksi dan izin data. Anggota grup ditambahkan admin lewat Admin \textgreater{} People. Hasil uji dengan satu pengguna uji per grup pada instance Metabase uji (konfigurasi sama dengan instance proyek):
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -2216,7 +2217,7 @@ Direktur Komersial & Membuat query (query builder atau SQL native) & Ditolak \\
 \caption{Dashboard yang dilihat pengguna Store Manager Sumatera}
 \end{figure}
 
-Pengaman lain \textbf{{[}Sudah{]}}: public sharing dimatikan (\texttt{MB\_\allowbreak{}ENABLE\_\allowbreak{}PUBLIC\_\allowbreak{}SHARING=false} di \texttt{compose.yaml}), tidak ada embedding, Metabase hanya mendengarkan \texttt{127.0.0.1}, koneksi DuckDB read-only, dan kredensial hanya lewat variabel lingkungan atau \texttt{.env} yang di-ignore.
+Pengaman lain \textbf{{[}Sudah{]}}: public sharing dimatikan (\texttt{MB\_\allowbreak{}ENABLE\_\allowbreak{}PUBLIC\_\allowbreak{}SHARING=false} di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/compose.yaml}{\texttt{compose.yaml}}), tidak ada embedding, Metabase hanya mendengarkan \texttt{127.0.0.1}, koneksi DuckDB read-only, dan kredensial hanya lewat variabel lingkungan atau \texttt{.env} yang di-ignore.
 
 \subsection{4. Lineage}\label{lineage}
 
@@ -2226,7 +2227,7 @@ Pengaman lain \textbf{{[}Sudah{]}}: public sharing dimatikan (\texttt{MB\_\allow
 \caption{Lineage}
 \end{figure}
 
-Sumber (\texttt{reports/img/lineage.drawio} dapat disunting di draw.io; dibuat ulang oleh \texttt{reports/img/build\_\allowbreak{}lineage.py}) \textbf{{[}Sudah{]}}. Rantai penuh: 13 file di \texttt{raw\_\allowbreak{}data/} → \texttt{raw} (TEMP view) → \texttt{stg} (\texttt{disposition} FACT / EXCLUDE / REJECT) → \texttt{dw} (star schema) → \texttt{dq} (rekonsiliasi, uji) → \texttt{metrics} dan \texttt{acc\_\allowbreak{}*} → 39 kartu Metabase (\texttt{dashboard/questions/*.sql}) → 5 tab + Detail Toko → \texttt{B\_\allowbreak{}insight\_\allowbreak{}brief} (angka dari \texttt{reports/insights/facts.sql}). Setiap angka di laporan dapat ditelusuri lewat Lampiran Number Registry dan \texttt{reports/insights/insight\_\allowbreak{}registry.md} ke view dan filter sumbernya \textbf{{[}Sudah{]}}. Alat lineage otomatis (mis. dbt docs) adalah pengembangan \textbf{{[}Usulan{]}}.
+Sumber (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/img/lineage.drawio}{\texttt{reports/img/lineage.drawio}} dapat disunting di draw.io; dibuat ulang oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/img/build_lineage.py}{\texttt{reports/img/build\_\allowbreak{}lineage.py}}) \textbf{{[}Sudah{]}}. Rantai penuh: 13 file di \texttt{raw\_\allowbreak{}data/} → \texttt{raw} (TEMP view) → \texttt{stg} (\texttt{disposition} FACT / EXCLUDE / REJECT) → \texttt{dw} (star schema) → \texttt{dq} (rekonsiliasi, uji) → \texttt{metrics} dan \texttt{acc\_\allowbreak{}*} → 39 kartu Metabase (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/tree/master/dashboard/questions}{\texttt{dashboard/questions/*.sql}}) → 5 tab + Detail Toko → \texttt{B\_\allowbreak{}insight\_\allowbreak{}brief} (angka dari \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/facts.sql}{\texttt{reports/insights/facts.sql}}). Setiap angka di laporan dapat ditelusuri lewat Lampiran Number Registry dan \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/insight_registry.md}{\texttt{reports/insights/insight\_\allowbreak{}registry.md}} ke view dan filter sumbernya \textbf{{[}Sudah{]}}. Alat lineage otomatis (mis. dbt docs) adalah pengembangan \textbf{{[}Usulan{]}}.
 
 \subsection{5. Refresh}\label{refresh}
 
@@ -2248,9 +2249,9 @@ Status
 \bottomrule\noalign{}
 \endlastfoot
 Pemicu & Data POS tiba di pusat sekitar 01:00 sampai 01:49 (kolom \texttt{synced\_\allowbreak{}at}). Jadwalkan rebuild harian pukul \textbf{03:00} agar semua toko sudah mengirim & \textbf{{[}Usulan{]}} \\
-Pelaksana & Tim Data \& Analytics (BI Analyst) menjalankan satu perintah, \texttt{bash\ scripts/build.sh}; bisa dijadwalkan lewat cron & Skrip \textbf{{[}Sudah{]}}, jadwal \textbf{{[}Usulan{]}} \\
-Urutan & (1) \texttt{docker\ compose\ stop\ metabase}, (2) \texttt{bash\ scripts/build.sh} (build ke berkas sementara, menukar \texttt{kirana.duckdb} hanya bila uji BLOCKING lolos), (3) \texttt{docker\ compose\ start\ metabase} dan sync schema & Urutan \textbf{{[}Sudah{]}} dan didokumentasikan di README \\
-Idempoten & Dua kali build menghasilkan 62 objek identik (\texttt{idempotency\_\allowbreak{}check.sh}) & \textbf{{[}Sudah{]}} \\
+Pelaksana & Tim Data \& Analytics (BI Analyst) menjalankan satu perintah, \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/build.sh}{\texttt{bash\ scripts/build.sh}}; bisa dijadwalkan lewat cron & Skrip \textbf{{[}Sudah{]}}, jadwal \textbf{{[}Usulan{]}} \\
+Urutan & (1) \texttt{docker\ compose\ stop\ metabase}, (2) \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/build.sh}{\texttt{bash\ scripts/build.sh}} (build ke berkas sementara, menukar \texttt{kirana.duckdb} hanya bila uji BLOCKING lolos), (3) \texttt{docker\ compose\ start\ metabase} dan sync schema & Urutan \textbf{{[}Sudah{]}} dan didokumentasikan di README \\
+Idempoten & Dua kali build menghasilkan 62 objek identik (\href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/idempotency_check.sh}{\texttt{idempotency\_\allowbreak{}check.sh}}) & \textbf{{[}Sudah{]}} \\
 Kesegaran & Kartu \texttt{kesegaran\_\allowbreak{}data} menampilkan tanggal data terakhir (30 Jun 2026), persentase sync berhasil, toko-hari gagal & \textbf{{[}Sudah{]}} \\
 \end{longtable}
 }
@@ -2315,7 +2316,7 @@ Hasil uji (\texttt{dq.test\_\allowbreak{}results}) & Disimpan per build & Bukti 
 % ======== number_registry ========
 \section{Number Registry}\label{number-registry}
 
-Dihasilkan otomatis oleh \texttt{scripts/export\_\allowbreak{}reports.sh} dari \texttt{kirana.duckdb}. Setiap angka di insight brief dan laporan harus berasal dari sini
+Dihasilkan otomatis oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/export_reports.sh}{\texttt{scripts/export\_\allowbreak{}reports.sh}} dari \texttt{kirana.duckdb}. Setiap angka di insight brief dan laporan harus berasal dari sini
 (atau dari kartu Metabase yang membaca view yang sama). Periode: FY2024 = Jan--Des 2024, FY2025 = Jan--Des 2025, H1 2026 = Jan--Jun 2026.
 Rupiah, tanpa pajak. Rasio dihitung ulang dari pembilang/penyebut. Data sampai: 30 Jun 2026.
 
@@ -2531,7 +2532,7 @@ H1 2026 & Website & 43.89 & 45.0 & 41.69 \\
 
 \subsection{6. Gross Margin \% total per periode (efek SCD HPP)}\label{gross-margin-total-per-periode-efek-scd-hpp}
 
-\emph{View: \texttt{metrics.v\_\allowbreak{}sales\_\allowbreak{}monthly}. Pembanding dengan HPP terkini ada di \texttt{sql/analysis/scd\_\allowbreak{}impact.sql}.}
+\emph{View: \texttt{metrics.v\_\allowbreak{}sales\_\allowbreak{}monthly}. Pembanding dengan HPP terkini ada di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/sql/analysis/scd_impact.sql}{\texttt{sql/analysis/scd\_\allowbreak{}impact.sql}}.}
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
