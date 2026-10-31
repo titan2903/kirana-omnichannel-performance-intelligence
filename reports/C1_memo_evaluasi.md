@@ -1,7 +1,7 @@
 # C1. Memo Evaluasi Solusi BI
 
 **Kepada:** Direktur Komersial KIRANA · **Dari:** BI Analyst · **Perihal:** Apakah solusi ini cukup untuk keputusan H2 2026, dan apa yang perlu dikembangkan.
-Semua angka sama dengan `B_insight_brief.pdf` dan `insight_registry.md`.
+Semua angka sama dengan Bagian B (insight brief) dan registri angka `reports/insights/insight_registry.md`.
 
 ## 1. Apakah dashboard menjawab dua keputusan?
 
@@ -11,21 +11,21 @@ Semua angka sama dengan `B_insight_brief.pdf` dan `insight_registry.md`.
 | --- | --- | --- |
 | 1. Promo mana yang menambah margin dan mana yang hanya membeli revenue? | Tab 3: `promo_incremental_gm_bar`, `promo_detail`, `margin_bridge_channel`. Hasil: App Payday positif di 27 dari 27 kode, Mega Sale 0 dari 8, Clearance 0 dari 3 | Terjawab untuk arah; dampak Rp adalah replay H2 2025 |
 | 1. Seberapa besar tekanan margin dan dari mana? | Tab 1 dan 3: margin kotor turun 3,1 pt (HPP per unit +5,9% vs harga neto +1,5%), contribution margin turun 4,2 pt | Terjawab |
-| 1. Apakah anggaran menjadi batasan? | `promo_detail`: diskon yang diberikan hanya 9,2% dari anggaran (Rp 1,94 miliar dari Rp 21,14 miliar) | Terjawab: mekanisme, bukan anggaran, yang menentukan |
+| 1. Apakah anggaran menjadi batasan? | Tab 3, `promo_per_jenis` (kolom Pemakaian anggaran): diskon yang diberikan hanya 9,2% dari anggaran (Rp 1,94 miliar dari Rp 21,14 miliar) | Terjawab: mekanisme, bukan anggaran, yang menentukan |
 | 2. Channel dan region mana di bawah target? | Tab 1 dan 2: `achievement_per_channel`, `ach_store_per_region` | Terjawab |
 | 2. Toko mana masuk program perbaikan, dan mana yang hanya bermasalah di data? | Tab 2: `store_ranking` (dengan kolom kelengkapan data), drill-down region → toko → Detail Toko | Terjawab dengan asumsi alokasi target |
-| 2. Mengapa MDN-01 turun? | Tab 2 dan Storyline: bukan kanibalisasi online (Medan online +45,2%, setara kota lain) | **Belum terjawab**: penyebab (trafik, harga kompetitor, jam buka) tidak ada di data |
+| 2. Mengapa MDN-01 turun? | Insight brief (insight 5; angka per kota dari `facts.sql`, belum ada kartu per kota): bukan kanibalisasi online (Medan online +45,2%, setara kota lain) | **Belum terjawab**: penyebab (trafik, harga kompetitor, jam buka) tidak ada di data |
 
 ## 2. Keterbatasan dan asumsi
 
-1. **Tidak ada target per toko.** Target toko adalah *alokasi* target region menurut pangsa penjualan tahun lalu. Ambang status (Hijau ≥100%, Kuning 90 s.d. <100%, Merah <90%) adalah usulan analis. Keduanya diberi label asumsi di dashboard.
+1. **Tidak ada target per toko.** Target toko adalah *alokasi* target region menurut pangsa penjualan tahun lalu. Ambang status (Hijau ≥100%, Kuning 90 s.d. <100%, Merah <90%) adalah usulan analis. Keduanya diberi label asumsi di dashboard. Pangsa memakai bulan yang sama tahun lalu, sehingga target alokasi Agu–Sep 2026 di Jawa Timur akan terdistorsi oleh penutupan SBY-01 (Agu–Sep 2025); H1 2026 tidak terpengaruh.
 2. **Target tidak mengikuti perpindahan region.** Target FY2025 tidak disesuaikan saat BGR-01 pindah ke Jabodetabek (1 Jul 2025). Achievement memakai region awal tahun (`region_target_basis`). Pada versi awal saya memakai region saat transaksi dan Jawa Barat tampak anjlok dari 98,1% ke 73,4%; itu artefak ukur dan sudah dikoreksi, dijaga uji T53, dan dijelaskan di A4 bagian 5.
 3. **Definisi.** Net Sales = gross − diskon, tanpa pajak dan sebelum retur. Retur dilaporkan terpisah (Return Rate = refund / Net Sales). Pembelian B2B bulk (14 baris, Rp 500 juta) dipertahankan dan ditandai.
 4. **Baseline promo.** Promo Lift memakai jendela ±1 sampai 4 minggu tanpa hari yang tercakup promo lain. Pengaruh musim yang tidak tampak dari tanggal belum dikendalikan; Ramadan dan Clearance diuji konsisten antar tahun.
 5. **Void, cancelled, TRN-99.** Void kasir dan pasangannya, serta order CANCELLED, dikeluarkan dari Net Sales tetapi dilaporkan (cancellation dan void rate). `TRN-99` (324 baris, Rp 77,5 juta, 0,12% nilai POS) dikarantina karena tidak ada di master toko, sync log, maupun target.
 6. **Hari sync FAILED.** BDG-02 gagal 7 hari (3–9 Nov 2025) dan tidak diimputasi; estimasi hilang Rp 20,8 juta hanya indikatif. Penutupan SBY-01 (49 hari) adalah kejadian bisnis, bukan masalah data.
 7. **Biaya di luar data.** Anggaran promo hanya `budget_idr`; biaya iklan dan biaya operasional toko tidak ada, sehingga contribution margin hanya dikurangi biaya channel dan bukan laba toko.
-8. **Teknis.** Driver DuckDB dibuka read-only dan DuckDB hanya punya satu penulis; Metabase harus dihentikan saat rebuild. Pembatasan akses per region memakai view, bukan row-level security Metabase.
+8. **Teknis.** Driver DuckDB dibuka read-only dan DuckDB hanya punya satu penulis; Metabase harus dihentikan saat rebuild. Pembatasan akses per region memakai view `acc_<region>` dan izin koleksi Metabase (`dashboard/access.py`), bukan row-level security Metabase (fitur berbayar).
 
 ## 3. Yang perlu dikembangkan
 

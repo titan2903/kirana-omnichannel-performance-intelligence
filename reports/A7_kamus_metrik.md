@@ -19,7 +19,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya `SELECT` dari s
 
 - **Definisi bisnis:** Nilai penjualan bersih: harga x qty dikurangi diskon POS atau voucher online, tanpa pajak, sebelum dikurangi retur.
 - **Rumus SQL:** `SUM(net_sales_idr)`
-- **Grain:** bulan x channel x region (as-of) x toko x kategori x flag B2B
+- **Grain:** bulan x channel x region (dasar target, region_target_basis) x toko x kategori x flag B2B
 - **View sumber:** `metrics.v_sales_monthly`
 - **Aturan inklusi/eksklusi:** Termasuk: POS valid dan order online COMPLETED, B2B bulk (dapat dikeluarkan lewat is_b2b_bulk). Dikecualikan: void dan baris asli yang di-void, order CANCELLED, duplikat, toko di luar master (TRN-99). Retur dan biaya channel TIDAK dikurangkan.
 - **Pemilik metrik:** Finance Controller
@@ -41,7 +41,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya `SELECT` dari s
 - **Rumus SQL:** `100 * SUM(gross_margin_idr) / NULLIF(SUM(net_sales_idr), 0)`
 - **Grain:** bulan x channel x region x toko x kategori
 - **View sumber:** `metrics.v_sales_monthly`
-- **Aturan inklusi/eksklusi:** HPP as-of dari product_cost_history (bukan HPP terkini). Margin dihitung setelah diskon/voucher dan sebelum biaya channel.
+- **Aturan inklusi/eksklusi:** Basis baris sama dengan Net Sales: tanpa void dan baris asli yang di-void, tanpa order CANCELLED, tanpa TRN-99; retur tidak dikurangkan. HPP as-of dari product_cost_history (bukan HPP terkini). Margin dihitung setelah diskon/voucher dan sebelum biaya channel.
 - **Pemilik metrik:** Finance Controller
 - **Target / ambang:** Target GM FP&A per channel: Store 46%, Website 45%, Mobile App 43%, Marketplace 42%. Hijau: selisih >= 0 pt; Kuning: sampai -2 pt; Merah: lebih dari 2 pt di bawah target (ASUMSI).
 
@@ -51,7 +51,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya `SELECT` dari s
 - **Rumus SQL:** `100 * SUM(contribution_margin_idr) / NULLIF(SUM(net_sales_idr), 0)`
 - **Grain:** bulan x channel x region x toko x kategori
 - **View sumber:** `metrics.v_sales_monthly / metrics.v_margin_vs_target`
-- **Aturan inklusi/eksklusi:** Tarif: Store 0,7%; Website dan Mobile App 2,2%; Marketplace 9,0% sampai 31 Mar 2025 lalu 11,5%. Biaya operasional toko dan biaya marketing di luar promo tidak tersedia di data.
+- **Aturan inklusi/eksklusi:** Basis baris sama dengan Net Sales: tanpa void dan baris asli yang di-void, tanpa order CANCELLED, tanpa TRN-99; retur tidak dikurangkan. Tarif: Store 0,7%; Website dan Mobile App 2,2%; Marketplace 9,0% sampai 31 Mar 2025 lalu 11,5%. Biaya operasional toko dan biaya marketing di luar promo tidak tersedia di data.
 - **Pemilik metrik:** Finance Controller
 - **Target / ambang:** Target turunan = Target GM - tarif channel berlaku (ASUMSI; FP&A tidak menetapkan target CM). Status memakai ambang selisih yang sama dengan Gross Margin.
 
@@ -71,7 +71,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya `SELECT` dari s
 - **Rumus SQL:** `SUM(net_sales_idr) / NULLIF(SUM(transactions), 0)`
 - **Grain:** bulan x channel x region x toko x member x B2B
 - **View sumber:** `metrics.v_txn_monthly`
-- **Aturan inklusi/eksklusi:** Struk = (sumber, trx_id/order_no) distinct. Hanya pada view tanpa kategori/promo karena 39% struk memuat lebih dari satu kategori.
+- **Aturan inklusi/eksklusi:** Struk = (sumber, trx_id/order_no) distinct. Struk void dan order CANCELLED tidak dihitung; retur tidak dikurangkan. Hanya pada view tanpa kategori/promo karena 39% struk memuat lebih dari satu kategori.
 - **Pemilik metrik:** Direktur Komersial
 - **Target / ambang:** Tidak ada target resmi. Pembanding: bulan yang sama tahun lalu.
 
@@ -172,7 +172,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya `SELECT` dari s
 
 FP&A hanya menetapkan target Store **per region**. Target toko di `v_store_target_alloc` adalah alokasi (asumsi, bukan target resmi):
 `target region bulan itu x pangsa toko`. Pangsa = penjualan toko (tanpa B2B) pada bulan yang sama tahun lalu dibagi total penjualan seluruh
-toko anggota region pada akhir bulan target (SCD2, sehingga perpindahan BGR-01 pada Juli 2025 diperlakukan benar). Region tanpa penjualan tahun
+toko anggota region menurut peta awal tahun target (`region_target_basis`; BGR-01 di Jawa Barat sepanjang 2025, Jabodetabek mulai 2026). Region tanpa penjualan tahun
 lalu (DPS-01 yang buka 15 Jan 2025) dibagi rata. Jumlah target toko selalu sama dengan target region (diuji, T44).
 
 ## Catatan metode: Promo Lift

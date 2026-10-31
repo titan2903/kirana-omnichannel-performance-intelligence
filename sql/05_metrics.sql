@@ -354,12 +354,12 @@ SELECT d.month_start, d.store_code, d.days_logged, d.success_days, d.failed_days
 FROM d LEFT JOIN ev ON ev.store_code = d.store_code AND d.month_start <= date_trunc('month', ev.ev_end) AND date_trunc('month', ev.ev_start) <= d.month_start;
 
 -- ============================ Kamus metrik ============================
--- Satu sumber definisi KPI. Dokumen reports/A7_kamus_metrik.md dihasilkan dari tabel ini (scripts/export_dictionary.sh).
+-- Satu sumber definisi KPI. Dokumen reports/A7_kamus_metrik.md dihasilkan dari tabel ini (scripts/export_reports.sh).
 -- Tiap source_view harus ada (diuji di 06_tests.sql, T40).
 CREATE OR REPLACE TABLE metrics.kpi_dictionary AS
 SELECT * FROM (VALUES
  (1, 'Net Sales', 'Nilai penjualan bersih: harga x qty dikurangi diskon POS atau voucher online, tanpa pajak, sebelum dikurangi retur.',
-  'SUM(net_sales_idr)', 'bulan x channel x region (as-of) x toko x kategori x flag B2B', 'metrics.v_sales_monthly',
+  'SUM(net_sales_idr)', 'bulan x channel x region (dasar target, region_target_basis) x toko x kategori x flag B2B', 'metrics.v_sales_monthly',
   'Termasuk: POS valid dan order online COMPLETED, B2B bulk (dapat dikeluarkan lewat is_b2b_bulk). Dikecualikan: void dan baris asli yang di-void, order CANCELLED, duplikat, toko di luar master (TRN-99). Retur dan biaya channel TIDAK dikurangkan.',
   'Finance Controller', 'Target bulanan FP&A per channel/region (FY2025 Rp 44,181 miliar; H1 2026 Rp 23,820 miliar, semua channel). Tidak ada target 2024.'),
  (2, 'Achievement vs Target %', 'Net Sales aktual dibagi target Net Sales pada grain target (Store per region, online per channel nasional).',
@@ -368,11 +368,11 @@ SELECT * FROM (VALUES
   'Direktur Komersial', 'Hijau >= 100%; Kuning 90 sampai <100%; Merah < 90% (ASUMSI analis, ref_status_threshold).'),
  (3, 'Gross Margin %', '(Net Sales - COGS) / Net Sales. COGS = qty x HPP yang berlaku pada tanggal transaksi.',
   '100 * SUM(gross_margin_idr) / NULLIF(SUM(net_sales_idr), 0)', 'bulan x channel x region x toko x kategori', 'metrics.v_sales_monthly',
-  'HPP as-of dari product_cost_history (bukan HPP terkini). Margin dihitung setelah diskon/voucher dan sebelum biaya channel.',
+  'Basis baris sama dengan Net Sales: tanpa void dan baris asli yang di-void, tanpa order CANCELLED, tanpa TRN-99; retur tidak dikurangkan. HPP as-of dari product_cost_history (bukan HPP terkini). Margin dihitung setelah diskon/voucher dan sebelum biaya channel.',
   'Finance Controller', 'Target GM FP&A per channel: Store 46%, Website 45%, Mobile App 43%, Marketplace 42%. Hijau: selisih >= 0 pt; Kuning: sampai -2 pt; Merah: lebih dari 2 pt di bawah target (ASUMSI).'),
  (4, 'Contribution Margin %', '(Gross Margin - biaya channel) / Net Sales. Biaya channel = Net Sales x tarif channel yang berlaku pada tanggal transaksi.',
   '100 * SUM(contribution_margin_idr) / NULLIF(SUM(net_sales_idr), 0)', 'bulan x channel x region x toko x kategori', 'metrics.v_sales_monthly / metrics.v_margin_vs_target',
-  'Tarif: Store 0,7%; Website dan Mobile App 2,2%; Marketplace 9,0% sampai 31 Mar 2025 lalu 11,5%. Biaya operasional toko dan biaya marketing di luar promo tidak tersedia di data.',
+  'Basis baris sama dengan Net Sales: tanpa void dan baris asli yang di-void, tanpa order CANCELLED, tanpa TRN-99; retur tidak dikurangkan. Tarif: Store 0,7%; Website dan Mobile App 2,2%; Marketplace 9,0% sampai 31 Mar 2025 lalu 11,5%. Biaya operasional toko dan biaya marketing di luar promo tidak tersedia di data.',
   'Finance Controller', 'Target turunan = Target GM - tarif channel berlaku (ASUMSI; FP&A tidak menetapkan target CM). Status memakai ambang selisih yang sama dengan Gross Margin.'),
  (5, 'Return Rate', 'Nilai refund retur dibagi Net Sales (Rp), dan qty retur dibagi qty terjual (unit).',
   '100 * SUM(refund_idr) / NULLIF(SUM(net_sales_idr), 0); 100 * SUM(return_qty) / NULLIF(SUM(qty_sold), 0)', 'bulan x channel x region x kategori', 'metrics.v_return_rate_monthly',
@@ -380,7 +380,7 @@ SELECT * FROM (VALUES
   'Head of Store Operations (Store); Head of E-Commerce (online)', 'Tidak ada target resmi. Pembanding: tahun lalu dan rata-rata channel; pemilik menetapkan ambang.'),
  (6, 'Average Order Value (AOV)', 'Net Sales per struk/order.',
   'SUM(net_sales_idr) / NULLIF(SUM(transactions), 0)', 'bulan x channel x region x toko x member x B2B', 'metrics.v_txn_monthly',
-  'Struk = (sumber, trx_id/order_no) distinct. Hanya pada view tanpa kategori/promo karena 39% struk memuat lebih dari satu kategori.',
+  'Struk = (sumber, trx_id/order_no) distinct. Struk void dan order CANCELLED tidak dihitung; retur tidak dikurangkan. Hanya pada view tanpa kategori/promo karena 39% struk memuat lebih dari satu kategori.',
   'Direktur Komersial', 'Tidak ada target resmi. Pembanding: bulan yang sama tahun lalu.'),
  (7, 'Jumlah Transaksi', 'Banyaknya struk POS atau order online valid.',
   'SUM(transactions)', 'bulan x channel x region x toko x member x B2B', 'metrics.v_txn_monthly',

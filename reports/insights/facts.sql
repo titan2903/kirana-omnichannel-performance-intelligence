@@ -115,6 +115,7 @@ UNION ALL SELECT 'web_mig_inactive', count(*) FILTER (WHERE h.customer_key IS NU
 INSERT INTO facts SELECT 'web_active_' || period_label, active_members, 'metrics.v_members_period' FROM metrics.v_members_period WHERE period_type = 'Semester' AND channel_name = 'Website' AND period_label IN ('2024-H1', '2026-H1');
 INSERT INTO facts SELECT 'web_repeat_' || period_label, repeat_rate_pct, 'metrics.v_members_period' FROM metrics.v_members_period WHERE period_type = 'Semester' AND channel_name = 'Website' AND period_label IN ('2024-H1', '2026-H1');
 INSERT INTO facts SELECT 'promo_n_website', count(*), 'dw.dim_promo (channel_scope = Website)' FROM dw.dim_promo WHERE channel_scope = 'Website';
+INSERT INTO facts SELECT 'promo_n_all', count(*), 'dw.dim_promo (channel_scope = ALL, Ramadan)' FROM dw.dim_promo WHERE channel_scope = 'ALL' AND promo_key > 0;
 INSERT INTO facts SELECT 'promo_n_app', count(*), 'dw.dim_promo (channel_scope = Mobile App)' FROM dw.dim_promo WHERE channel_scope = 'Mobile App';
 
 -- ====================================================== I4 promo

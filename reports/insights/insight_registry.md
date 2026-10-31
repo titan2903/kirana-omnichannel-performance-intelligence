@@ -122,6 +122,7 @@ storyline dashboard, dan grafik ada di tabel ini beserta sumbernya. Nilai mentah
 | `p_util_total_pct` | 9.1875 | metrics.v_promo_performance |
 | `price_idx_fy25` | 99.9558 | dw.fact_sales: harga neto per unit, SKU x channel sama, FY2024 = 100 |
 | `price_idx_h126` | 101.4664 | dw.fact_sales: harga neto per unit, SKU x channel sama, FY2024 = 100 |
+| `promo_n_all` | 3 | dw.dim_promo (channel_scope = ALL, Ramadan) |
 | `promo_n_app` | 27 | dw.dim_promo (channel_scope = Mobile App) |
 | `promo_n_website` | 2 | dw.dim_promo (channel_scope = Website) |
 | `reg_jb_h125_asof` | 98.0958 | dw.fact_sales.region_asof vs dw.fact_target |

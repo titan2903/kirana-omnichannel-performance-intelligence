@@ -94,7 +94,7 @@ Dihasilkan oleh `dashboard/wireframe/build_wireframe.py` dari `dashboard/questio
 
 ![5. Storyline](wireframe_kirana_storyline.png)
 
-- **Tujuan:** Menyajikan 4-6 temuan terkuantifikasi berjudul asertif beserta rekomendasi, merujuk kartu pada tab 1-4 (diisi pada Task 5).
+- **Tujuan:** Menyajikan 4-6 temuan terkuantifikasi berjudul asertif beserta rekomendasi, merujuk kartu pada tab 1-4.
 - **Pengguna:** Direktur Komersial.
 - **Keputusan yang didukung:** Kedua keputusan H2 2026.
 - **Pertanyaan bisnis:** Seluruh Q1-Q7 (ringkasan).
@@ -102,6 +102,12 @@ Dihasilkan oleh `dashboard/wireframe/build_wireframe.py` dari `dashboard/questio
 | Kartu | Bentuk | Filter yang berlaku |
 | --- | --- | --- |
 | Kesegaran data dan status sinkronisasi POS | table | tidak ada (indikator global) |
+| Gross dan Contribution Margin bulanan (%) | line | Periode, Channel, Region, Kategori |
+| Dari Net Sales ke Contribution Margin per channel (% Net Sales) | bar | Periode, Channel, Region, Kategori |
+| Pencapaian terhadap target per channel | table | Periode, Channel, Region |
+| Margin kotor tambahan per jenis promo (Rp juta) | row | Periode |
+| Kinerja per toko (klik toko untuk detail) | table | Periode, Region |
+| Return Rate per kategori (%) | row | Periode, Channel, Region, Kategori |
 
 ## KIRANA Detail Toko: Detail Toko
 

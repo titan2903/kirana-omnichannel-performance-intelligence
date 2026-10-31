@@ -299,9 +299,9 @@ ST = [
      "Fashion = {{fashion_refund_share_pct|pct1}} dari seluruh refund. Menurunkan Return Rate Fashion online ke level Store menghindari sekitar **{{fashion_excess_refund_year_rp|rpj}}** refund per tahun.",
      "returns_customers__return_rate_per_kategori", 5),
 ]
-texts, extra, row = [], [], 3
+texts, extra, row = [], [], 6   # baris 1-3 = kartu kesegaran data (ada di semua tab)
 texts.append({"row": 0, "col": 0, "w": 24, "h": 1, "type": "heading", "text": "Storyline: margin dan promo menentukan H2 2026, bukan volume"})
-texts.append({"row": 1, "col": 0, "w": 24, "h": 2, "type": "text", "text": render(
+texts.append({"row": 4, "col": 0, "w": 24, "h": 2, "type": "text", "text": render(
     "**Ringkasan.** Net Sales memenuhi target ({{ach_total_fy25|pct1}} FY2025, {{ach_total_h126|pct1}} H1 2026) tetapi margin kotor turun {{gm_drop_pt|pt1}} dan contribution margin {{cm_drop_pt|pt1}}. "
     "Keputusan 1 (promo): hentikan atau batasi Mega Sale, hentikan Clearance, ubah Member Day, alihkan ke App Payday. Keputusan 2 (toko): program intensif MDN-01, pantau SBY-02, MLG-01, SOL-01. "
     "Angka identik dengan `reports/B_insight_brief.pdf`. *Tanpa filter, kartu menampilkan seluruh periode (FY2025 + H1 2026); angka H1 2026 muncul bila Periode = 1 Jan - 30 Jun 2026.*")})

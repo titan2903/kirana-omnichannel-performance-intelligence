@@ -10,7 +10,8 @@
 \newunicodechar{−}{\ensuremath{-}}\newunicodechar{→}{\ensuremath{\rightarrow}}\newunicodechar{≤}{\ensuremath{\leq}}\newunicodechar{≥}{\ensuremath{\geq}}
 \newunicodechar{≈}{\ensuremath{\approx}}\newunicodechar{≠}{\ensuremath{\neq}}\newunicodechar{±}{\ensuremath{\pm}}\newunicodechar{·}{\ensuremath{\cdot}}
 \usepackage{lmodern}\usepackage[scaled=0.95]{helvet}\renewcommand{\familydefault}{\sfdefault}
-\usepackage{longtable,booktabs,array,calc,graphicx,xcolor,etoolbox,pdfpages,fancyhdr,caption}
+\usepackage{longtable,booktabs,array,calc,graphicx,xcolor,etoolbox,pdfpages,fancyhdr,caption,float}
+\floatplacement{figure}{H}\renewcommand{\figurename}{Gambar}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}\newcounter{none}\usepackage{fvextra}\DefineVerbatimEnvironment{verbatim}{Verbatim}{breaklines,fontsize=\scriptsize}
 \usepackage[normalem]{ulem}
@@ -33,7 +34,7 @@
 
 \begin{document}\small
 \begin{titlepage}
-\vspace*{50mm}
+\vspace*{25mm}
 {\fontsize{26}{30}\selectfont\bfseries KIRANA Omnichannel\\Performance Intelligence\par}
 \vspace{6mm}{\large\color{gray} Laporan UAS Business Intelligence Systems\\Universitas Cakrawala, Sains Data, Blok A\par}
 \vspace{10mm}
@@ -41,13 +42,12 @@
 \textbf{Nama} & \nama\\ \textbf{NIM} & \nim\\ \textbf{Periode data} & 1 Jan 2024 -- 30 Jun 2026\\
 \textbf{Keputusan} & Realokasi anggaran promo dan program perbaikan toko/region, H2 2026
 \end{tabular}
-\vspace{10mm}\par\textbf{Daftar isi}\par\renewcommand{\contentsname}{}\tableofcontents
+\vspace{6mm}\par\textbf{Daftar isi}\par\renewcommand{\contentsname}{}\tableofcontents
 \end{titlepage}
 \setcounter{page}{2}
 
 \bagian{Bagian A. Dokumentasi teknis}
 % ======== A1_decision_statement ========
-% Dikonversi dari reports/A1_decision_statement.md; sunting langsung di sini.
 \section{A1. Decision Statement}\label{a1.-decision-statement}
 
 \subsection{Pernyataan keputusan}\label{pernyataan-keputusan}
@@ -109,7 +109,7 @@ Finance Controller & Validasi angka sales, margin, HPP, biaya channel & Definisi
 \end{longtable}
 }
 
-\subsection{Ukuran keputusan (draf, dikunci pada Task 3 dan 5)}\label{ukuran-keputusan-draf-dikunci-pada-task-3-dan-5}
+\subsection{Ukuran keputusan}\label{ukuran-keputusan}
 
 \begin{itemize}
 \tightlist
@@ -146,11 +146,11 @@ Tab dashboard
 \endlastfoot
 1 & Pencapaian net sales FY2025 dan H1 2026 terhadap target per channel, region, toko & 2 (dan 1) & Net Sales, Achievement vs Target \% & 1 Executive Overview; 2 Channel, Region \& Store \\
 2 & Tren, musiman, dan pergeseran kontribusi antar-channel & 1 & Net Sales, kontribusi channel \% & 1 Executive Overview; 2 Channel, Region \& Store \\
-3 & Kategori, channel, promo yang menekan gross margin dan contribution margin & 1 & Gross Margin \%, Contribution Margin \% & 3 Margin \& Promotion \\
-4 & Efektivitas promo (Ramadan, Clearance, Member Day, App Payday, Mega Sale, Harbolnas) & 1 & Promo Lift, dampak margin promo & 3 Margin \& Promotion \\
+3 & Kategori, channel, promo yang menekan gross margin dan contribution margin & 1 & Gross Margin \%, Contribution Margin \% & 3 Margin \& Promosi \\
+4 & Efektivitas promo (Ramadan, Clearance, Member Day, App Payday, Mega Sale, Harbolnas) & 1 & Promo Lift, dampak margin promo & 3 Margin \& Promosi \\
 5 & Toko berkinerja rendah dan penyebabnya (bisnis atau data) & 2 & Achievement \%, tren toko, flag data tidak lengkap & 2 Channel, Region \& Store \\
-6 & Tingkat dan alasan retur per kategori dan channel & 1 dan 2 & Return Rate, distribusi alasan & 4 Returns \& Customers \\
-7 & Aktivitas dan repeat purchase member per channel & 1 & Active Members, Repeat Rate & 4 Returns \& Customers \\
+6 & Tingkat dan alasan retur per kategori dan channel & 1 dan 2 & Return Rate, distribusi alasan & 4 Retur \& Customer \\
+7 & Aktivitas dan repeat purchase member per channel & 1 & Active Members, Repeat Rate & 4 Retur \& Customer \\
 \end{longtable}
 }
 
@@ -169,7 +169,6 @@ Tab dashboard
 \end{itemize}
 
 % ======== A2_profiling ========
-% Dikonversi dari reports/A2_profiling.md; sunting langsung di sini.
 \section{A2. Data Profiling}\label{a2.-data-profiling}
 
 Profiling dilakukan langsung dari \texttt{raw\_\allowbreak{}data/} dengan DuckDB, tanpa mengubah file. Semua angka dapat
@@ -187,13 +186,13 @@ Kode \texttt{DQ-xx} merujuk ke Data Quality Issue Log (A3).
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1635}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1154}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1058}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1538}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0769}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1731}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.2115}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1650}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1165}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1068}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1553}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0777}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1748}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.2039}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 File
@@ -224,7 +223,7 @@ Catatan
 \texttt{customers.csv} & CRM & 42.320 & \texttt{customer\_\allowbreak{}id} & 42.320 & join 2023-06-16 s.d. 2026-06-18 & Berisi PII \\
 \texttt{returns.csv} & Customer Service & 18.090 & \texttt{return\_\allowbreak{}id} & 18.090 & 2024-01-03 s.d. 2026-06-30 & Refund total Rp 3.702.006.200 \\
 \texttt{promotions.csv} & Marketing & 73 & \texttt{promo\_\allowbreak{}code} & 73 & 2024-01-05 s.d. 2026-06-28 & Diskon 10 s.d. 45\% \\
-\texttt{channel\_\allowbreak{}fee\_\allowbreak{}rates.csv} & Finance & 5 & \texttt{channel}+\texttt{valid\_\allowbreak{}from} & 5 & 2024-01-01 s.d. 2099-12-31 & Marketplace 9,0\% -\textgreater{} 11,5\% mulai 2025-04-01 \\
+\texttt{channel\_\allowbreak{}fee\_\allowbreak{}rates.csv} & Finance & 5 & \texttt{channel}+\texttt{valid\_\allowbreak{}from} & 5 & 2024-01-01 s.d. 2099-12-31 & Marketplace 9,0\% → 11,5\% mulai 2025-04-01 \\
 \texttt{pos\_\allowbreak{}sync\_\allowbreak{}log.csv} & IT & 16.036 & \texttt{store\_\allowbreak{}code}+\texttt{business\_\allowbreak{}date} & 16.036 & 2024-01-01 s.d. 2026-06-30 & 15.980 SUCCESS, 49 STORE\_\allowbreak{}CLOSED, 7 FAILED \\
 \texttt{sales\_\allowbreak{}targets\_\allowbreak{}2025\_\allowbreak{}2026.xlsx} & FP\&A & 9 + 9 + 4 baris & \texttt{channel}+\texttt{region} & 9 / 9 / 4 & FY2025, H1 2026 & 3 sheet; header di baris 3 (DQ-16) \\
 \end{longtable}
@@ -324,7 +323,7 @@ Format tanggal & 100\% \texttt{DD/MM/YYYY\ HH:MM}, semua dalam periode; awalan \
 Status & 196.881 COMPLETED, 12.745 CANCELLED (6,08\% baris) (DQ-11) \\
 Voucher & Semua kode ada di \texttt{promotions}; voucher tidak pernah melebihi nilai kotor; kode dan nilai selalu berpasangan \\
 Customer & Semua \texttt{customer\_\allowbreak{}id} ada di \texttt{customers} dan berformat \texttt{Mxxxxxx}; tidak ada order tanpa customer \\
-\texttt{ship\_\allowbreak{}province} & 13 provinsi + 2.109 kosong (DQ-12). Sulawesi Selatan dan Kalimantan Timur berada di luar enam region -\textgreater{} \texttt{Lainnya} \\
+\texttt{ship\_\allowbreak{}province} & 13 provinsi + 2.109 kosong (DQ-12). Sulawesi Selatan dan Kalimantan Timur berada di luar enam region → \texttt{Lainnya} \\
 Duplikat kunci & 232 grup, semuanya salinan persis (DQ-10), tidak ada konflik nilai/status \\
 Order distinct & 140.573 \texttt{order\_\allowbreak{}no} (sebelum pembersihan) \\
 Metode bayar & E-Wallet 73.445; Virtual Account 63.194; COD 26.972; Credit Card 25.138; Paylater 20.877 \\
@@ -404,7 +403,7 @@ Hasil
 \endlastfoot
 Volume & 18.090 retur, refund Rp 3.702.006.200; tanggal dalam periode; qty dan refund \textgreater{} 0 \\
 Per channel & Marketplace 6.659; Store 5.801; Mobile App 3.987; Website 1.643 \\
-Alasan & 8 label; "Barang cacat" (2.938) dan "Barang cacat / tidak berfungsi" (602) berhimpit (DQ-22) \\
+Alasan & 8 label; ``Barang cacat'' (2.938) dan ``Barang cacat / tidak berfungsi'' (602) berhimpit (DQ-22) \\
 Integritas & 1 retur yatim (DQ-21). Selain itu, untuk retur POS dan online: \texttt{sku} cocok dengan baris asal, total qty retur per item tidak melebihi qty terjual, channel dan toko retur sama dengan transaksi asal, tidak ada retur atas order CANCELLED, tidak ada retur sebelum transaksi \\
 Refund & Sama dengan qty retur x nilai bersih per unit (setelah diskon/voucher), selisih paling besar Rp 100 karena pembulatan. Itu sebabnya refund 55\%--100\% dari harga sebelum diskon; bukan retur parsial \\
 \end{longtable}
@@ -564,7 +563,6 @@ Online, semua 209.626 baris (termasuk CANCELLED, duplikat) & Rp 47.493.993.000 \
 Angka ini bukan Net Sales; hanya titik awal rekonsiliasi (Task 2). Net Sales didefinisikan di Task 3.
 
 % ======== A3_issue_log ========
-% Dikonversi dari reports/A3_issue_log.md; sunting langsung di sini.
 \section{A3. Data Quality Issue Log}\label{a3.-data-quality-issue-log}
 
 Seluruh angka dihasilkan oleh \texttt{sql/profiling/02\_\allowbreak{}issue\_\allowbreak{}impact.sql} (dapat diulang dari \texttt{raw\_\allowbreak{}data/}).
@@ -579,7 +577,7 @@ Kode \texttt{DQ-xx} dipakai sebagai komentar di \texttt{sql/02\_\allowbreak{}sta
 \item
   Satu baris dapat terkena lebih dari satu isu (mis. kode toko huruf kecil dan SKU berspasi), jadi \textbf{Rp antar-isu tidak boleh dijumlahkan}.
 \item
-  Urutan perlakuan di pipeline: normalisasi format -\textgreater{} dedup -\textgreater{} pasangan void -\textgreater{} pengecualian. Hitungan duplikat, void, dan B2B dilakukan setelah normalisasi.
+  Urutan perlakuan di pipeline: normalisasi format → dedup → pasangan void → pengecualian. Hitungan duplikat, void, dan B2B dilakukan setelah normalisasi.
 \item
   Isu master dan region (DQ-13, 14, 15, 17) dihitung pada \textbf{penjualan valid}: POS setelah dedup, tanpa void dan baris asalnya, tanpa \texttt{TRN-99}; online hanya \texttt{COMPLETED}. Basis ini sama dengan rekonsiliasi di Task 2.
 \item
@@ -625,15 +623,15 @@ Uji
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-DQ-01 & Kode toko huruf kecil (\texttt{jkt-01}) & \texttt{sales\_\allowbreak{}pos\_\allowbreak{}transactions} / \texttt{store\_\allowbreak{}code} & 3.236 & 753.013.400 & Data & \textbf{Koreksi:} \texttt{upper(trim())} & Tanpa koreksi, baris terpecah ke "toko" yang tidak ada di master sehingga hilang dari agregat toko, region, dan target & B: domain \texttt{store\_\allowbreak{}code} \\
+DQ-01 & Kode toko huruf kecil (\texttt{jkt-01}) & \texttt{sales\_\allowbreak{}pos\_\allowbreak{}transactions} / \texttt{store\_\allowbreak{}code} & 3.236 & 753.013.400 & Data & \textbf{Koreksi:} \texttt{upper(trim())} & Tanpa koreksi, baris terpecah ke ``toko'' yang tidak ada di master sehingga hilang dari agregat toko, region, dan target & B: domain \texttt{store\_\allowbreak{}code} \\
 DQ-02 & Kode \texttt{TRN-99} tidak ada di \texttt{stores.csv}, sync log, maupun target & idem & 324 & 77.478.700 & Data & \textbf{Quarantine} (\texttt{stg.pos\_\allowbreak{}line}, \texttt{disposition\ =\ REJECT\_\allowbreak{}STORE\_\allowbreak{}NOT\_\allowbreak{}IN\_\allowbreak{}MASTER}); tidak masuk fakta. 320 baris unik (324 dengan salinan duplikat); termasuk satu void tanpa pasangan (DQ-06c) & Tidak punya region, target, dan catatan sync; 0,12\% nilai POS. Dugaan toko pelatihan/uji (\textbf{asumsi, perlu konfirmasi Store Operations}) & B: FK \texttt{store} yatim = 0 di fakta \\
-DQ-03 & SKU berspasi / huruf kecil & idem / \texttt{sku} & 2.650 & 637.316.400 & Data & \textbf{Koreksi:} \texttt{upper(trim())} & Tanpa koreksi, join ke \texttt{products} dan \texttt{product\_\allowbreak{}cost\_\allowbreak{}history} gagal sehingga HPP/margin kosong. Setelah koreksi, 100\% SKU cocok. Ikut membuat 58 duplikat tampak "konflik" padahal identik & B: FK \texttt{sku} yatim = 0 \\
+DQ-03 & SKU berspasi / huruf kecil & idem / \texttt{sku} & 2.650 & 637.316.400 & Data & \textbf{Koreksi:} \texttt{upper(trim())} & Tanpa koreksi, join ke \texttt{products} dan \texttt{product\_\allowbreak{}cost\_\allowbreak{}history} gagal sehingga HPP/margin kosong. Setelah koreksi, 100\% SKU cocok. Ikut membuat 58 duplikat tampak ``konflik'' padahal identik & B: FK \texttt{sku} yatim = 0 \\
 DQ-04 & Duplikat persis \texttt{(trx\_\allowbreak{}id,\ line\_\allowbreak{}no)} setelah normalisasi & idem & 1.577 (ekstra) & 384.198.300 & Data & \textbf{Hapus} salinan ekstra, pertahankan satu & Salinan identik di semua kolom; menggandakan penjualan. Terbukti benar oleh kontrol sync log (A2 §5) & B: grain unik \\
 DQ-05 & Tabrakan nomor struk: \texttt{(trx\_\allowbreak{}id,\ line\_\allowbreak{}no)} sama, item, kasir, dan pembayaran berbeda & idem & 20 grup & 8.474.000 (absolut) & Data & \textbf{Pertahankan} kedua baris, ditandai \texttt{key\_\allowbreak{}collision}; grain memakai produk, bukan hanya \texttt{(trx\_\allowbreak{}id,\ line\_\allowbreak{}no)} & Item berbeda, bukan salinan; membuangnya menghilangkan penjualan. \textbf{Hasil implementasi:} seluruh 20 grup terdiri dari item dan void-nya, sehingga keduanya dikeluarkan lewat DQ-06 dan \textbf{tidak ada tabrakan tersisa di \texttt{fact\_\allowbreak{}sales}} (T23 = 0) & W: T23 tabrakan kunci \\
 DQ-06a & Void kasir (\texttt{qty\ \textless{}\ 0}) & idem / \texttt{qty} & 2.068 & 409.124.200 (absolut) & Bisnis & \textbf{Keluarkan} dari Net Sales dan hitungan transaksi; disimpan di \texttt{dw.fact\_\allowbreak{}sales\_\allowbreak{}excluded} (\texttt{VOID}) & Void membatalkan penjualan & B: rekonsiliasi \\
 DQ-06b & Baris asli yang dibatalkan void (dipasangkan 1:1 per \texttt{trx\_\allowbreak{}id}, \texttt{sku}, \texttt{qty}) & idem & 2.067 & 408.697.800 & Bisnis & \textbf{Keluarkan} bersama void-nya & Sync log hanya menghitung baris tanpa keduanya (A2 §5); jika hanya void dikeluarkan, penjualan tetap terhitung. 126 dari baris asli ini terjadi sebelum \texttt{launch\_\allowbreak{}date} produk (DQ-17) & B: rekonsiliasi \\
 DQ-06c & Void tanpa baris asli & idem & 1 & 403.900 & Data & \textbf{Quarantine} (\texttt{REJECT\_\allowbreak{}VOID\_\allowbreak{}WITHOUT\_\allowbreak{}ORIGINAL}) & Tidak ada penjualan yang dapat dikoreksi. \textbf{Hasil implementasi:} satu-satunya void tanpa pasangan (trx \texttt{TRN-99-0124-0058041}) berada di toko \texttt{TRN-99}, sehingga sudah dikarantina lewat DQ-02; di toko master semua void berpasangan (T24 = 0) & W: T24 void tanpa pasangan \\
-DQ-07 & Pembelian B2B bulk (\texttt{trx\_\allowbreak{}id} memuat \texttt{B2B}, \texttt{line\_\allowbreak{}no} 50, qty 152--446, \texttt{promo\_\allowbreak{}code\ =\ B2B-CORP} yang tidak ada di \texttt{promotions}) & idem & 14 & 499.918.500 & Bisnis & \textbf{Pertahankan}, tandai \texttt{is\_\allowbreak{}b2b\_\allowbreak{}bulk}; \texttt{B2B-CORP} masuk \texttt{dim\_\allowbreak{}promo} sebagai promo korporat tanpa diskon & Penjualan nyata (0,80\% nilai POS) tetapi di luar sinkronisasi POS (A2 §5) dan tidak mewakili kinerja toko normal: terkonsentrasi di JKT-01, SBY-01, BDG-01. Tampilkan dengan dan tanpa B2B pada kinerja toko (Task 5) & W: promo di luar master \\
+DQ-07 & Pembelian B2B bulk (\texttt{trx\_\allowbreak{}id} memuat \texttt{B2B}, \texttt{line\_\allowbreak{}no} 50, qty 152--446, \texttt{promo\_\allowbreak{}code\ =\ B2B-CORP} yang tidak ada di \texttt{promotions}) & idem & 14 & 499.918.500 & Bisnis & \textbf{Pertahankan}, tandai \texttt{is\_\allowbreak{}b2b\_\allowbreak{}bulk}; \texttt{B2B-CORP} masuk \texttt{dim\_\allowbreak{}promo} sebagai promo korporat tanpa diskon & Penjualan nyata (0,80\% nilai POS) tetapi di luar sinkronisasi POS (A2 §5) dan tidak mewakili kinerja toko normal: terkonsentrasi di JKT-01, SBY-01, BDG-01. Tampilkan dengan dan tanpa B2B pada kinerja toko (Bagian B) & W: T29 (B2B bulk di fakta) \\
 \end{longtable}
 }
 
@@ -674,11 +672,11 @@ Uji
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-DQ-08 & 12 label \texttt{sales\_\allowbreak{}channel} (\texttt{MP}, \texttt{APP}, \texttt{WEB}, \texttt{Web\ Store}, \texttt{mobile\_\allowbreak{}app}, ...) untuk 3 channel & \texttt{sales\_\allowbreak{}online\_\allowbreak{}orders} / \texttt{sales\_\allowbreak{}channel} & 31.483 & 7.109.459.900 & Data & \textbf{Koreksi:} tabel pemetaan eksplisit ke Website / Mobile App / Marketplace & Tanpa pemetaan, agregat per channel terpecah dan tidak cocok dengan target per channel. Semua label terpetakan, tidak ada order terbelah dua channel & B: domain channel \\
-DQ-09 & \texttt{item\_\allowbreak{}price} berformat teks \texttt{Rp100.900} & idem / \texttt{item\_\allowbreak{}price} & 36.179 & 8.050.182.800 & Data & \textbf{Koreksi:} hanya dua pola dikenali, angka polos dan \texttt{Rp} + ribuan bertitik (\texttt{Rp100.900}); pola lain tidak ditebak -\textgreater{} NULL -\textgreater{} quarantine (hasil: 0 baris) & Nilai teks tidak bisa dijumlah; mengabaikan baris ini menghilangkan 17\% baris & B: harga numerik \textgreater{} 0 \\
+DQ-08 & 12 label \texttt{sales\_\allowbreak{}channel} (\texttt{MP}, \texttt{APP}, \texttt{WEB}, \texttt{Web\ Store}, \texttt{mobile\_\allowbreak{}app}, \ldots) untuk 3 channel & \texttt{sales\_\allowbreak{}online\_\allowbreak{}orders} / \texttt{sales\_\allowbreak{}channel} & 31.483 & 7.109.459.900 & Data & \textbf{Koreksi:} tabel pemetaan eksplisit ke Website / Mobile App / Marketplace & Tanpa pemetaan, agregat per channel terpecah dan tidak cocok dengan target per channel. Semua label terpetakan, tidak ada order terbelah dua channel & B: domain channel \\
+DQ-09 & \texttt{item\_\allowbreak{}price} berformat teks \texttt{Rp100.900} & idem / \texttt{item\_\allowbreak{}price} & 36.179 & 8.050.182.800 & Data & \textbf{Koreksi:} hanya dua pola dikenali, angka polos dan \texttt{Rp} + ribuan bertitik (\texttt{Rp100.900}); pola lain tidak ditebak → NULL → quarantine (hasil: 0 baris) & Nilai teks tidak bisa dijumlah; mengabaikan baris ini menghilangkan 17\% baris & B: harga numerik \textgreater{} 0 \\
 DQ-10 & Duplikat persis \texttt{(order\_\allowbreak{}no,\ line\_\allowbreak{}no)} & idem & 232 (ekstra) & 48.915.600 & Data & \textbf{Hapus} salinan ekstra & Identik di semua kolom, tidak ada duplikat yang konflik & B: grain unik \\
 DQ-11 & Order \texttt{CANCELLED} & idem / \texttt{order\_\allowbreak{}status} & 12.733 & 2.882.492.400 & Bisnis & \textbf{Keluarkan} dari Net Sales; disimpan di \texttt{dw.fact\_\allowbreak{}sales\_\allowbreak{}excluded} (\texttt{exclude\_\allowbreak{}reason\ =\ CANCELLED}) untuk cancellation rate & Tidak ada penjualan; berguna sebagai ukuran operasional & -- \\
-DQ-12 & \texttt{ship\_\allowbreak{}province} kosong & idem / \texttt{ship\_\allowbreak{}province} & 1.984 & 453.083.700 & Data & \textbf{Koreksi:} provinsi disimpulkan dari \texttt{ship\_\allowbreak{}city} bila kota itu hanya berpasangan dengan satu provinsi di seluruh file; ditandai \texttt{province\_\allowbreak{}source\ =\ INFERRED\_\allowbreak{}FROM\_\allowbreak{}CITY}. Bila tak terselesaikan -\textgreater{} \texttt{Lainnya} & Kota selalu terisi dan setiap kota hanya punya satu provinsi di 207 ribu baris lain, jadi penyimpulan deterministik. \textbf{Hasil:} seluruh 1.984 baris terselesaikan, tidak ada yang jatuh ke \texttt{Lainnya} karena ini & W: T25 provinsi tak terselesaikan \\
+DQ-12 & \texttt{ship\_\allowbreak{}province} kosong & idem / \texttt{ship\_\allowbreak{}province} & 1.984 & 453.083.700 & Data & \textbf{Koreksi:} provinsi disimpulkan dari \texttt{ship\_\allowbreak{}city} bila kota itu hanya berpasangan dengan satu provinsi di seluruh file; ditandai \texttt{province\_\allowbreak{}source\ =\ INFERRED\_\allowbreak{}FROM\_\allowbreak{}CITY}. Bila tak terselesaikan → \texttt{Lainnya} & Kota selalu terisi dan setiap kota hanya punya satu provinsi di 207 ribu baris lain, jadi penyimpulan deterministik. \textbf{Hasil:} seluruh 1.984 baris terselesaikan, tidak ada yang jatuh ke \texttt{Lainnya} karena ini & W: T25 provinsi tak terselesaikan \\
 \end{longtable}
 }
 
@@ -723,10 +721,10 @@ Uji
 \bottomrule\noalign{}
 \endlastfoot
 DQ-13 & 6 SKU ganda di master (varian nama \texttt{(old)}) & \texttt{products} / \texttt{sku} & 6 SKU (3.699 baris penjualan valid) & 983.406.300 & Data & \textbf{Hapus} baris \texttt{(old)}, pertahankan satu per SKU & Atribut harga, HPP, dan kategori sama; join naif menggandakan penjualan SKU tersebut & B: \texttt{dim\_\allowbreak{}product} unik \\
-DQ-14 & Label kategori tidak baku: \texttt{Home\ Décor} (9), \texttt{kitchen\ \&\ dining} (5) & \texttt{products} / \texttt{category} & 14 SKU (12.198 baris penjualan valid) & 2.314.085.900 & Data & \textbf{Koreksi:} ke \texttt{Home\ Decor} dan \texttt{Kitchen\ \&\ Dining} & Memecah kategori pada agregat dan membuat 972 pemakaian promo tampak di luar \texttt{category\_\allowbreak{}scope} & B: domain kategori \\
-DQ-15 & Riwayat region hanya untuk BGR-01 (pindah Jawa Barat -\textgreater{} Jabodetabek 1 Jul 2025); 17 toko tanpa riwayat & \texttt{store\_\allowbreak{}region\_\allowbreak{}history} & 2 baris; 7.705 baris penjualan valid BGR-01 sebelum 2025-07-01 & 1.818.909.900 & Data / Bisnis & \textbf{SCD2 \texttt{dim\_\allowbreak{}store}} dengan \texttt{COALESCE(riwayat,\ stores.region)}; di fakta tersimpan \texttt{region\_\allowbreak{}target\_\allowbreak{}basis} (peta awal tahun, dasar achievement), \texttt{region\_\allowbreak{}asof}, dan \texttt{region\_\allowbreak{}current}. \textbf{Direvisi di Task 5:} achievement memakai \texttt{region\_\allowbreak{}target\_\allowbreak{}basis}, bukan region saat transaksi & Target FY2025 tidak disesuaikan saat BGR-01 pindah (target Jawa Barat 341 -\textgreater{} 347 juta pada Jun -\textgreater{} Jul 2025, baru turun Jan 2026). Region saat transaksi menciptakan lonjakan palsu (Jawa Barat 98,1\% -\textgreater{} 73,4\%, Jabodetabek 94,9\% -\textgreater{} 109,7\%) dan menyembunyikan bahwa Jawa Barat FY2025 sebenarnya 100,8\%. Inner join menjatuhkan 17 toko & B: T14 satu region per toko per tanggal; T53 region dasar target \\
+DQ-14 & Label kategori tidak baku: \texttt{Home\ Décor} (9), \texttt{kitchen\ \&\ dining} (5) & \texttt{products} / \texttt{category} & 14 SKU (12.198 baris penjualan valid) & 2.314.085.900 & Data & \textbf{Koreksi:} ke \texttt{Home\ Decor} dan \texttt{Kitchen\ \&\ Dining} & Memecah kategori pada agregat dan membuat 972 pemakaian promo tampak di luar \texttt{category\_\allowbreak{}scope} & W: T26 (promo di luar \texttt{category\_\allowbreak{}scope}) \\
+DQ-15 & Riwayat region hanya untuk BGR-01 (pindah Jawa Barat → Jabodetabek 1 Jul 2025); 17 toko tanpa riwayat & \texttt{store\_\allowbreak{}region\_\allowbreak{}history} & 2 baris; 7.705 baris penjualan valid BGR-01 sebelum 2025-07-01 & 1.818.909.900 & Data / Bisnis & \textbf{SCD2 \texttt{dim\_\allowbreak{}store}} dengan \texttt{COALESCE(riwayat,\ stores.region)}; di fakta tersimpan \texttt{region\_\allowbreak{}target\_\allowbreak{}basis} (peta awal tahun, dasar achievement), \texttt{region\_\allowbreak{}asof}, dan \texttt{region\_\allowbreak{}current}. \textbf{Direvisi di Task 5:} achievement memakai \texttt{region\_\allowbreak{}target\_\allowbreak{}basis}, bukan region saat transaksi & Target FY2025 tidak disesuaikan saat BGR-01 pindah (target Jawa Barat 341 → 347 juta pada Jun → Jul 2025, baru turun Jan 2026). Region saat transaksi menciptakan lonjakan palsu (Jawa Barat 98,1\% → 73,4\%, Jabodetabek 94,9\% → 109,7\%) dan menyembunyikan bahwa Jawa Barat FY2025 sebenarnya 100,8\%. Inner join menjatuhkan 17 toko & B: T14 satu region per toko per tanggal; T53 region dasar target \\
 DQ-16 & Target Excel: header baris 3, bulan melebar, label region tidak baku (\texttt{Jabar}, \texttt{Jatim}, \texttt{Sumatra}, \texttt{Jateng-DIY}, \texttt{Bali\ Nusra}, \texttt{JABODETABEK}) & \texttt{sales\_\allowbreak{}targets\_\allowbreak{}2025\_\allowbreak{}2026.xlsx} & 12 baris region (2 sheet) & 40.413.000.000 (total target Store) & Data & \textbf{Unpivot} ke \texttt{fact\_\allowbreak{}target(bulan,\ channel,\ region)} dan petakan label ke nama resmi & Join target ke aktual gagal tanpa pemetaan; achievement Store menjadi kosong & B: setiap (bulan, scope) punya target (2025--H1 2026) \\
-DQ-17 & Baris penjualan sebelum \texttt{launch\_\allowbreak{}date} produk & \texttt{products} / \texttt{launch\_\allowbreak{}date} & 126 & 27.821.400 & Observasi & \textbf{Tidak ada tindakan tambahan}: seluruhnya sudah dikeluarkan lewat DQ-06b & Ke-126 baris adalah baris asli yang kemudian di-void kasir, jadi penjualan valid sebelum launch = 0. Void pada produk yang belum rilis konsisten dengan koreksi kasir & B: penjualan valid pra-launch = 0 \\
+DQ-17 & Baris penjualan sebelum \texttt{launch\_\allowbreak{}date} produk & \texttt{products} / \texttt{launch\_\allowbreak{}date} & 126 & 27.821.400 & Observasi & \textbf{Tidak ada tindakan tambahan}: seluruhnya sudah dikeluarkan lewat DQ-06b & Ke-126 baris adalah baris asli yang kemudian di-void kasir, jadi penjualan valid sebelum launch = 0. Void pada produk yang belum rilis konsisten dengan koreksi kasir & W: T27 \\
 \end{longtable}
 }
 
@@ -734,15 +732,15 @@ DQ-17 & Baris penjualan sebelum \texttt{launch\_\allowbreak{}date} produk & \tex
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0288}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1731}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1058}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0865}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1346}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0385}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1731}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1731}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0865}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0297}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1683}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0990}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0792}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1386}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0396}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1683}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1683}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1089}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 ID
@@ -768,10 +766,10 @@ Uji
 \bottomrule\noalign{}
 \endlastfoot
 DQ-18 & \texttt{birth\_\allowbreak{}date} sentinel \texttt{1900-01-01} & \texttt{customers} / \texttt{birth\_\allowbreak{}date} (PII) & 418 member & -- & Data & \texttt{birth\_\allowbreak{}date} \textbf{tidak dibawa} ke model; turunan \texttt{age\_\allowbreak{}band} = \texttt{Tidak\ diketahui} untuk sentinel & Kolom PII; sentinel merusak perhitungan usia & B: tidak ada PII di \texttt{dw} \\
-DQ-19 & Email ganda antar member & \texttt{customers} / \texttt{email} (PII) & 491 grup = 982 member & 1.233.559.600 (net sales member tersebut) & Data & \textbf{Pertahankan} \texttt{customer\_\allowbreak{}id} terpisah, tidak digabung & Tidak ada bukti bahwa dua ID adalah satu orang (email dapat dipakai bersama). Risiko: Repeat Rate bisa terhitung rendah. Dicatat sebagai keterbatasan di memo evaluasi & W \\
+DQ-19 & Email ganda antar member & \texttt{customers} / \texttt{email} (PII) & 491 grup = 982 member & 1.233.559.600 (net sales member tersebut) & Data & \textbf{Pertahankan} \texttt{customer\_\allowbreak{}id} terpisah, tidak digabung & Tidak ada bukti bahwa dua ID adalah satu orang (email dapat dipakai bersama). Risiko: Repeat Rate bisa terhitung rendah. Dicatat sebagai keterbatasan di memo evaluasi & -- (flag \texttt{possible\_\allowbreak{}duplicate\_\allowbreak{}member}) \\
 DQ-20 & Member tanpa transaksi & \texttt{customers} & 2.753 & -- & Observasi & \textbf{Pertahankan} di \texttt{dim\_\allowbreak{}customer}; Active Members dihitung dari transaksi & Wajar: member terdaftar belum bertransaksi & -- \\
 DQ-21 & Retur yatim: \texttt{original\_\allowbreak{}trx\_\allowbreak{}id} tidak ditemukan di POS maupun online & \texttt{returns} / \texttt{original\_\allowbreak{}trx\_\allowbreak{}id} & 1 & 178.900 & Data & \textbf{Quarantine}; tidak masuk \texttt{fact\_\allowbreak{}returns} & Tidak bisa dikaitkan ke kategori, produk, atau transaksi asal & W: retur yatim \\
-DQ-22 & Alasan retur ganda arti: "Barang cacat" (2.938) dan "Barang cacat / tidak berfungsi" (602) & \texttt{returns} / \texttt{return\_\allowbreak{}reason} & 602 & 334.698.500 & Data & \textbf{Koreksi:} gabung ke "Barang cacat" & Dua label untuk alasan yang sama memecah distribusi alasan retur. \textbf{Asumsi}, dapat dikonfirmasi ke Customer Service & -- \\
+DQ-22 & Alasan retur ganda arti: ``Barang cacat'' (2.938) dan ``Barang cacat / tidak berfungsi'' (602) & \texttt{returns} / \texttt{return\_\allowbreak{}reason} & 602 & 334.698.500 & Data & \textbf{Koreksi:} gabung ke ``Barang cacat'' & Dua label untuk alasan yang sama memecah distribusi alasan retur. \textbf{Asumsi}, dapat dikonfirmasi ke Customer Service & -- \\
 \end{longtable}
 }
 
@@ -779,15 +777,15 @@ DQ-22 & Alasan retur ganda arti: "Barang cacat" (2.938) dan "Barang cacat / tida
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0297}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1782}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1089}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0495}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1386}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0396}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1782}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1782}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0990}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0294}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1765}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0980}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0490}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1275}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.0392}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1765}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1765}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 16\tabcolsep) * \real{0.1275}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 ID
@@ -812,8 +810,8 @@ Uji
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-DQ-23 & Sync FAILED: BDG-02, 3--9 Nov 2025; tidak ada baris POS pada hari tersebut & \texttt{pos\_\allowbreak{}sync\_\allowbreak{}log} / \texttt{sync\_\allowbreak{}status} & 7 & ≈ 20.789.288 (\textbf{estimasi}) & \textbf{Data} & \textbf{Tandai}, tidak diimputasi: \texttt{v\_\allowbreak{}data\_\allowbreak{}completeness} menandai toko-hari ini, dan dashboard menampilkan penanda data tidak lengkap & Penjualan hilang, bukan nol. Estimasi = 7 hari x rata-rata harian BDG-02 empat minggu sebelum dan sesudah (penjualan valid, tanpa B2B, hari tanpa transaksi dihitung 0); hanya untuk anotasi, tidak masuk angka resmi & W: FAILED menutupi penjualan \\
-DQ-24 & STORE\_\allowbreak{}CLOSED: SBY-01, 4 Agu -- 21 Sep 2025 & idem & 49 & ≈ 300.412.656 (\textbf{estimasi indikatif}) & \textbf{Bisnis} & \textbf{Pertahankan} tanpa koreksi; target tidak disesuaikan; achievement SBY-01 dan Jawa Timur pada Agu--Sep 2025 diberi anotasi & Renovasi total (\texttt{store\_\allowbreak{}events}), tidak ada penjualan sah. Estimasi = 49 hari x rata-rata harian delapan minggu sebelum dan sesudah (penjualan valid, tanpa B2B; belum memperhitungkan musiman) & W \\
+DQ-23 & Sync FAILED: BDG-02, 3--9 Nov 2025; tidak ada baris POS pada hari tersebut & \texttt{pos\_\allowbreak{}sync\_\allowbreak{}log} / \texttt{sync\_\allowbreak{}status} & 7 & ≈ 20,8 juta (\textbf{estimasi}) & \textbf{Data} & \textbf{Tandai}, tidak diimputasi: \texttt{v\_\allowbreak{}data\_\allowbreak{}completeness} menandai toko-hari ini, dan dashboard menampilkan penanda data tidak lengkap & Penjualan hilang, bukan nol. Estimasi = 7 hari x rata-rata harian BDG-02 empat minggu sebelum dan sesudah (penjualan valid, tanpa B2B, hari tanpa transaksi dihitung 0); hanya untuk anotasi, tidak masuk angka resmi & W: FAILED menutupi penjualan \\
+DQ-24 & STORE\_\allowbreak{}CLOSED: SBY-01, 4 Agu -- 21 Sep 2025 & idem & 49 & ≈ 300,4 juta (\textbf{estimasi indikatif}) & \textbf{Bisnis} & \textbf{Pertahankan} tanpa koreksi; target tidak disesuaikan; achievement SBY-01 dan Jawa Timur pada Agu--Sep 2025 diberi anotasi & Renovasi total (\texttt{store\_\allowbreak{}events}), tidak ada penjualan sah. Estimasi = 49 hari x rata-rata harian delapan minggu sebelum dan sesudah (penjualan valid, tanpa B2B; belum memperhitungkan musiman) & B: T51 (penanda \texttt{v\_\allowbreak{}data\_\allowbreak{}completeness}) \\
 \end{longtable}
 }
 
@@ -834,13 +832,13 @@ Isu
 \bottomrule\noalign{}
 \endlastfoot
 Masalah data (dikoreksi / dikarantina / ditandai) & DQ-01, 02, 03, 04, 05, 06c, 08, 09, 10, 12, 13, 14, 15, 16, 18, 19, 21, 22, 23 \\
-Kejadian bisnis & DQ-06a, 06b (void), DQ-07 (B2B bulk), DQ-11 (order batal), DQ-24 (renovasi SBY-01) \\
+Kejadian bisnis & DQ-06a, 06b (void), DQ-07 (B2B bulk), DQ-11 (order batal), DQ-15 (perpindahan BGR-01; target tidak disesuaikan = masalah ukur), DQ-24 (renovasi SBY-01) \\
 Observasi tanpa koreksi & DQ-17, 20 \\
 \end{longtable}
 }
 
-Observasi lain yang bukan isu: harga transaksi 94,8\%--100\% dari harga master (harga berubah); retur parsial
-(refund 70\%--100\% harga); 54 toko-hari SUCCESS tanpa baris POS; kenaikan HPP 250 SKU (ditangani lewat SCD,
+Observasi lain yang bukan isu: harga transaksi 94,8\%--100\% dari harga master (harga berubah); refund 55\%--100\% dari harga sebelum diskon karena
+refund = nilai bersih setelah diskon (bukan retur parsial); 54 toko-hari SUCCESS tanpa baris POS; kenaikan HPP 250 SKU (ditangani lewat SCD,
 bukan dikoreksi).
 
 \subsection{7. Keputusan yang menunggu konfirmasi}\label{keputusan-yang-menunggu-konfirmasi}
@@ -864,15 +862,14 @@ Siapa yang dapat mengonfirmasi
 \endlastfoot
 \texttt{TRN-99} = toko pelatihan/uji, dikeluarkan (DQ-02) & Dikeluarkan; 0,12\% nilai POS & Head of Store Operations \\
 Transaksi B2B dipertahankan di Net Sales (DQ-07) & Dipertahankan dan ditandai & Direktur Komersial / Finance Controller \\
-"Barang cacat / tidak berfungsi" = "Barang cacat" (DQ-22) & Digabung & Customer Service \\
+``Barang cacat / tidak berfungsi'' = ``Barang cacat'' (DQ-22) & Digabung & Customer Service \\
 Member berbeda dengan email sama dianggap orang berbeda (DQ-19) & Tidak digabung & CRM \\
 \end{longtable}
 }
 
-Dampak perubahan asumsi ditunjukkan di laporan (Task 5) bila material.
+Dampak perubahan asumsi ditunjukkan di laporan (Bagian B) bila material.
 
 % ======== A4_data_model ========
-% Dikonversi dari reports/A4_data_model.md; sunting langsung di sini.
 \section{A4. Pipeline, Star Schema, Grain, dan Keputusan SCD}\label{a4.-pipeline-star-schema-grain-dan-keputusan-scd}
 
 Semua yang ada di dokumen ini dihasilkan oleh \texttt{duckdb\ kirana.duckdb\ \textless{}\ sql/00\_\allowbreak{}main.sql} (sekitar 4 detik,
@@ -882,8 +879,8 @@ idempoten) dan dapat diverifikasi ulang. Pengujian dan rekonsiliasi ada di A5.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Diagram alur}]{img/mermaid1.png}}
-\caption{Diagram alur}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Diagram alur data}]{img/mermaid1.png}}
+\caption{Diagram alur data}
 \end{figure}
 
 {\def\LTcaptype{none} % do not increment counter
@@ -911,11 +908,11 @@ staging & \texttt{02\_\allowbreak{}staging.sql} & Normalisasi, tipe, dedup, pasa
 model & \texttt{03\_\allowbreak{}model.sql} & Dimensi dan fakta (star schema) & Tanpa PII \\
 rekonsiliasi & \texttt{04\_\allowbreak{}reconciliation.sql} & \texttt{dq.reconciliation}, \texttt{dq.net\_\allowbreak{}sales\_\allowbreak{}bridge} & Sisi mentah dihitung dari raw, bukan dari stg \\
 semantic layer & \texttt{05\_\allowbreak{}metrics.sql} & \texttt{metrics.v\_\allowbreak{}*}, \texttt{metrics.ref\_\allowbreak{}status\_\allowbreak{}threshold}, \texttt{metrics.kpi\_\allowbreak{}dictionary} & Satu-satunya tempat rumus KPI; lihat A7 \\
-uji & \texttt{06\_\allowbreak{}tests.sql} & \texttt{dq.test\_\allowbreak{}results}, \texttt{dq.test\_\allowbreak{}results\_\allowbreak{}demo} & Gerbang di \texttt{00\_\allowbreak{}main.sql}; 43 uji termasuk 14 uji semantic layer dan region \\
+uji & \texttt{06\_\allowbreak{}tests.sql} & \texttt{dq.test\_\allowbreak{}results}, \texttt{dq.test\_\allowbreak{}results\_\allowbreak{}demo} & Gerbang di \texttt{00\_\allowbreak{}main.sql}; 43 uji, termasuk 15 uji semantic layer, region, dan akses (T40--T54) \\
 \end{longtable}
 }
 
-\texttt{kirana.duckdb} hanya memuat schema \texttt{stg}, \texttt{dw}, \texttt{dq} (dan \texttt{metrics} pada Task 3). Tidak ada kolom PII di database ini.
+\texttt{kirana.duckdb} memuat schema \texttt{stg}, \texttt{dw}, \texttt{dq}, \texttt{metrics}, dan enam schema akses \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} (Task 6). Tidak ada kolom PII di database ini.
 
 \subsection{2. Star schema}\label{star-schema}
 
@@ -1007,14 +1004,14 @@ Hasil
 \bottomrule\noalign{}
 \endlastfoot
 DQ-01, 03 & \texttt{upper(trim())} pada \texttt{store\_\allowbreak{}code} dan \texttt{sku} & Semua SKU cocok ke master; toko terpetakan \\
-DQ-02 & \texttt{TRN-99} -\textgreater{} \texttt{REJECT\_\allowbreak{}STORE\_\allowbreak{}NOT\_\allowbreak{}IN\_\allowbreak{}MASTER} & 320 baris (324 dengan salinan) dikarantina \\
+DQ-02 & \texttt{TRN-99} → \texttt{REJECT\_\allowbreak{}STORE\_\allowbreak{}NOT\_\allowbreak{}IN\_\allowbreak{}MASTER} & 320 baris (324 dengan salinan) dikarantina \\
 DQ-04, 10 & Dedup persis (\texttt{GROUP\ BY\ ALL}, \texttt{n\_\allowbreak{}copies}) & 1.577 POS dan 232 online salinan ekstra \\
 DQ-05 & Tabrakan nomor struk dipertahankan, ditandai \texttt{key\_\allowbreak{}collision} & 20 grup; seluruhnya melibatkan pasangan void sehingga tidak ada di \texttt{fact\_\allowbreak{}sales} \\
 DQ-06 & Void dipasangkan 1:1 dengan baris asli (\texttt{trx\_\allowbreak{}id}, \texttt{sku}, \texttt{qty} berlawanan) & 2.067 void dan 2.067 baris asli dikeluarkan \\
 DQ-07 & B2B bulk dipertahankan, \texttt{is\_\allowbreak{}b2b\_\allowbreak{}bulk} & 14 baris, \texttt{B2B-CORP} masuk \texttt{dim\_\allowbreak{}promo} \\
-DQ-08 & Pemetaan eksplisit 12 label channel & Label tak dikenal -\textgreater{} \texttt{REJECT\_\allowbreak{}UNMAPPED\_\allowbreak{}CHANNEL} (diuji) \\
-DQ-09 & Parser harga hanya dua pola (\texttt{100900}, \texttt{Rp100.900}) & Pola lain -\textgreater{} \texttt{REJECT\_\allowbreak{}UNPARSEABLE} (diuji) \\
-DQ-11 & Order \texttt{CANCELLED} -\textgreater{} \texttt{EXCLUDE\_\allowbreak{}CANCELLED} & 12.733 baris, disimpan di \texttt{fact\_\allowbreak{}sales\_\allowbreak{}excluded} \\
+DQ-08 & Pemetaan eksplisit 12 label channel & Label tak dikenal → \texttt{REJECT\_\allowbreak{}UNMAPPED\_\allowbreak{}CHANNEL} (diuji) \\
+DQ-09 & Parser harga hanya dua pola (\texttt{100900}, \texttt{Rp100.900}) & Pola lain → \texttt{REJECT\_\allowbreak{}UNPARSEABLE} (diuji) \\
+DQ-11 & Order \texttt{CANCELLED} → \texttt{EXCLUDE\_\allowbreak{}CANCELLED} & 12.733 baris, disimpan di \texttt{fact\_\allowbreak{}sales\_\allowbreak{}excluded} \\
 DQ-12 & Provinsi kosong \textbf{disimpulkan dari \texttt{ship\_\allowbreak{}city}} bila kota hanya berpasangan dengan satu provinsi & Seluruh 1.984 baris terselesaikan (\texttt{province\_\allowbreak{}source\ =\ INFERRED\_\allowbreak{}FROM\_\allowbreak{}CITY}) \\
 DQ-13, 14 & Satu baris per SKU (buang varian \texttt{(old)}), kategori dibakukan & 600 SKU; 6 dikarantina \\
 DQ-16 & Target di-unpivot, label region dibakukan & 162 sel \\
@@ -1023,8 +1020,8 @@ DQ-21, 22 & Retur yatim dikarantina; label alasan digabung & 1 retur ditolak \\
 \end{longtable}
 }
 
-\textbf{Pemetaan region online.} Region ditentukan dari \textbf{provinsi tujuan} sesuai panduan paket data. Banten -\textgreater{} Jabodetabek
-(satu-satunya kota di data adalah Tangerang, sama dengan toko TGR-01); Sulawesi Selatan dan Kalimantan Timur -\textgreater{} \texttt{Lainnya}.
+\textbf{Pemetaan region online.} Region ditentukan dari \textbf{provinsi tujuan} sesuai panduan paket data. Banten → Jabodetabek
+(satu-satunya kota di data adalah Tangerang, sama dengan toko TGR-01); Sulawesi Selatan dan Kalimantan Timur → \texttt{Lainnya}.
 Keterbatasan: kota Bekasi, Bogor, dan Depok berada di provinsi Jawa Barat sehingga masuk region \texttt{Jawa\ Barat}, padahal
 toko di kota yang sama berada di \texttt{Jabodetabek}. Target online ditetapkan per channel nasional, sehingga ini hanya
 memengaruhi analisis regional online, bukan perhitungan achievement.
@@ -1072,7 +1069,7 @@ H1 2026 & Rp 25.210.478.100 & \textbf{43,05\%} & 43,05\% & 0,00 pt \\
 \item
   Sebanyak 126.374 baris (27,8\%) memiliki HPP yang berbeda antara as-of dan terkini. 250 SKU mengalami kenaikan HPP (60 SKU pada 1 Jul 2025, rata-rata +18\%; 190 SKU pada 1 Jan 2026, rata-rata +4\%).
 \item
-  \textbf{Dampak bagi cerita bisnis:} dengan HPP as-of, gross margin turun 3,06 pt dari 2024 ke H1 2026 (46,11\% -\textgreater{} 43,05\%), yaitu gejala "margin kotor menurun" yang diminta manajemen. Dengan HPP terkini, penurunan itu hampir hilang (43,03\% -\textgreater{} 42,49\% -\textgreater{} 43,05\%) karena seluruh histori dinilai memakai HPP tertinggi. Memakai \texttt{current\_\allowbreak{}unit\_\allowbreak{}cost} akan menyembunyikan masalah yang justru harus dijelaskan.
+  \textbf{Dampak bagi cerita bisnis:} dengan HPP as-of, gross margin turun 3,06 pt dari 2024 ke H1 2026 (46,11\% → 43,05\%), yaitu gejala ``margin kotor menurun'' yang diminta manajemen. Dengan HPP terkini, penurunan itu hampir hilang (43,03\% → 42,49\% → 43,05\%) karena seluruh histori dinilai memakai HPP tertinggi. Memakai \texttt{current\_\allowbreak{}unit\_\allowbreak{}cost} akan menyembunyikan masalah yang justru harus dijelaskan.
 \end{itemize}
 
 \subsubsection{\texorpdfstring{(b) Region toko: \texttt{store\_\allowbreak{}region\_\allowbreak{}history} (SCD tipe 2)}{(b) Region toko: store\_\allowbreak{}region\_\allowbreak{}history (SCD tipe 2)}}\label{b-region-toko-store_region_history-scd-tipe-2}
@@ -1080,7 +1077,7 @@ H1 2026 & Rp 25.210.478.100 & \textbf{43,05\%} & 43,05\% & 0,00 pt \\
 \begin{quote}
 \textbf{Koreksi (Task 5).} Keputusan awal di Task 2 memakai region \emph{saat transaksi} untuk membandingkan penjualan dengan target. Analisis Task 5
 menunjukkan itu salah: target FP\&A \textbf{tidak disesuaikan} ketika BGR-01 pindah (1 Jul 2025). Target Jawa Barat tetap 341 juta (Jun 2025) dan 347
-juta (Jul 2025), baru turun menjadi 277 juta pada Jan 2026 (Des 2025: 439 juta). Target Jabodetabek tidak melonjak pada Juli 2025 (792 -\textgreater{} 821 juta).
+juta (Jul 2025), baru turun menjadi 277 juta pada Jan 2026 (Des 2025: 439 juta). Target Jabodetabek tidak melonjak pada Juli 2025 (792 → 821 juta).
 Jadi target FY2025 disusun dengan peta region lama sepanjang tahun, dan target 2026 dengan peta baru.
 \end{quote}
 
@@ -1146,7 +1143,7 @@ Jabodetabek & H1 2026 & 96,7\% & \textbf{96,7\%} & 96,7\% \\
 \begin{itemize}
 \tightlist
 \item
-  Pemetaan A menciptakan \textbf{lonjakan palsu} tepat di titik pindah (Jawa Barat 98,1\% -\textgreater{} 73,4\%, Jabodetabek 94,9\% -\textgreater{} 109,7\%). Pemetaan B stabil di kedua sisi.
+  Pemetaan A menciptakan \textbf{lonjakan palsu} tepat di titik pindah (Jawa Barat 98,1\% → 73,4\%, Jabodetabek 94,9\% → 109,7\%). Pemetaan B stabil di kedua sisi.
 \item
   FY2025: Jawa Barat \textbf{100,8\%} (A: 85,6\%; C: 72,2\%) dan Jabodetabek \textbf{95,6\%} (A: 102,4\%; C: 108,4\%). Selisih berasal dari Rp 673.004.400 penjualan BGR-01 pada Juli--Desember 2025.
 \item
@@ -1158,7 +1155,6 @@ Jabodetabek & H1 2026 & 96,7\% & \textbf{96,7\%} & 96,7\% \\
 \subsubsection{(c) Biaya channel}\label{c-biaya-channel}
 
 Tarif dipasang per baris menurut tanggal transaksi (\texttt{ref\_\allowbreak{}channel\_\allowbreak{}fee}); Marketplace 9,0\% sampai 31 Mar 2025 dan 11,5\% sejak 1 Apr 2025.
-Target Store hanya ada per region, sehingga \texttt{fact\_\allowbreak{}target} memakai \texttt{target\_\allowbreak{}scope} (\texttt{REGION} atau \texttt{NATIONAL}).
 
 \subsection{6. Keterbatasan yang diketahui}\label{keterbatasan-yang-diketahui}
 
@@ -1174,12 +1170,11 @@ Target Store hanya ada per region, sehingga \texttt{fact\_\allowbreak{}target} m
   \textbf{Ekstensi \texttt{excel} diunduh sekali} pada mesin baru (\texttt{INSTALL\ excel}); setelah terpasang, build tidak membutuhkan jaringan (diuji dengan repository yang tidak terjangkau).
 \end{itemize}
 
-\subsection{7. Yang belum tercakup di dokumen ini}\label{yang-belum-tercakup-di-dokumen-ini}
+\subsection{7. Sumber diagram}\label{sumber-diagram}
 
 Diagram star schema dan lineage dibuat sebagai draw.io (\texttt{reports/img/star\_\allowbreak{}schema.drawio}, \texttt{lineage.drawio}) dan diekspor ke PNG oleh \texttt{reports/img/build\_\allowbreak{}star.py} dan \texttt{build\_\allowbreak{}lineage.py}.
 
 % ======== A5_quality_reconciliation ========
-% Dikonversi dari reports/A5_quality_reconciliation.md; sunting langsung di sini.
 \section{A5. Uji Kualitas Data dan Rekonsiliasi}\label{a5.-uji-kualitas-data-dan-rekonsiliasi}
 
 Dihasilkan oleh \texttt{sql/04\_\allowbreak{}reconciliation.sql} dan \texttt{sql/06\_\allowbreak{}tests.sql}; tabel hasil ada di \texttt{kirana.duckdb}
@@ -1187,9 +1182,9 @@ Dihasilkan oleh \texttt{sql/04\_\allowbreak{}reconciliation.sql} dan \texttt{sql
 
 \begin{verbatim}
 bash scripts/build.sh                                          # bangun ke file sementara; kirana.duckdb diganti HANYA bila semua uji BLOCKING lolos
-bash scripts/mutation_test.sh                                  # 35 cacat disuntik ke salinan (data, staging, dan semantic layer); semua harus terdeteksi
+bash scripts/mutation_test.sh                                  # 35 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
 duckdb -readonly kirana.duckdb -markdown -c "SELECT * FROM dq.test_results ORDER BY test_id"
-bash .claude/skills/kirana-pipeline/scripts/idempotency_check.sh   # IDEMPOTENT: 62 objek identik di dua run
+bash scripts/idempotency_check.sh   # IDEMPOTENT: 62 objek identik di dua run
 \end{verbatim}
 
 \subsection{1. Hasil uji produksi}\label{hasil-uji-produksi}
@@ -1229,7 +1224,7 @@ T02 & Tidak ada FK yatim (tanggal, produk, toko, channel, pelanggan, promo) & BL
 T03 & Channel, toko, region hanya bernilai resmi & BLOCKING & 0 & PASS & Memecah agregat (DQ-01, 08) \\
 T04 & Tiap baris punya tepat satu HPP as-of dan sama dengan nilai di fakta & BLOCKING & 0 & PASS & COGS dan GM salah (SCD HPP) \\
 T05 & Tiap baris punya tarif biaya channel as-of & BLOCKING & 0 & PASS & Contribution margin menyimpang \\
-T10 & Rekonsiliasi raw -\textgreater{} fakta: selisih baris dan Rp = 0 & BLOCKING & 0 & PASS & Data hilang tanpa jejak \\
+T10 & Rekonsiliasi raw → fakta: selisih baris dan Rp = 0 & BLOCKING & 0 & PASS & Data hilang tanpa jejak \\
 T11 & Jembatan Net Sales menutup & BLOCKING & 0 & PASS & Net Sales harus dapat ditelusuri \\
 T12 & Tidak ada kolom PII langsung di stg/dw/dq/metrics/acc\_\allowbreak{}* & BLOCKING & 0 & PASS & PII tidak boleh ke dashboard \\
 T13 & Kontrol sync log: \texttt{SUM(rows\_\allowbreak{}uploaded)} = baris POS valid tanpa B2B & BLOCKING & 0 & PASS & Kontrol independen dari IT: membuktikan dedup dan void benar \\
@@ -1264,8 +1259,8 @@ T48 & \texttt{v\_\allowbreak{}cancellation\_\allowbreak{}void\_\allowbreak{}mont
 T49 & \texttt{v\_\allowbreak{}promo\_\allowbreak{}performance}: 73 promo dan total diskon = fakta & BLOCKING & 0 & PASS & Analisis efektivitas promo harus dapat dipercaya \\
 T50 & Baseline Promo Lift memadai (tak ada TIDAK\_\allowbreak{}CUKUP) & WARNING & 0 & PASS & Promo tanpa baseline tidak punya lift \\
 T51 & \texttt{v\_\allowbreak{}data\_\allowbreak{}completeness} konsisten dengan sync log & BLOCKING & 0 & PASS & Penanda data tidak lengkap harus sama dengan sumber \\
-T53 & \texttt{region\_\allowbreak{}target\_\allowbreak{}basis} = region toko pada awal tahun transaksi (dihitung ulang dari \texttt{dim\_\allowbreak{}store}) & BLOCKING & 0 & PASS & Target FY2025 tidak disesuaikan saat BGR-01 pindah; region saat transaksi membuat achievement Jawa Barat dan Jabodetabek salah \\
 T52 & \texttt{v\_\allowbreak{}store\_\allowbreak{}performance\_\allowbreak{}monthly}: satu baris per bulan x toko; Net Sales dan target = \texttt{v\_\allowbreak{}store\_\allowbreak{}target\_\allowbreak{}alloc} & BLOCKING & 0 & PASS & Join kelengkapan yang menggandakan baris merusak achievement toko di dashboard \\
+T53 & \texttt{region\_\allowbreak{}target\_\allowbreak{}basis} = region toko pada awal tahun transaksi (dihitung ulang dari \texttt{dim\_\allowbreak{}store}) & BLOCKING & 0 & PASS & Target FY2025 tidak disesuaikan saat BGR-01 pindah; region saat transaksi membuat achievement Jawa Barat dan Jabodetabek salah \\
 T54 & Schema \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}}: tiap view hanya memuat regionnya; gabungan semua region (+ Lainnya untuk online) = view induk & BLOCKING & 0 & PASS & Pembatasan akses per region yang bocor atau menghilangkan baris (Task 6) \\
 \end{longtable}
 }
@@ -1370,7 +1365,7 @@ View region memuat baris region lain & T54 \\
 \end{longtable}
 }
 
-\subsection{3. Rekonsiliasi raw -\textgreater{} tabel bersih (baris)}\label{rekonsiliasi-raw---tabel-bersih-baris}
+\subsection{3. Rekonsiliasi raw → tabel bersih (baris)}\label{rekonsiliasi-raw-tabel-bersih-baris}
 
 Rumus: \texttt{raw\ =\ salinan\ duplikat\ +\ ditolak\ +\ dikeluarkan\ +\ fakta}. Sisi mentah dihitung langsung dari file, bukan dari staging.
 
@@ -1499,26 +1494,71 @@ memastikan angka ini tetap sama pada setiap build. Transaksi B2B berada di luar 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{idempotency\_\allowbreak{}check.sh}: build dua kali ke database sementara, hash isi tiap tabel dan view dibandingkan -\textgreater{} \textbf{IDEMPOTENT: 62 objek identik}.
+  \texttt{idempotency\_\allowbreak{}check.sh}: build dua kali ke database sementara, hash isi tiap tabel dan view dibandingkan → \textbf{IDEMPOTENT: 62 objek identik}.
 \item
   \texttt{scripts/build.sh}: build ke \texttt{kirana.duckdb.building}, lalu menukar ke \texttt{kirana.duckdb} hanya bila gerbang BLOCKING lolos. Jalur gagal diuji: file yang ada tidak berubah (checksum sama) dan file sementara dihapus.
 \item
   13 file \texttt{raw\_\allowbreak{}data/} dibandingkan dengan ZIP asli (SHA-256): \textbf{13 identik, 0 berbeda}. Pipeline tidak pernah menulis ke \texttt{raw\_\allowbreak{}data/}.
 \end{itemize}
 
+% ======== A6_ringkasan_kpi ========
+\section{A6. Ringkasan KPI (kamus metrik)}\label{a6.-ringkasan-kpi-kamus-metrik}
 
-\bagian{Bagian B. Insight brief untuk Direktur Komersial}
-% Brief dibuat otomatis (scripts/build_insights.py dari reports/insights/brief.tpl.md) agar angka sama dengan dashboard.
-% Ubah teks di brief.tpl.md lalu jalankan ulang build_insights.py; berkas PDF-nya disisipkan di sini.
-\includepdf[pages=-,pagecommand={\thispagestyle{fancy}}]{../reports/B_insight_brief.pdf}
+Dua belas KPI hidup sebagai view di schema \texttt{metrics}; kartu Metabase hanya \texttt{SELECT} dari view itu. Rasio dihitung ulang dari pembilang
+dan penyebut setelah filter (tidak pernah AVG kolom persen). Definisi bisnis dan aturan inklusi/eksklusi lengkap ada di Lampiran A7;
+tabel ini dihasilkan dari \texttt{metrics.kpi\_\allowbreak{}dictionary} yang sama.
 
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0396}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1287}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2079}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2079}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2079}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2079}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedleft
+\#
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+KPI
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Rumus SQL
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Grain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Pemilik
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Target / ambang
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & Net Sales & \texttt{SUM(net\_\allowbreak{}sales\_\allowbreak{}idr)} & bulan x channel x region (dasar target, region\_\allowbreak{}target\_\allowbreak{}basis) x toko x kategori x flag B2B & Finance Controller & Target bulanan FP\&A per channel/region (FY2025 Rp 44,181 miliar; H1 2026 Rp 23,820 miliar, semua channel). Tidak ada target 2024. \\
+2 & Achievement vs Target \% & \texttt{100\ *\ SUM(net\_\allowbreak{}sales\_\allowbreak{}idr)\ /\ NULLIF(SUM(target\_\allowbreak{}net\_\allowbreak{}sales\_\allowbreak{}idr),\ 0)} & bulan x channel x region (Store) atau nasional (online) & Direktur Komersial & Hijau \textgreater= 100\%; Kuning 90 sampai \textless100\%; Merah \textless{} 90\% (ASUMSI analis, ref\_\allowbreak{}status\_\allowbreak{}threshold). \\
+3 & Gross Margin \% & \texttt{100\ *\ SUM(gross\_\allowbreak{}margin\_\allowbreak{}idr)\ /\ NULLIF(SUM(net\_\allowbreak{}sales\_\allowbreak{}idr),\ 0)} & bulan x channel x region x toko x kategori & Finance Controller & Target GM FP\&A per channel: Store 46\%, Website 45\%, Mobile App 43\%, Marketplace 42\%. Hijau: selisih \textgreater= 0 pt; Kuning: sampai -2 pt; Merah: lebih dari 2 pt di bawah target (ASUMSI). \\
+4 & Contribution Margin \% & \texttt{100\ *\ SUM(contribution\_\allowbreak{}margin\_\allowbreak{}idr)\ /\ NULLIF(SUM(net\_\allowbreak{}sales\_\allowbreak{}idr),\ 0)} & bulan x channel x region x toko x kategori & Finance Controller & Target turunan = Target GM - tarif channel berlaku (ASUMSI; FP\&A tidak menetapkan target CM). Status memakai ambang selisih yang sama dengan Gross Margin. \\
+5 & Return Rate & \texttt{100\ *\ SUM(refund\_\allowbreak{}idr)\ /\ NULLIF(SUM(net\_\allowbreak{}sales\_\allowbreak{}idr),\ 0);\ 100\ *\ SUM(return\_\allowbreak{}qty)\ /\ NULLIF(SUM(qty\_\allowbreak{}sold),\ 0)} & bulan x channel x region x kategori & Head of Store Operations (Store); Head of E-Commerce (online) & Tidak ada target resmi; pembanding historis \\
+6 & Average Order Value (AOV) & \texttt{SUM(net\_\allowbreak{}sales\_\allowbreak{}idr)\ /\ NULLIF(SUM(transactions),\ 0)} & bulan x channel x region x toko x member x B2B & Direktur Komersial & Tidak ada target resmi; pembanding historis \\
+7 & Jumlah Transaksi & \texttt{SUM(transactions)} & bulan x channel x region x toko x member x B2B & Direktur Komersial & Tidak ada target resmi; pembanding historis \\
+8 & Active Members & \texttt{active\_\allowbreak{}members\ (pilih\ satu\ period\_\allowbreak{}type,\ filter\ period\_\allowbreak{}start\ dan\ channel\_\allowbreak{}name)} & tipe periode (Bulan, Kuartal, Semester, Tahun) x periode x channel (+ Semua channel) & Head of E-Commerce (online); Head of Store Operations (Store) & Tidak ada target resmi; pembanding historis \\
+9 & Repeat Rate & \texttt{100\ *\ repeat\_\allowbreak{}members\ /\ NULLIF(active\_\allowbreak{}members,\ 0)} & tipe periode x periode x channel (+ Semua channel) & Head of E-Commerce (online); Head of Store Operations (Store) & Tidak ada target resmi; pembanding historis \\
+10 & Promo Lift dan Dampak Margin & \texttt{lift\_\allowbreak{}net\_\allowbreak{}pct\ =\ 100\ *\ (net\_\allowbreak{}sales\_\allowbreak{}idr\ /\ baseline\_\allowbreak{}net\_\allowbreak{}sales\_\allowbreak{}idr\ -\ 1);\ incremental\_\allowbreak{}gross\_\allowbreak{}margin\_\allowbreak{}idr\ =\ gross\_\allowbreak{}margin\_\allowbreak{}idr\ -\ baseline\_\allowbreak{}gross\_\allowbreak{}margin\_\allowbreak{}idr} & satu kode promo (73) & Direktur Komersial (Marketing) & Tidak ada target resmi; pembanding historis \\
+11 & Cancellation Rate dan Void Rate & \texttt{100\ *\ SUM(cancelled\_\allowbreak{}net\_\allowbreak{}sales\_\allowbreak{}idr)\ /\ NULLIF(SUM(valid\_\allowbreak{}net\_\allowbreak{}sales\_\allowbreak{}idr)\ +\ SUM(cancelled\_\allowbreak{}net\_\allowbreak{}sales\_\allowbreak{}idr),\ 0)} & bulan x channel x region & Head of E-Commerce (pembatalan); Head of Store Operations (void) & Tidak ada target resmi; pembanding historis \\
+12 & Promo Budget Utilization & \texttt{100\ *\ SUM(discount\_\allowbreak{}idr)\ /\ NULLIF(SUM(budget\_\allowbreak{}idr),\ 0)} & satu kode promo & Finance Controller; Direktur Komersial (Marketing) & Batas atas 100\% dari anggaran promo. \\
+\end{longtable}
+}
+
+% Bagian B: dibuat otomatis (scripts/build_insights.py dari reports/insights/brief.tpl.md) agar angka sama dengan dashboard.
+% Ubah teks di brief.tpl.md lalu jalankan ulang build_insights.py; PDF-nya disisipkan di sini (judul bagian masuk daftar isi lewat addtotoc).
+\clearpage
+\includepdf[pages=-,pagecommand={\thispagestyle{fancy}},addtotoc={1,section,1,Bagian B. Insight brief untuk Direktur Komersial,bagianB}]{../reports/B_insight_brief.pdf}
 \bagian{Bagian C. Memo evaluasi dan pernyataan penggunaan AI}
 % ======== C1_memo_evaluasi ========
-% Dikonversi dari reports/C1_memo_evaluasi.md; sunting langsung di sini.
 \section{C1. Memo Evaluasi Solusi BI}\label{c1.-memo-evaluasi-solusi-bi}
 
 \textbf{Kepada:} Direktur Komersial KIRANA · \textbf{Dari:} BI Analyst · \textbf{Perihal:} Apakah solusi ini cukup untuk keputusan H2 2026, dan apa yang perlu dikembangkan.
-Semua angka sama dengan \texttt{B\_\allowbreak{}insight\_\allowbreak{}brief.pdf} dan \texttt{insight\_\allowbreak{}registry.md}.
+Semua angka sama dengan Bagian B (insight brief) dan registri angka \texttt{reports/insights/insight\_\allowbreak{}registry.md}.
 
 \subsection{1. Apakah dashboard menjawab dua keputusan?}\label{apakah-dashboard-menjawab-dua-keputusan}
 
@@ -1543,10 +1583,10 @@ Status
 \endlastfoot
 1. Promo mana yang menambah margin dan mana yang hanya membeli revenue? & Tab 3: \texttt{promo\_\allowbreak{}incremental\_\allowbreak{}gm\_\allowbreak{}bar}, \texttt{promo\_\allowbreak{}detail}, \texttt{margin\_\allowbreak{}bridge\_\allowbreak{}channel}. Hasil: App Payday positif di 27 dari 27 kode, Mega Sale 0 dari 8, Clearance 0 dari 3 & Terjawab untuk arah; dampak Rp adalah replay H2 2025 \\
 1. Seberapa besar tekanan margin dan dari mana? & Tab 1 dan 3: margin kotor turun 3,1 pt (HPP per unit +5,9\% vs harga neto +1,5\%), contribution margin turun 4,2 pt & Terjawab \\
-1. Apakah anggaran menjadi batasan? & \texttt{promo\_\allowbreak{}detail}: diskon yang diberikan hanya 9,2\% dari anggaran (Rp 1,94 miliar dari Rp 21,14 miliar) & Terjawab: mekanisme, bukan anggaran, yang menentukan \\
+1. Apakah anggaran menjadi batasan? & Tab 3, \texttt{promo\_\allowbreak{}per\_\allowbreak{}jenis} (kolom Pemakaian anggaran): diskon yang diberikan hanya 9,2\% dari anggaran (Rp 1,94 miliar dari Rp 21,14 miliar) & Terjawab: mekanisme, bukan anggaran, yang menentukan \\
 2. Channel dan region mana di bawah target? & Tab 1 dan 2: \texttt{achievement\_\allowbreak{}per\_\allowbreak{}channel}, \texttt{ach\_\allowbreak{}store\_\allowbreak{}per\_\allowbreak{}region} & Terjawab \\
 2. Toko mana masuk program perbaikan, dan mana yang hanya bermasalah di data? & Tab 2: \texttt{store\_\allowbreak{}ranking} (dengan kolom kelengkapan data), drill-down region → toko → Detail Toko & Terjawab dengan asumsi alokasi target \\
-2. Mengapa MDN-01 turun? & Tab 2 dan Storyline: bukan kanibalisasi online (Medan online +45,2\%, setara kota lain) & \textbf{Belum terjawab}: penyebab (trafik, harga kompetitor, jam buka) tidak ada di data \\
+2. Mengapa MDN-01 turun? & Insight brief (insight 5; angka per kota dari \texttt{facts.sql}, belum ada kartu per kota): bukan kanibalisasi online (Medan online +45,2\%, setara kota lain) & \textbf{Belum terjawab}: penyebab (trafik, harga kompetitor, jam buka) tidak ada di data \\
 \end{longtable}
 }
 
@@ -1556,7 +1596,7 @@ Status
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \textbf{Tidak ada target per toko.} Target toko adalah \emph{alokasi} target region menurut pangsa penjualan tahun lalu. Ambang status (Hijau ≥100\%, Kuning 90 s.d. \textless100\%, Merah \textless90\%) adalah usulan analis. Keduanya diberi label asumsi di dashboard.
+  \textbf{Tidak ada target per toko.} Target toko adalah \emph{alokasi} target region menurut pangsa penjualan tahun lalu. Ambang status (Hijau ≥100\%, Kuning 90 s.d. \textless100\%, Merah \textless90\%) adalah usulan analis. Keduanya diberi label asumsi di dashboard. Pangsa memakai bulan yang sama tahun lalu, sehingga target alokasi Agu--Sep 2026 di Jawa Timur akan terdistorsi oleh penutupan SBY-01 (Agu--Sep 2025); H1 2026 tidak terpengaruh.
 \item
   \textbf{Target tidak mengikuti perpindahan region.} Target FY2025 tidak disesuaikan saat BGR-01 pindah ke Jabodetabek (1 Jul 2025). Achievement memakai region awal tahun (\texttt{region\_\allowbreak{}target\_\allowbreak{}basis}). Pada versi awal saya memakai region saat transaksi dan Jawa Barat tampak anjlok dari 98,1\% ke 73,4\%; itu artefak ukur dan sudah dikoreksi, dijaga uji T53, dan dijelaskan di A4 bagian 5.
 \item
@@ -1570,7 +1610,7 @@ Status
 \item
   \textbf{Biaya di luar data.} Anggaran promo hanya \texttt{budget\_\allowbreak{}idr}; biaya iklan dan biaya operasional toko tidak ada, sehingga contribution margin hanya dikurangi biaya channel dan bukan laba toko.
 \item
-  \textbf{Teknis.} Driver DuckDB dibuka read-only dan DuckDB hanya punya satu penulis; Metabase harus dihentikan saat rebuild. Pembatasan akses per region memakai view, bukan row-level security Metabase.
+  \textbf{Teknis.} Driver DuckDB dibuka read-only dan DuckDB hanya punya satu penulis; Metabase harus dihentikan saat rebuild. Pembatasan akses per region memakai view \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} dan izin koleksi Metabase (\texttt{dashboard/access.py}), bukan row-level security Metabase (fitur berbayar).
 \end{enumerate}
 
 \subsection{3. Yang perlu dikembangkan}\label{yang-perlu-dikembangkan}
@@ -1621,7 +1661,6 @@ ML menjadi layak bila: (a) promo dijalankan dengan kelompok kontrol sehingga upl
 Solusi cukup untuk memutuskan \textbf{arah} realokasi promo dan \textbf{daftar pantau} toko pada Juli 2026. Sebelum angka dampak dijadikan komitmen anggaran, minta tiga hal: konfirmasi Store Operations atas renovasi SBY-01 dan log sync BDG-02, target toko resmi dari FP\&A, dan satu uji promo terkontrol.
 
 % ======== D_pernyataan_ai ========
-% Dikonversi dari reports/D_pernyataan_ai.md; sunting langsung di sini.
 \section{Pernyataan Penggunaan AI}\label{pernyataan-penggunaan-ai}
 
 \textbf{Alat:} Claude Code (Anthropic), asisten AI berbasis terminal yang berjalan di mesin lokal dan memiliki akses ke folder proyek.
@@ -1645,7 +1684,7 @@ Peran AI
 Persiapan & Membaca panduan UAS dan paket data, lalu membantu menyusun aturan kerja dan daftar langkah per task \\
 Task 1 sampai 3 & Membantu menulis dan men-debug SQL DuckDB (profiling, staging, star schema, uji kualitas, rekonsiliasi, view metrik) \\
 Task 4 & Membantu menulis skrip pembuat dashboard Metabase (\texttt{dashboard/provision.py}, \texttt{export.py}) dan wireframe \\
-Task 5 dan 6 & Membantu menyusun kueri fakta (\texttt{facts.sql}), template dan skrip pembuat brief, serta draf teks brief, memo evaluasi, dan lampiran tata kelola \\
+Task 5 dan 6 & Membantu menyusun kueri fakta (\texttt{facts.sql}), template dan skrip pembuat brief, serta draf teks brief, memo evaluasi, lampiran tata kelola, dan skrip hak akses Metabase (\texttt{dashboard/access.py}) \\
 Peninjauan & Meninjau pekerjaan sebelumnya dan menjalankan pemeriksaan (idempotensi, uji mutasi, pindai PII) \\
 \end{longtable}
 }
@@ -1655,7 +1694,7 @@ Peninjauan & Meninjau pekerjaan sebelumnya dan menjalankan pemeriksaan (idempote
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Angka tidak diketik manual.} Setiap angka di brief dan storyline dihitung oleh \texttt{reports/insights/facts.sql} dari \texttt{kirana.duckdb} dan tercatat di \texttt{insight\_\allowbreak{}registry.md}; kunci angka yang tidak ada membuat build gagal. Angka kamus dan pencapaian tercatat di \texttt{number\_\allowbreak{}registry.md}.
+  \textbf{Angka tidak diketik manual.} Setiap angka di brief dan storyline dihitung oleh \texttt{reports/insights/facts.sql} dari \texttt{kirana.duckdb} dan tercatat di \texttt{reports/insights/insight\_\allowbreak{}registry.md}; kunci angka yang tidak ada membuat build gagal. Angka kamus dan pencapaian tercatat di Lampiran Number Registry.
 \item
   \textbf{Pemeriksaan otomatis.} 43 uji kualitas data (29 BLOCKING, semuanya lolos), rekonsiliasi dengan selisih 0, 35 cacat yang sengaja disuntik (semuanya terdeteksi), dan uji idempotensi (dua build menghasilkan 62 objek identik).
 \item
@@ -1666,10 +1705,8 @@ Peninjauan & Meninjau pekerjaan sebelumnya dan menjalankan pemeriksaan (idempote
   \textbf{Batas.} Penilaian dan rekomendasi akhir (Bagian B dan C) bersandar pada asumsi yang dicantumkan secara eksplisit di brief dan memo; dampak Rupiah adalah estimasi indikatif dari replay data historis.
 \end{itemize}
 
-
 \bagian{Lampiran}
 % ======== A7_kamus_metrik ========
-% Dikonversi dari reports/A7_kamus_metrik.md; sunting langsung di sini.
 \section{A7. Kamus Metrik}\label{a7.-kamus-metrik}
 
 Dihasilkan otomatis oleh \texttt{scripts/export\_\allowbreak{}reports.sh} dari tabel \texttt{metrics.kpi\_\allowbreak{}dictionary} di \texttt{kirana.duckdb}; definisi di sini
@@ -1707,7 +1744,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya \texttt{SELECT}
 \item
   \textbf{Rumus SQL:} \texttt{SUM(net\_\allowbreak{}sales\_\allowbreak{}idr)}
 \item
-  \textbf{Grain:} bulan x channel x region (as-of) x toko x kategori x flag B2B
+  \textbf{Grain:} bulan x channel x region (dasar target, region\_\allowbreak{}target\_\allowbreak{}basis) x toko x kategori x flag B2B
 \item
   \textbf{View sumber:} \texttt{metrics.v\_\allowbreak{}sales\_\allowbreak{}monthly}
 \item
@@ -1751,7 +1788,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya \texttt{SELECT}
 \item
   \textbf{View sumber:} \texttt{metrics.v\_\allowbreak{}sales\_\allowbreak{}monthly}
 \item
-  \textbf{Aturan inklusi/eksklusi:} HPP as-of dari product\_\allowbreak{}cost\_\allowbreak{}history (bukan HPP terkini). Margin dihitung setelah diskon/voucher dan sebelum biaya channel.
+  \textbf{Aturan inklusi/eksklusi:} Basis baris sama dengan Net Sales: tanpa void dan baris asli yang di-void, tanpa order CANCELLED, tanpa TRN-99; retur tidak dikurangkan. HPP as-of dari product\_\allowbreak{}cost\_\allowbreak{}history (bukan HPP terkini). Margin dihitung setelah diskon/voucher dan sebelum biaya channel.
 \item
   \textbf{Pemilik metrik:} Finance Controller
 \item
@@ -1771,7 +1808,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya \texttt{SELECT}
 \item
   \textbf{View sumber:} \texttt{metrics.v\_\allowbreak{}sales\_\allowbreak{}monthly\ /\ metrics.v\_\allowbreak{}margin\_\allowbreak{}vs\_\allowbreak{}target}
 \item
-  \textbf{Aturan inklusi/eksklusi:} Tarif: Store 0,7\%; Website dan Mobile App 2,2\%; Marketplace 9,0\% sampai 31 Mar 2025 lalu 11,5\%. Biaya operasional toko dan biaya marketing di luar promo tidak tersedia di data.
+  \textbf{Aturan inklusi/eksklusi:} Basis baris sama dengan Net Sales: tanpa void dan baris asli yang di-void, tanpa order CANCELLED, tanpa TRN-99; retur tidak dikurangkan. Tarif: Store 0,7\%; Website dan Mobile App 2,2\%; Marketplace 9,0\% sampai 31 Mar 2025 lalu 11,5\%. Biaya operasional toko dan biaya marketing di luar promo tidak tersedia di data.
 \item
   \textbf{Pemilik metrik:} Finance Controller
 \item
@@ -1811,7 +1848,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya \texttt{SELECT}
 \item
   \textbf{View sumber:} \texttt{metrics.v\_\allowbreak{}txn\_\allowbreak{}monthly}
 \item
-  \textbf{Aturan inklusi/eksklusi:} Struk = (sumber, trx\_\allowbreak{}id/order\_\allowbreak{}no) distinct. Hanya pada view tanpa kategori/promo karena 39\% struk memuat lebih dari satu kategori.
+  \textbf{Aturan inklusi/eksklusi:} Struk = (sumber, trx\_\allowbreak{}id/order\_\allowbreak{}no) distinct. Struk void dan order CANCELLED tidak dihitung; retur tidak dikurangkan. Hanya pada view tanpa kategori/promo karena 39\% struk memuat lebih dari satu kategori.
 \item
   \textbf{Pemilik metrik:} Direktur Komersial
 \item
@@ -2017,7 +2054,7 @@ Dipakai untuk
 
 FP\&A hanya menetapkan target Store \textbf{per region}. Target toko di \texttt{v\_\allowbreak{}store\_\allowbreak{}target\_\allowbreak{}alloc} adalah alokasi (asumsi, bukan target resmi):
 \texttt{target\ region\ bulan\ itu\ x\ pangsa\ toko}. Pangsa = penjualan toko (tanpa B2B) pada bulan yang sama tahun lalu dibagi total penjualan seluruh
-toko anggota region pada akhir bulan target (SCD2, sehingga perpindahan BGR-01 pada Juli 2025 diperlakukan benar). Region tanpa penjualan tahun
+toko anggota region menurut peta awal tahun target (\texttt{region\_\allowbreak{}target\_\allowbreak{}basis}; BGR-01 di Jawa Barat sepanjang 2025, Jabodetabek mulai 2026). Region tanpa penjualan tahun
 lalu (DPS-01 yang buka 15 Jan 2025) dibagi rata. Jumlah target toko selalu sama dengan target region (diuji, T44).
 
 \subsection{Catatan metode: Promo Lift}\label{catatan-metode-promo-lift}
@@ -2030,7 +2067,6 @@ dengan promo sejenis (stabilitas lintas tahun) daripada dengan jenis promo lain.
 
 \clearpage
 % ======== C2_tata_kelola ========
-% Dikonversi dari reports/C2_tata_kelola.md; sunting langsung di sini.
 \section{C2. Lampiran Tata Kelola}\label{c2.-lampiran-tata-kelola}
 
 Legenda status: \textbf{{[}Sudah{]}} diimplementasikan dan dapat diperiksa di repo; \textbf{{[}Usulan{]}} rancangan yang belum dijalankan (butuh keputusan pemilik atau akses admin).
@@ -2070,7 +2106,7 @@ Dipakai di
 \end{longtable}
 }
 
-Pemilik \textbf{metrik} (bukan sumber): Net Sales dan GM/CM Finance Controller; Achievement dan Promo Lift Direktur Komersial; Return Rate Head of Store Operations (Store) dan Head of E-Commerce (online). Rinciannya ada di \texttt{A7\_\allowbreak{}kamus\_\allowbreak{}metrik.md} \textbf{{[}Sudah{]}}. Penetapan pemilik di atas adalah usulan analis berdasarkan kolom "Sumber" paket data \textbf{{[}Usulan{]}} sampai disetujui masing-masing.
+Pemilik \textbf{metrik} (bukan sumber): Net Sales dan GM/CM Finance Controller; Achievement dan Promo Lift Direktur Komersial; Return Rate Head of Store Operations (Store) dan Head of E-Commerce (online). Rinciannya ada di Kamus Metrik (A6 dan Lampiran A7) \textbf{{[}Sudah{]}}. Penetapan pemilik di atas adalah usulan analis berdasarkan kolom ``Sumber'' paket data \textbf{{[}Usulan{]}} sampai disetujui masing-masing.
 
 \subsection{2. Klasifikasi PII dan perlakuannya}\label{klasifikasi-pii-dan-perlakuannya}
 
@@ -2095,27 +2131,27 @@ Status
 \bottomrule\noalign{}
 \endlastfoot
 \texttt{full\_\allowbreak{}name}, \texttt{phone}, \texttt{email} & PII langsung & Tidak dibawa ke \texttt{stg}, \texttt{dw}, \texttt{metrics}, atau dashboard & \textbf{{[}Sudah{]}} \\
-\texttt{birth\_\allowbreak{}date} & PII langsung & Dihitung menjadi \texttt{age\_\allowbreak{}band} di staging, kolom asli dibuang; nilai sentinel \texttt{1900-01-01} (418 member) menjadi "Tidak diketahui" & \textbf{{[}Sudah{]}} \\
+\texttt{birth\_\allowbreak{}date} & PII langsung & Dihitung menjadi \texttt{age\_\allowbreak{}band} di staging, kolom asli dibuang; nilai sentinel \texttt{1900-01-01} (418 member) menjadi ``Tidak diketahui'' & \textbf{{[}Sudah{]}} \\
 \texttt{gender}, \texttt{city} & Quasi-identifier & Tidak dibawa; tidak dibutuhkan untuk dua keputusan & \textbf{{[}Sudah{]}} \\
 \texttt{customer\_\allowbreak{}id} / \texttt{member\_\allowbreak{}id} & Pseudonim & Boleh sebagai kunci; tidak ditampilkan sebagai daftar di dashboard & \textbf{{[}Sudah{]}} \\
 \texttt{member\_\allowbreak{}tier}, \texttt{join\_\allowbreak{}date}, \texttt{join\_\allowbreak{}channel} & Non-PII & Boleh dipakai & \textbf{{[}Sudah{]}} \\
 \end{longtable}
 }
 
-Pengendali: (1) \texttt{01\_\allowbreak{}load} hanya membuat TEMP view sehingga PII tidak tersimpan di \texttt{kirana.duckdb}; (2) uji \textbf{T12} (BLOCKING) memeriksa \texttt{information\_\allowbreak{}schema.columns} pada \texttt{stg}, \texttt{dw}, \texttt{dq}, \texttt{metrics}, dan \texttt{acc\_\allowbreak{}*} dan sudah terbukti mendeteksi cacat yang disuntik (mutasi M06); (3) \texttt{.env}, \texttt{raw\_\allowbreak{}data/}, dan \texttt{docs/} ada di \texttt{.gitignore} \textbf{{[}Sudah{]}}. Catatan: dua member dapat berbagi email (DQ-19, 491 grup); karena email tidak dibawa, kedua \texttt{customer\_\allowbreak{}id} tetap terpisah dan tidak digabung.
+Pengendali: (1) \texttt{01\_\allowbreak{}load} hanya membuat TEMP view sehingga PII tidak tersimpan di \texttt{kirana.duckdb}; (2) uji \textbf{T12} (BLOCKING) memeriksa \texttt{information\_\allowbreak{}schema.columns} pada \texttt{stg}, \texttt{dw}, \texttt{dq}, \texttt{metrics}, dan \texttt{acc\_\allowbreak{}*} dan sudah terbukti mendeteksi kolom PII yang disuntik (uji mutasi, A5 §2b); (3) \texttt{.env}, \texttt{raw\_\allowbreak{}data/}, dan \texttt{docs/} ada di \texttt{.gitignore} \textbf{{[}Sudah{]}}. Catatan: dua member dapat berbagi email (DQ-19, 491 grup); karena email tidak dibawa, kedua \texttt{customer\_\allowbreak{}id} tetap terpisah dan tidak digabung.
 
 \subsection{3. Desain hak akses}\label{desain-hak-akses}
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2300}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3800}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3900}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4300}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3400}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Peran
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Akses yang dirancang
+Akses
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Status
 \end{minipage} \\
@@ -2123,16 +2159,62 @@ Status
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Finance (Finance Controller) & Semua schema \texttt{metrics} dan \texttt{dw} non-PII & \textbf{{[}Usulan{]}} group Metabase "Finance" \\
-Direktur Komersial & Semua agregat di \texttt{metrics}, tanpa \texttt{dw} baris detail & \textbf{{[}Usulan{]}} group "Komersial" \\
-Store Manager & Hanya region-nya melalui schema \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} & View \textbf{{[}Sudah{]}}; group dan izin Metabase \textbf{{[}Usulan{]}} \\
+Finance (Finance Controller) & Koleksi \emph{KIRANA BI} (lihat); query builder pada schema \texttt{metrics} dan \texttt{dw} (non-PII); tanpa SQL native & \textbf{{[}Sudah{]}} grup ``Finance'' \\
+Direktur Komersial & Koleksi \emph{KIRANA BI} (lihat), dashboard saja; tidak membuat query & \textbf{{[}Sudah{]}} grup ``Direktur Komersial'' \\
+Store Manager & Hanya koleksi regionnya: dashboard ``KIRANA Store Manager - \texttt{\textless{}region\textgreater{}}'' yang membaca \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}}; query builder hanya pada schema \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} & \textbf{{[}Sudah{]}} 6 grup ``Store Manager \texttt{\textless{}region\textgreater{}}'' \\
+All Users (setiap akun) & Tidak melihat koleksi KIRANA dan tidak dapat membuat query; akses hanya lewat grup di atas & \textbf{{[}Sudah{]}} \\
 Siapa pun & Tidak ada akses ke PII (data tidak ada di model) & \textbf{{[}Sudah{]}} \\
 \end{longtable}
 }
 
-\textbf{Yang sudah diimplementasikan.} Enam schema \texttt{acc\_\allowbreak{}jabodetabek}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}barat}, \texttt{acc\_\allowbreak{}jateng\_\allowbreak{}diy}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}timur}, \texttt{acc\_\allowbreak{}bali\_\allowbreak{}nusra}, \texttt{acc\_\allowbreak{}sumatera} (di \texttt{sql/05\_\allowbreak{}metrics.sql}), masing-masing berisi \texttt{v\_\allowbreak{}sales\_\allowbreak{}monthly} dan \texttt{v\_\allowbreak{}store\_\allowbreak{}performance\_\allowbreak{}monthly} yang sudah difilter ke satu region, memakai definisi region yang sama dengan dashboard (\texttt{region\_\allowbreak{}target\_\allowbreak{}basis}). Uji \textbf{T54} (BLOCKING) memastikan tiap view hanya memuat regionnya dan gabungan seluruh region (ditambah \texttt{Lainnya} untuk pesanan online di luar enam region) sama dengan view induk; mutasi M35 membuktikan uji ini mendeteksi kebocoran. Region \texttt{Lainnya} sengaja tidak punya schema.
+\textbf{Lapisan data.} Enam schema \texttt{acc\_\allowbreak{}jabodetabek}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}barat}, \texttt{acc\_\allowbreak{}jateng\_\allowbreak{}diy}, \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}timur}, \texttt{acc\_\allowbreak{}bali\_\allowbreak{}nusra}, \texttt{acc\_\allowbreak{}sumatera} (di \texttt{sql/05\_\allowbreak{}metrics.sql}), masing-masing berisi \texttt{v\_\allowbreak{}sales\_\allowbreak{}monthly} dan \texttt{v\_\allowbreak{}store\_\allowbreak{}performance\_\allowbreak{}monthly} yang sudah difilter ke satu region, memakai definisi region yang sama dengan dashboard (\texttt{region\_\allowbreak{}target\_\allowbreak{}basis}). Uji \textbf{T54} (BLOCKING) memastikan tiap view hanya memuat regionnya dan gabungan seluruh region (ditambah \texttt{Lainnya} untuk pesanan online di luar enam region) sama dengan view induk; uji mutasi (A5 §2b) membuktikan uji ini mendeteksi kebocoran. Region \texttt{Lainnya} sengaja tidak punya schema.
 
-\textbf{Cara menerapkan di Metabase (usulan, belum dijalankan di instance ini).} Metabase edisi OSS tidak punya row-level sandboxing, jadi pembatasan dilakukan di data: (1) Admin \textgreater{} People \textgreater{} Groups: buat "Finance", "Komersial", dan satu group "Store Manager "; (2) Admin \textgreater{} Permissions \textgreater{} Data: untuk group Store Manager, set izin data hanya pada schema \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} miliknya (view data: dapat diakses; schema lain: diblokir; query native: dimatikan); (3) buat dashboard turunan untuk Store Manager yang kartunya membaca \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}}. Keterbatasan: dashboard utama memakai kartu SQL native sehingga tidak dapat dibuka oleh group yang diblokir pada schema \texttt{metrics}; perilaku izin ini belum saya verifikasi di Metabase.
+\textbf{Lapisan Metabase.} Metabase edisi OSS tidak punya row-level security, jadi batas baris ada di view \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} dan Metabase membatasi koleksi serta schema yang boleh dibuka. \texttt{dashboard/access.py} (dijalankan setelah \texttt{provision.py}, aman diulang) membuat grup, satu koleksi dan dashboard per region, lalu mengatur izin koleksi dan izin data. Anggota grup ditambahkan admin lewat Admin \textgreater{} People. Hasil uji dengan satu pengguna uji per grup pada instance Metabase uji (konfigurasi sama dengan instance proyek):
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1919}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4343}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3737}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Pengguna uji
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dibuka
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Hasil
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Store Manager Sumatera & Dashboard regionnya & Berhasil; hanya toko MDN-01 dan PLM-01 yang tampil \\
+Store Manager Sumatera & Dashboard utama; dashboard Store Manager Jabodetabek & Ditolak (403) \\
+Store Manager Sumatera & Query builder \texttt{acc\_\allowbreak{}sumatera} / \texttt{acc\_\allowbreak{}jawa\_\allowbreak{}timur} / \texttt{metrics} / \texttt{dw}; SQL native & Berhasil / ditolak / ditolak / ditolak; ditolak \\
+Finance & Dashboard utama; query builder \texttt{metrics} dan \texttt{dw} & Berhasil \\
+Finance & Query builder \texttt{stg} dan \texttt{acc\_\allowbreak{}*}; SQL native; dashboard Store Manager & Ditolak \\
+Direktur Komersial & Dashboard utama & Berhasil \\
+Direktur Komersial & Membuat query (query builder atau SQL native) & Ditolak \\
+\end{longtable}
+}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Izin koleksi KIRANA BI per grup}]{img/akses_izin_koleksi.png}}
+\caption{Izin koleksi KIRANA BI per grup}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Izin data grup Store Manager Sumatera: hanya acc\_\allowbreak{}sumatera}]{img/akses_izin_data_sm_sumatera.png}}
+\caption{Izin data grup Store Manager Sumatera: hanya acc\_\allowbreak{}sumatera}
+\end{figure}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Dashboard yang dilihat pengguna Store Manager Sumatera}]{img/akses_dashboard_sm_sumatera.png}}
+\caption{Dashboard yang dilihat pengguna Store Manager Sumatera}
+\end{figure}
 
 Pengaman lain \textbf{{[}Sudah{]}}: public sharing dimatikan (\texttt{MB\_\allowbreak{}ENABLE\_\allowbreak{}PUBLIC\_\allowbreak{}SHARING=false} di \texttt{compose.yaml}), tidak ada embedding, Metabase hanya mendengarkan \texttt{127.0.0.1}, koneksi DuckDB read-only, dan kredensial hanya lewat variabel lingkungan atau \texttt{.env} yang di-ignore.
 
@@ -2144,7 +2226,7 @@ Pengaman lain \textbf{{[}Sudah{]}}: public sharing dimatikan (\texttt{MB\_\allow
 \caption{Lineage}
 \end{figure}
 
-Sumber (\texttt{reports/img/lineage.drawio} dapat disunting di draw.io; dibuat ulang oleh \texttt{reports/img/build\_\allowbreak{}lineage.py}) \textbf{{[}Sudah{]}}. Rantai penuh: 13 file di \texttt{raw\_\allowbreak{}data/} → \texttt{raw} (TEMP view) → \texttt{stg} (\texttt{disposition} FACT / EXCLUDE / REJECT) → \texttt{dw} (star schema) → \texttt{dq} (rekonsiliasi, uji) → \texttt{metrics} dan \texttt{acc\_\allowbreak{}*} → 39 kartu Metabase (\texttt{dashboard/questions/*.sql}) → 5 tab + Detail Toko → \texttt{B\_\allowbreak{}insight\_\allowbreak{}brief} (angka dari \texttt{reports/insights/facts.sql}). Setiap angka di laporan dapat ditelusuri lewat \texttt{number\_\allowbreak{}registry.md} dan \texttt{insight\_\allowbreak{}registry.md} ke view dan filter sumbernya \textbf{{[}Sudah{]}}. Alat lineage otomatis (mis. dbt docs) adalah pengembangan \textbf{{[}Usulan{]}}.
+Sumber (\texttt{reports/img/lineage.drawio} dapat disunting di draw.io; dibuat ulang oleh \texttt{reports/img/build\_\allowbreak{}lineage.py}) \textbf{{[}Sudah{]}}. Rantai penuh: 13 file di \texttt{raw\_\allowbreak{}data/} → \texttt{raw} (TEMP view) → \texttt{stg} (\texttt{disposition} FACT / EXCLUDE / REJECT) → \texttt{dw} (star schema) → \texttt{dq} (rekonsiliasi, uji) → \texttt{metrics} dan \texttt{acc\_\allowbreak{}*} → 39 kartu Metabase (\texttt{dashboard/questions/*.sql}) → 5 tab + Detail Toko → \texttt{B\_\allowbreak{}insight\_\allowbreak{}brief} (angka dari \texttt{reports/insights/facts.sql}). Setiap angka di laporan dapat ditelusuri lewat Lampiran Number Registry dan \texttt{reports/insights/insight\_\allowbreak{}registry.md} ke view dan filter sumbernya \textbf{{[}Sudah{]}}. Alat lineage otomatis (mis. dbt docs) adalah pengembangan \textbf{{[}Usulan{]}}.
 
 \subsection{5. Refresh}\label{refresh}
 
@@ -2198,7 +2280,7 @@ Rekonsiliasi raw → fakta & Selisih ≠ 0 membuat T10 dan T11 gagal & \textbf{{
 Uji mutasi & 35 cacat disuntik, semua terdeteksi; jalankan setelah mengubah model & \textbf{{[}Sudah{]}} \\
 Sync POS FAILED & Notifikasi ke IT bila ada toko-hari FAILED atau lebih dari 1 hari berturut-turut; dashboard menandai toko sebagai data tidak lengkap & Penanda \textbf{{[}Sudah{]}}; notifikasi \textbf{{[}Usulan{]}} \\
 Freshness & Peringatan bila tanggal data terakhir lebih dari 2 hari dari tanggal rebuild & \textbf{{[}Usulan{]}} \\
-Log akses Metabase & Tinjau bulanan siapa membuka dashboard dan perubahan group & \textbf{{[}Usulan{]}} \\
+Log akses Metabase & Tinjau bulanan siapa membuka dashboard dan perubahan grup & \textbf{{[}Usulan{]}} \\
 \end{longtable}
 }
 
@@ -2231,7 +2313,6 @@ Hasil uji (\texttt{dq.test\_\allowbreak{}results}) & Disimpan per build & Bukti 
 
 \clearpage
 % ======== number_registry ========
-% Dikonversi dari reports/number_registry.md; sunting langsung di sini.
 \section{Number Registry}\label{number-registry}
 
 Dihasilkan otomatis oleh \texttt{scripts/export\_\allowbreak{}reports.sh} dari \texttt{kirana.duckdb}. Setiap angka di insight brief dan laporan harus berasal dari sini
@@ -2320,7 +2401,7 @@ H1 2026 & Website & 1237537600 & 1415000000 & 87.5 & Merah \\
 
 \subsection{3. Achievement Store per region}\label{achievement-store-per-region}
 
-\emph{View: \texttt{metrics.v\_\allowbreak{}target\_\allowbreak{}achievement} (channel Store, region as-of tanggal transaksi).}
+\emph{View: \texttt{metrics.v\_\allowbreak{}target\_\allowbreak{}achievement} (channel Store, region dasar target \texttt{region\_\allowbreak{}target\_\allowbreak{}basis} = region awal tahun).}
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}

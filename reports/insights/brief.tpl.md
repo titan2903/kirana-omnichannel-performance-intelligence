@@ -17,7 +17,7 @@ Penjualan sudah memenuhi target secara agregat (FY2025 **{{ach_total_fy25|pct1}}
 
 ## 1. Margin kotor turun {{gm_drop_pt|pt1}} karena HPP per unit naik {{hpp_idx_h126|idx}}% sementara harga neto hanya naik {{price_idx_h126|idx}}%
 
-Pada {{gm_h126|pct1}} margin kotor H1 2026 jauh di bawah FY2024 ({{gm_fy24|pct1}}). Bila HPP per SKU dibekukan di nilai akhir 2024, margin H1 2026 justru **{{gm_cf_h126|pct1}}**, sehingga efek HPP ({{hpp_effect_pt|pt1}}) menjelaskan seluruh penurunan. Diskon bukan penyebab utamanya: rasio diskon terhadap gross sales naik hanya {{disc_rise_pt|pt2}} (dari {{disc_fy24|pct2}} ke {{disc_h126|pct2}}) dan bauran kategori nyaris tidak bergeser. Kenaikan HPP terjadi dua kali: **{{sku_hpp_jul25|int}} SKU** pada 1 Jul 2025 (rata-rata +{{hpp_naik_jul25_pct|n1}}%) dan **{{sku_hpp_jan26|int}} SKU** pada 1 Jan 2026 (rata-rata +{{hpp_naik_jan26_pct|n1}}%).
+Margin kotor H1 2026 ({{gm_h126|pct1}}) jauh di bawah FY2024 ({{gm_fy24|pct1}}). Bila HPP per SKU dibekukan di nilai akhir 2024, margin H1 2026 justru **{{gm_cf_h126|pct1}}**, sehingga efek HPP ({{hpp_effect_pt|pt1}}) menjelaskan seluruh penurunan. Diskon bukan penyebab utamanya: rasio diskon terhadap gross sales naik hanya {{disc_rise_pt|pt2}} (dari {{disc_fy24|pct2}} ke {{disc_h126|pct2}}) dan bauran kategori nyaris tidak bergeser. Kenaikan HPP terjadi dua kali: **{{sku_hpp_jul25|int}} SKU** pada 1 Jul 2025 (rata-rata +{{hpp_naik_jul25_pct|n1}}%) dan **{{sku_hpp_jan26|int}} SKU** pada 1 Jan 2026 (rata-rata +{{hpp_naik_jan26_pct|n1}}%).
 
 <div class="figs"><img src="insights/img/c1_margin.png" alt="HPP dan harga neto per unit, margin aktual dan kontrafaktual"></div>
 
@@ -37,7 +37,7 @@ Pada FY2025 Net Sales {{ach_total_fy25|pct1}} dari target (selisih {{gap_total_f
 
 <div class="figs"><img src="insights/img/c3_target.png" alt="Selisih Net Sales terhadap target per channel"></div>
 
-**Website bukan kehilangan pelanggan, melainkan pelanggan yang berpindah.** Dari {{web_mig_total|int}} member yang aktif di Website pada FY2024, hanya {{web_mig_still|int}} ({{web_mig_still_pct|pct0}}) yang masih berbelanja di sana pada H1 2026; **{{web_mig_app|int}}** pindah ke Mobile App, {{web_mig_other|int}} ke Marketplace/Store, dan hanya {{web_mig_inactive|int}} yang berhenti total. Website hanya memiliki **{{promo_n_website|int}}** promo sepanjang periode (Harbolnas 1 hari) dibanding {{promo_n_app|int}} promo Mobile App. Implikasinya: jangan menambah anggaran promo Website untuk mengejar target, tetapi tinjau ulang target Website.
+**Website bukan kehilangan pelanggan, melainkan pelanggan yang berpindah.** Dari {{web_mig_total|int}} member yang aktif di Website pada FY2024, hanya {{web_mig_still|int}} ({{web_mig_still_pct|pct0}}) yang masih berbelanja di sana pada H1 2026; **{{web_mig_app|int}}** pindah ke Mobile App, {{web_mig_other|int}} ke Marketplace/Store, dan hanya {{web_mig_inactive|int}} yang berhenti total. Selain {{promo_n_all|int}} promo Ramadan untuk semua channel, Website hanya memiliki **{{promo_n_website|int}}** promo khusus (Harbolnas, masing-masing 1 hari) dibanding {{promo_n_app|int}} promo khusus Mobile App. Implikasinya: jangan menambah anggaran promo Website untuk mengejar target, tetapi tinjau ulang target Website.
 
 ## 4. Mega Sale dan Clearance menggerus margin, App Payday menambahnya di {{p_pos_ap|int}} dari {{p_n_ap|int}} kode
 
@@ -60,8 +60,8 @@ Target toko adalah **alokasi** target region menurut pangsa penjualan tahun lalu
 <div class="figs"><img src="insights/img/c5_toko.png" alt="Achievement toko FY2025 dan H1 2026"></div>
 
 - **MDN-01 (Medan):** {{s_mdn01_ach_fy25|pct1}} (FY2025) dan {{s_mdn01_ach_h126|pct1}} (H1 2026), kekurangan {{s_mdn01_gap_fy25|rpj_abs}} dan {{s_mdn01_gap_h126|rpj_abs}}, penjualan turun {{s_mdn01_yoy|abs|pct1}} secara tahunan. Penjualan online ke Medan justru tumbuh {{online_yoy_medan|pct1}}, setara kota lain ({{online_yoy_palembang|pct1}} di Palembang, tempat toko PLM-01 tetap tumbuh {{s_plm01_yoy|pct1}}), sehingga kanibalisasi online saja tidak menjelaskannya.
-- **SBY-02, MLG-01, SOL-01:** {{s_sby02_ach_h126|pct1}}, {{s_mlg01_ach_h126|pct1}}, {{s_sol01_ach_h126|pct1}} pada H1 2026 (naik dari ≥95% pada FY2025) dengan penjualan tahunan {{s_sby02_yoy|pct1}}, {{s_mlg01_yoy|pct1}}, {{s_sol01_yoy|pct1}}: pantau 90 hari. Keempat toko bersama-sama berselisih {{s_prog4_gap_h126|rpj_abs}} dari target H1 2026.
-- **Region:** Sumatera di bawah target di kedua periode ({{ach_reg_sum_fy25|pct1}} dan {{ach_reg_sum_h126|pct1}}), terutama karena MDN-01 (PLM-01 sehat). **Jawa Barat tidak bermasalah** ({{ach_reg_jb_fy25|pct1}} pada FY2025, {{ach_reg_jb_h126|pct1}} pada H1 2026); lihat tabel Anomali di halaman 5.
+- **SBY-02, MLG-01, SOL-01:** {{s_sby02_ach_h126|pct1}}, {{s_mlg01_ach_h126|pct1}}, {{s_sol01_ach_h126|pct1}} pada H1 2026 (turun dari ≥95% pada FY2025) dengan penjualan tahunan {{s_sby02_yoy|pct1}}, {{s_mlg01_yoy|pct1}}, {{s_sol01_yoy|pct1}}: pantau 90 hari. Keempat toko bersama-sama berselisih {{s_prog4_gap_h126|rpj_abs}} dari target H1 2026.
+- **Region:** Sumatera di bawah target di kedua periode ({{ach_reg_sum_fy25|pct1}} dan {{ach_reg_sum_h126|pct1}}), terutama karena MDN-01 (PLM-01 sehat). **Jawa Barat tidak bermasalah** ({{ach_reg_jb_fy25|pct1}} pada FY2025, {{ach_reg_jb_h126|pct1}} pada H1 2026); lihat tabel Anomali di akhir brief.
 
 ## 6. Fashion online mengembalikan {{rr_fashion_online_pct|pct1}} penjualannya (Store {{rr_fashion_store_pct|pct1}}), dan {{fr_ukuran|pct0}} refund Fashion karena ukuran
 
@@ -83,7 +83,7 @@ Fashion hanya sebagian kecil penjualan tetapi menyumbang **{{fashion_refund_shar
 <tr class="grp"><td colspan="4"><b>Keputusan 2: toko atau region yang masuk program perbaikan</b></td></tr>
 <tr><td><b>2a.</b> Program intensif <b>MDN-01</b> (diagnosis 30 hari: trafik, ketersediaan, kompetitor lokal).</td><td>Gap H1 2026 {{s_mdn01_gap_h126|rpj_abs}}; menutup separuh menambah sekitar {{s_mdn01_half_net_rp|rpj}} Net Sales per semester.</td><td>Alokasi target toko adalah asumsi; penyebab bisnis belum terbukti dari data.</td><td>Data trafik pengunjung, harga kompetitor, jam operasional Medan.</td></tr>
 <tr><td><b>2b.</b> Pemantauan 90 hari <b>SBY-02, MLG-01, SOL-01</b> (intervensi hanya bila tetap di bawah 90%).</td><td>Empat toko bersama menutup gap {{s_prog4_gap_h126|rpj_abs}} per semester: batas atas {{s_prog4_cm_full_rp|rpj}} CM, skenario 50%: {{s_prog4_cm_half_rp|rpj}}.</td><td>Penurunan ringan bisa musiman atau kanibalisasi online ({{online_yoy_all|pct0}} di seluruh kota).</td><td>Penjualan H2 2026; atribusi online per kota toko.</td></tr>
-<tr><td><b>2c.</b> Tidak ada program untuk <b>SBY-01, BDG-02, DPS-01</b> dan region <b>Jawa Barat</b>.</td><td>Penjelasan di tabel Anomali (halaman 5); SBY-01 pulih ke {{s_sby01_ach_h126|pct1}} setelah renovasi.</td><td>Menyembunyikan masalah nyata bila asumsi anomali salah.</td><td>Konfirmasi Store Operations atas renovasi; log sync lengkap BDG-02.</td></tr>
+<tr><td><b>2c.</b> Tidak ada program untuk <b>SBY-01, BDG-02, DPS-01</b> dan region <b>Jawa Barat</b>.</td><td>Penjelasan di tabel Anomali di akhir brief; SBY-01 pulih ke {{s_sby01_ach_h126|pct1}} setelah renovasi.</td><td>Menyembunyikan masalah nyata bila asumsi anomali salah.</td><td>Konfirmasi Store Operations atas renovasi; log sync lengkap BDG-02.</td></tr>
 </tbody></table>
 
 ## Anomali: kejadian bisnis atau masalah data

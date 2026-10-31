@@ -2,7 +2,7 @@
 --   duckdb kirana.duckdb < sql/00_main.sql      (jalankan dari root project; hentikan Metabase dulu)
 -- Urutan: load -> staging -> model -> rekonsiliasi -> metrics (semantic layer) -> uji kualitas
 -- Idempoten: hanya CREATE OR REPLACE; tanpa random()/now(); verifikasi:
---   bash .claude/skills/kirana-pipeline/scripts/idempotency_check.sh
+--   bash scripts/idempotency_check.sh
 .bail on
 .read sql/01_load.sql
 .read sql/02_staging.sql

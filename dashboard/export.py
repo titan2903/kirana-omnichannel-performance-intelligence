@@ -8,7 +8,7 @@ Hasil: <out>/NN_<nama>.png, <out>/Dashboard_KIRANA.pdf. Ganti nama PDF menjadi U
 """
 import json, os, sys, time
 import requests
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from playwright.sync_api import sync_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -84,6 +84,10 @@ def main():
             pg.get_by_text("SBY-01", exact=True).first.click()
         shot("09_klik_toko_SBY-01_detail.png", f"{URL}/dashboard/{main_id}?tab={t_crs}&periode=2025-01-01~2025-12-31", after=click_store)
         print("URL setelah klik toko:", page.url)
+
+        # 5) pembatasan akses (setelah dashboard/access.py): dashboard Store Manager yang hanya membaca acc_sumatera
+        if "access" in state:
+            shot("10_akses_dashboard_store_manager_sumatera.png", f"{URL}/dashboard/{state['access']['acc_sumatera']['dashboard']}")
         b.close()
 
     # ---- gabungkan ke PDF (satu halaman per gambar, lebar A4 landscape-ish proporsional)
@@ -96,6 +100,16 @@ def main():
             im = im.crop((0, 0, im.width, min(im.height, rows[0] + 40)))
             im.save(p)
         imgs.append(im)
+    # wireframe beranotasi (dibuat sebelum dashboard) menjadi halaman awal, diberi label agar tidak tertukar dengan tangkapan layar
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 22)
+    wfs = []
+    for n in ("kirana_executive", "kirana_channel_region_store", "kirana_margin_promo", "kirana_returns_customers", "kirana_storyline", "detail_toko_detail"):
+        im = Image.open(os.path.join(HERE, "wireframe", f"wireframe_{n}.png")).convert("RGB")
+        page = Image.new("RGB", (im.width, im.height + 50), "white")
+        page.paste(im, (0, 50))
+        ImageDraw.Draw(page).text((10, 12), "WIREFRAME beranotasi (dibuat sebelum dashboard; dashboard/wireframe/)", font=font, fill="#d03b3b")
+        wfs.append(page)
+    imgs = wfs + imgs
     pdf = os.path.join(OUT, "Dashboard_KIRANA.pdf")
     imgs[0].save(pdf, save_all=True, append_images=imgs[1:], resolution=110)
     print("PDF:", pdf, f"({len(imgs)} halaman)")

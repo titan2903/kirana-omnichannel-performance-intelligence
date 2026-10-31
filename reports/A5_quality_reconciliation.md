@@ -5,9 +5,9 @@ Dihasilkan oleh `sql/04_reconciliation.sql` dan `sql/06_tests.sql`; tabel hasil 
 
 ```bash
 bash scripts/build.sh                                          # bangun ke file sementara; kirana.duckdb diganti HANYA bila semua uji BLOCKING lolos
-bash scripts/mutation_test.sh                                  # 35 cacat disuntik ke salinan (data, staging, dan semantic layer); semua harus terdeteksi
+bash scripts/mutation_test.sh                                  # 35 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
 duckdb -readonly kirana.duckdb -markdown -c "SELECT * FROM dq.test_results ORDER BY test_id"
-bash .claude/skills/kirana-pipeline/scripts/idempotency_check.sh   # IDEMPOTENT: 62 objek identik di dua run
+bash scripts/idempotency_check.sh   # IDEMPOTENT: 62 objek identik di dua run
 ```
 
 ## 1. Hasil uji produksi
@@ -23,7 +23,7 @@ bash .claude/skills/kirana-pipeline/scripts/idempotency_check.sh   # IDEMPOTENT:
 | T03 | Channel, toko, region hanya bernilai resmi | BLOCKING | 0 | PASS | Memecah agregat (DQ-01, 08) |
 | T04 | Tiap baris punya tepat satu HPP as-of dan sama dengan nilai di fakta | BLOCKING | 0 | PASS | COGS dan GM salah (SCD HPP) |
 | T05 | Tiap baris punya tarif biaya channel as-of | BLOCKING | 0 | PASS | Contribution margin menyimpang |
-| T10 | Rekonsiliasi raw -> fakta: selisih baris dan Rp = 0 | BLOCKING | 0 | PASS | Data hilang tanpa jejak |
+| T10 | Rekonsiliasi raw → fakta: selisih baris dan Rp = 0 | BLOCKING | 0 | PASS | Data hilang tanpa jejak |
 | T11 | Jembatan Net Sales menutup | BLOCKING | 0 | PASS | Net Sales harus dapat ditelusuri |
 | T12 | Tidak ada kolom PII langsung di stg/dw/dq/metrics/acc_* | BLOCKING | 0 | PASS | PII tidak boleh ke dashboard |
 | T13 | Kontrol sync log: `SUM(rows_uploaded)` = baris POS valid tanpa B2B | BLOCKING | 0 | PASS | Kontrol independen dari IT: membuktikan dedup dan void benar |
@@ -58,8 +58,8 @@ bash .claude/skills/kirana-pipeline/scripts/idempotency_check.sh   # IDEMPOTENT:
 | T49 | `v_promo_performance`: 73 promo dan total diskon = fakta | BLOCKING | 0 | PASS | Analisis efektivitas promo harus dapat dipercaya |
 | T50 | Baseline Promo Lift memadai (tak ada TIDAK_CUKUP) | WARNING | 0 | PASS | Promo tanpa baseline tidak punya lift |
 | T51 | `v_data_completeness` konsisten dengan sync log | BLOCKING | 0 | PASS | Penanda data tidak lengkap harus sama dengan sumber |
-| T53 | `region_target_basis` = region toko pada awal tahun transaksi (dihitung ulang dari `dim_store`) | BLOCKING | 0 | PASS | Target FY2025 tidak disesuaikan saat BGR-01 pindah; region saat transaksi membuat achievement Jawa Barat dan Jabodetabek salah |
 | T52 | `v_store_performance_monthly`: satu baris per bulan x toko; Net Sales dan target = `v_store_target_alloc` | BLOCKING | 0 | PASS | Join kelengkapan yang menggandakan baris merusak achievement toko di dashboard |
+| T53 | `region_target_basis` = region toko pada awal tahun transaksi (dihitung ulang dari `dim_store`) | BLOCKING | 0 | PASS | Target FY2025 tidak disesuaikan saat BGR-01 pindah; region saat transaksi membuat achievement Jawa Barat dan Jabodetabek salah |
 | T54 | Schema `acc_<region>`: tiap view hanya memuat regionnya; gabungan semua region (+ Lainnya untuk online) = view induk | BLOCKING | 0 | PASS | Pembatasan akses per region yang bocor atau menghilangkan baris (Task 6) |
 
 Uji T13 menangkap bug nyata saat pengembangan: `is_b2b_bulk` bernilai NULL (bukan `false`) untuk baris tanpa promo,
@@ -125,7 +125,7 @@ T01–T05 yang pernah terbukti bisa gagal.
 | Region dasar target salah pada 1 baris POS | T53 |
 | View region memuat baris region lain | T54 |
 
-## 3. Rekonsiliasi raw -> tabel bersih (baris)
+## 3. Rekonsiliasi raw → tabel bersih (baris)
 
 Rumus: `raw = salinan duplikat + ditolak + dikeluarkan + fakta`. Sisi mentah dihitung langsung dari file, bukan dari staging.
 
@@ -179,6 +179,6 @@ memastikan angka ini tetap sama pada setiap build. Transaksi B2B berada di luar 
 
 ## 7. Idempotensi dan integritas sumber
 
-- `idempotency_check.sh`: build dua kali ke database sementara, hash isi tiap tabel dan view dibandingkan -> **IDEMPOTENT: 62 objek identik**.
+- `idempotency_check.sh`: build dua kali ke database sementara, hash isi tiap tabel dan view dibandingkan → **IDEMPOTENT: 62 objek identik**.
 - `scripts/build.sh`: build ke `kirana.duckdb.building`, lalu menukar ke `kirana.duckdb` hanya bila gerbang BLOCKING lolos. Jalur gagal diuji: file yang ada tidak berubah (checksum sama) dan file sementara dihapus.
 - 13 file `raw_data/` dibandingkan dengan ZIP asli (SHA-256): **13 identik, 0 berbeda**. Pipeline tidak pernah menulis ke `raw_data/`.

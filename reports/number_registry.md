@@ -37,7 +37,7 @@ Rupiah, tanpa pajak. Rasio dihitung ulang dari pembilang/penyebut. Data sampai: 
 | H1 2026 | Website     | 1237537600    | 1415000000  | 87.5            | Merah  |
 
 ## 3. Achievement Store per region
-*View: `metrics.v_target_achievement` (channel Store, region as-of tanggal transaksi).*
+*View: `metrics.v_target_achievement` (channel Store, region dasar target `region_target_basis` = region awal tahun).*
 
 | periode |        region        | net_sales_idr | target_idr | achievement_pct | status |
 |---------|----------------------|--------------:|-----------:|----------------:|--------|

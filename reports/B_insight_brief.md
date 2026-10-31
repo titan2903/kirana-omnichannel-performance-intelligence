@@ -17,7 +17,7 @@ Penjualan sudah memenuhi target secara agregat (FY2025 **99,5%**, H1 2026 **105,
 
 ## 1. Margin kotor turun 3,1 pt karena HPP per unit naik 5,9% sementara harga neto hanya naik 1,5%
 
-Pada 43,0% margin kotor H1 2026 jauh di bawah FY2024 (46,1%). Bila HPP per SKU dibekukan di nilai akhir 2024, margin H1 2026 justru **46,3%**, sehingga efek HPP (−3,3 pt) menjelaskan seluruh penurunan. Diskon bukan penyebab utamanya: rasio diskon terhadap gross sales naik hanya 0,43 pt (dari 1,63% ke 2,05%) dan bauran kategori nyaris tidak bergeser. Kenaikan HPP terjadi dua kali: **60 SKU** pada 1 Jul 2025 (rata-rata +18,0%) dan **190 SKU** pada 1 Jan 2026 (rata-rata +4,0%).
+Margin kotor H1 2026 (43,0%) jauh di bawah FY2024 (46,1%). Bila HPP per SKU dibekukan di nilai akhir 2024, margin H1 2026 justru **46,3%**, sehingga efek HPP (−3,3 pt) menjelaskan seluruh penurunan. Diskon bukan penyebab utamanya: rasio diskon terhadap gross sales naik hanya 0,43 pt (dari 1,63% ke 2,05%) dan bauran kategori nyaris tidak bergeser. Kenaikan HPP terjadi dua kali: **60 SKU** pada 1 Jul 2025 (rata-rata +18,0%) dan **190 SKU** pada 1 Jan 2026 (rata-rata +4,0%).
 
 <div class="figs"><img src="insights/img/c1_margin.png" alt="HPP dan harga neto per unit, margin aktual dan kontrafaktual"></div>
 
@@ -37,7 +37,7 @@ Pada FY2025 Net Sales 99,5% dari target (selisih −Rp 224 juta); pada H1 2026 1
 
 <div class="figs"><img src="insights/img/c3_target.png" alt="Selisih Net Sales terhadap target per channel"></div>
 
-**Website bukan kehilangan pelanggan, melainkan pelanggan yang berpindah.** Dari 7.968 member yang aktif di Website pada FY2024, hanya 1.119 (14%) yang masih berbelanja di sana pada H1 2026; **2.538** pindah ke Mobile App, 2.309 ke Marketplace/Store, dan hanya 2.002 yang berhenti total. Website hanya memiliki **2** promo sepanjang periode (Harbolnas 1 hari) dibanding 27 promo Mobile App. Implikasinya: jangan menambah anggaran promo Website untuk mengejar target, tetapi tinjau ulang target Website.
+**Website bukan kehilangan pelanggan, melainkan pelanggan yang berpindah.** Dari 7.968 member yang aktif di Website pada FY2024, hanya 1.119 (14%) yang masih berbelanja di sana pada H1 2026; **2.538** pindah ke Mobile App, 2.309 ke Marketplace/Store, dan hanya 2.002 yang berhenti total. Selain 3 promo Ramadan untuk semua channel, Website hanya memiliki **2** promo khusus (Harbolnas, masing-masing 1 hari) dibanding 27 promo khusus Mobile App. Implikasinya: jangan menambah anggaran promo Website untuk mengejar target, tetapi tinjau ulang target Website.
 
 ## 4. Mega Sale dan Clearance menggerus margin, App Payday menambahnya di 27 dari 27 kode
 
@@ -60,8 +60,8 @@ Target toko adalah **alokasi** target region menurut pangsa penjualan tahun lalu
 <div class="figs"><img src="insights/img/c5_toko.png" alt="Achievement toko FY2025 dan H1 2026"></div>
 
 - **MDN-01 (Medan):** 79,3% (FY2025) dan 83,5% (H1 2026), kekurangan Rp 301 juta dan Rp 107 juta, penjualan turun 6,3% secara tahunan. Penjualan online ke Medan justru tumbuh 45,2%, setara kota lain (45,6% di Palembang, tempat toko PLM-01 tetap tumbuh 5,7%), sehingga kanibalisasi online saja tidak menjelaskannya.
-- **SBY-02, MLG-01, SOL-01:** 87,8%, 87,9%, 89,9% pada H1 2026 (naik dari ≥95% pada FY2025) dengan penjualan tahunan −1,1%, −1,6%, −0,7%: pantau 90 hari. Keempat toko bersama-sama berselisih Rp 318 juta dari target H1 2026.
-- **Region:** Sumatera di bawah target di kedua periode (86,7% dan 89,0%), terutama karena MDN-01 (PLM-01 sehat). **Jawa Barat tidak bermasalah** (100,8% pada FY2025, 95,8% pada H1 2026); lihat tabel Anomali di halaman 5.
+- **SBY-02, MLG-01, SOL-01:** 87,8%, 87,9%, 89,9% pada H1 2026 (turun dari ≥95% pada FY2025) dengan penjualan tahunan −1,1%, −1,6%, −0,7%: pantau 90 hari. Keempat toko bersama-sama berselisih Rp 318 juta dari target H1 2026.
+- **Region:** Sumatera di bawah target di kedua periode (86,7% dan 89,0%), terutama karena MDN-01 (PLM-01 sehat). **Jawa Barat tidak bermasalah** (100,8% pada FY2025, 95,8% pada H1 2026); lihat tabel Anomali di akhir brief.
 
 ## 6. Fashion online mengembalikan 15,1% penjualannya (Store 2,8%), dan 57% refund Fashion karena ukuran
 
@@ -83,7 +83,7 @@ Fashion hanya sebagian kecil penjualan tetapi menyumbang **40,5%** dari seluruh 
 <tr class="grp"><td colspan="4"><b>Keputusan 2: toko atau region yang masuk program perbaikan</b></td></tr>
 <tr><td><b>2a.</b> Program intensif <b>MDN-01</b> (diagnosis 30 hari: trafik, ketersediaan, kompetitor lokal).</td><td>Gap H1 2026 Rp 107 juta; menutup separuh menambah sekitar Rp 53,7 juta Net Sales per semester.</td><td>Alokasi target toko adalah asumsi; penyebab bisnis belum terbukti dari data.</td><td>Data trafik pengunjung, harga kompetitor, jam operasional Medan.</td></tr>
 <tr><td><b>2b.</b> Pemantauan 90 hari <b>SBY-02, MLG-01, SOL-01</b> (intervensi hanya bila tetap di bawah 90%).</td><td>Empat toko bersama menutup gap Rp 318 juta per semester: batas atas Rp 138 juta CM, skenario 50%: Rp 69,2 juta.</td><td>Penurunan ringan bisa musiman atau kanibalisasi online (43% di seluruh kota).</td><td>Penjualan H2 2026; atribusi online per kota toko.</td></tr>
-<tr><td><b>2c.</b> Tidak ada program untuk <b>SBY-01, BDG-02, DPS-01</b> dan region <b>Jawa Barat</b>.</td><td>Penjelasan di tabel Anomali (halaman 5); SBY-01 pulih ke 111,3% setelah renovasi.</td><td>Menyembunyikan masalah nyata bila asumsi anomali salah.</td><td>Konfirmasi Store Operations atas renovasi; log sync lengkap BDG-02.</td></tr>
+<tr><td><b>2c.</b> Tidak ada program untuk <b>SBY-01, BDG-02, DPS-01</b> dan region <b>Jawa Barat</b>.</td><td>Penjelasan di tabel Anomali di akhir brief; SBY-01 pulih ke 111,3% setelah renovasi.</td><td>Menyembunyikan masalah nyata bila asumsi anomali salah.</td><td>Konfirmasi Store Operations atas renovasi; log sync lengkap BDG-02.</td></tr>
 </tbody></table>
 
 ## Anomali: kejadian bisnis atau masalah data

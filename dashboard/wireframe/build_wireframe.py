@@ -33,7 +33,7 @@ ANNOT = {
         keputusan="Keputusan 1 dan 2: kualitas channel/kategori yang layak ditambah anggaran promo atau diperbaiki.",
         pertanyaan="Q6 retur per kategori dan channel; Q7 aktivitas dan repeat member."),
     "storyline": dict(
-        tujuan="Menyajikan 4-6 temuan terkuantifikasi berjudul asertif beserta rekomendasi, merujuk kartu pada tab 1-4 (diisi pada Task 5).",
+        tujuan="Menyajikan 4-6 temuan terkuantifikasi berjudul asertif beserta rekomendasi, merujuk kartu pada tab 1-4.",
         pengguna="Direktur Komersial.",
         keputusan="Kedua keputusan H2 2026.",
         pertanyaan="Seluruh Q1-Q7 (ringkasan)."),
@@ -50,7 +50,7 @@ CHART = ("#dae8fc", "#6c8ebf")
 
 
 def parse(path):
-    meta = {"filters": []}
+    meta = {"filters": [], "key": os.path.splitext(os.path.basename(path))[0]}
     for line in open(path, encoding="utf-8").read().splitlines():
         if not line.startswith("-- "):
             break
@@ -82,6 +82,9 @@ def tab_items(dkey, tab):
             pos = m["pos"] if sh.get("tabs") == "all" else sh.get(tab["key"])
         if pos:
             items.append(dict(name=m["name"], display=m["display"], pos=pos, filters=m["filters"]))
+    for ex in layout.get("extra_placements", {}).get(tab["key"], []) if dkey == "kirana" else []:  # kartu dipakai ulang (Storyline)
+        m = next(c for c in cards if c["key"] == ex["card"])
+        items.append(dict(name=m["name"], display=m["display"], pos=ex["pos"], filters=m["filters"]))
     return items
 
 

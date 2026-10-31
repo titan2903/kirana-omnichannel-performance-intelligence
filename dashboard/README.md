@@ -9,7 +9,8 @@ di Metabase dan tidak ada kolom PII.
 | `questions/*.sql` | 39 kartu. Header `-- ...` memuat nama, tab, posisi, bentuk, filter, dan pengaturan visual; sisanya SQL asli kartu |
 | `layout.json` | Dua dashboard (utama 5 tab, Detail Toko), parameter filter, teks, dan kartu bersama |
 | `provision.py` | Membuat kartu dan dashboard; `--verify` menguji semua kartu dan tiap filter |
-| `export.py` | PNG per tab, tangkapan layar filter dan drill-through, dan satu PDF |
+| `access.py` | Hak akses (Task 6): grup Finance, Direktur Komersial, Store Manager per region; koleksi + dashboard per region dari `acc_<region>`; izin koleksi dan data |
+| `export.py` | Wireframe beranotasi, PNG per tab, tangkapan layar filter, drill-through, dan dashboard Store Manager, lalu satu PDF |
 | `wireframe/` | Wireframe beranotasi (`wireframe.drawio`, PNG, `wireframe.md`) dihasilkan dari sumber yang sama |
 | `export/` | Hasil ekspor (di-ignore git, dibuat ulang oleh `export.py`; lihat catatan di bawah) |
 
@@ -21,7 +22,7 @@ di Metabase dan tidak ada kolom PII.
 2. **Channel, Region & Store**: tabel achievement per region (klik region mengisi filter Region), tabel kinerja 18 toko (klik toko membuka Detail Toko), kontribusi channel.
 3. **Margin & Promosi**: margin per kategori, jembatan Net Sales ke CM, CM dan rasio diskon bulanan, efektivitas promo per jenis dan per kode.
 4. **Retur & Customer**: Return Rate, Cancellation dan Void Rate, retur per channel/kategori/alasan, Active Members, Repeat Rate.
-5. **Storyline**: kerangka; diisi pada Task 5.
+5. **Storyline**: ringkasan, 6 temuan berjudul asertif, dan rekomendasi; teks dihasilkan `scripts/build_insights.py` dari angka yang sama dengan insight brief.
 
 **KIRANA Detail Toko** (filter: Periode, Toko): ringkasan, tren vs target alokasi, kategori, kelengkapan data.
 
@@ -41,6 +42,7 @@ read-only, dan akun admin Metabase. **Kredensial hanya lewat variabel lingkungan
 ```bash
 export METABASE_URL=http://localhost:3000 METABASE_USER=<email-admin> METABASE_PASSWORD=<password>
 python3 dashboard/provision.py --verify          # membuat dashboard, lalu menguji semua kartu dan filter
+python3 dashboard/access.py                      # grup, koleksi per region, izin (jalankan setelah provision.py)
 
 pip install playwright pillow requests           # Chrome sistem dipakai; tidak ada unduhan browser
 python3 dashboard/export.py                      # PNG + dashboard/export/Dashboard_KIRANA.pdf
@@ -59,9 +61,8 @@ Setelah rebuild database: `docker compose stop metabase`, `bash scripts/build.sh
 
 ## Catatan ekspor
 
-Berkas di `export/` dihasilkan dari instance Metabase sementara yang membaca `kirana.duckdb` yang sama (dashboard identik). Jalankan
-`export.py` pada Metabase Anda sendiri sebelum pengumpulan, lalu ganti nama PDF menjadi `UAS_BI_<NIM>_<NamaLengkap>_Dashboard.pdf`.
-Halaman Storyline masih kerangka sampai Task 5 selesai; ekspor ulang sesudahnya.
+Berkas di `export/` dihasilkan dari Metabase proyek (port 3001). `scripts/package_submission.sh` menyalinnya menjadi
+`UAS_BI_<NIM>_<NamaLengkap>_Dashboard.pdf`.
 
 ## Asumsi dan keterbatasan
 

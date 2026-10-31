@@ -26,7 +26,7 @@
 | Head of E-Commerce | Keputusan 1 untuk Website, Mobile App, Marketplace | Efektivitas promo online, dampak komisi Marketplace, retur online |
 | Finance Controller | Validasi angka sales, margin, HPP, biaya channel | Definisi metrik tertulis, rekonsiliasi dari raw ke angka laporan |
 
-## Ukuran keputusan (draf, dikunci pada Task 3 dan 5)
+## Ukuran keputusan
 
 - **Keputusan 1:** promo lift terhadap baseline, dampak ke gross margin dan contribution margin (setelah biaya channel), serta pemakaian anggaran terhadap `budget_idr` per promo.
 - **Keputusan 2:** pencapaian terhadap target (region), tren dan kontribusi toko, dengan kriteria tegas yang memisahkan toko bermasalah karena bisnis dari toko yang datanya tidak lengkap.
@@ -37,11 +37,11 @@
 | --- | --- | --- | --- | --- |
 | 1 | Pencapaian net sales FY2025 dan H1 2026 terhadap target per channel, region, toko | 2 (dan 1) | Net Sales, Achievement vs Target % | 1 Executive Overview; 2 Channel, Region & Store |
 | 2 | Tren, musiman, dan pergeseran kontribusi antar-channel | 1 | Net Sales, kontribusi channel % | 1 Executive Overview; 2 Channel, Region & Store |
-| 3 | Kategori, channel, promo yang menekan gross margin dan contribution margin | 1 | Gross Margin %, Contribution Margin % | 3 Margin & Promotion |
-| 4 | Efektivitas promo (Ramadan, Clearance, Member Day, App Payday, Mega Sale, Harbolnas) | 1 | Promo Lift, dampak margin promo | 3 Margin & Promotion |
+| 3 | Kategori, channel, promo yang menekan gross margin dan contribution margin | 1 | Gross Margin %, Contribution Margin % | 3 Margin & Promosi |
+| 4 | Efektivitas promo (Ramadan, Clearance, Member Day, App Payday, Mega Sale, Harbolnas) | 1 | Promo Lift, dampak margin promo | 3 Margin & Promosi |
 | 5 | Toko berkinerja rendah dan penyebabnya (bisnis atau data) | 2 | Achievement %, tren toko, flag data tidak lengkap | 2 Channel, Region & Store |
-| 6 | Tingkat dan alasan retur per kategori dan channel | 1 dan 2 | Return Rate, distribusi alasan | 4 Returns & Customers |
-| 7 | Aktivitas dan repeat purchase member per channel | 1 | Active Members, Repeat Rate | 4 Returns & Customers |
+| 6 | Tingkat dan alasan retur per kategori dan channel | 1 dan 2 | Return Rate, distribusi alasan | 4 Retur & Customer |
+| 7 | Aktivitas dan repeat purchase member per channel | 1 | Active Members, Repeat Rate | 4 Retur & Customer |
 
 ## Asumsi dan batas ruang lingkup
 

@@ -25,7 +25,7 @@ Kode `DQ-xx` merujuk ke Data Quality Issue Log ([A3](A3_issue_log.md)).
 | `customers.csv` | CRM | 42.320 | `customer_id` | 42.320 | join 2023-06-16 s.d. 2026-06-18 | Berisi PII |
 | `returns.csv` | Customer Service | 18.090 | `return_id` | 18.090 | 2024-01-03 s.d. 2026-06-30 | Refund total Rp 3.702.006.200 |
 | `promotions.csv` | Marketing | 73 | `promo_code` | 73 | 2024-01-05 s.d. 2026-06-28 | Diskon 10 s.d. 45% |
-| `channel_fee_rates.csv` | Finance | 5 | `channel`+`valid_from` | 5 | 2024-01-01 s.d. 2099-12-31 | Marketplace 9,0% -> 11,5% mulai 2025-04-01 |
+| `channel_fee_rates.csv` | Finance | 5 | `channel`+`valid_from` | 5 | 2024-01-01 s.d. 2099-12-31 | Marketplace 9,0% → 11,5% mulai 2025-04-01 |
 | `pos_sync_log.csv` | IT | 16.036 | `store_code`+`business_date` | 16.036 | 2024-01-01 s.d. 2026-06-30 | 15.980 SUCCESS, 49 STORE_CLOSED, 7 FAILED |
 | `sales_targets_2025_2026.xlsx` | FP&A | 9 + 9 + 4 baris | `channel`+`region` | 9 / 9 / 4 | FY2025, H1 2026 | 3 sheet; header di baris 3 (DQ-16) |
 
@@ -74,7 +74,7 @@ Kolom lain pada file di atas, serta `products`, `stores`, dan `customers`, tidak
 | Status | 196.881 COMPLETED, 12.745 CANCELLED (6,08% baris) (DQ-11) |
 | Voucher | Semua kode ada di `promotions`; voucher tidak pernah melebihi nilai kotor; kode dan nilai selalu berpasangan |
 | Customer | Semua `customer_id` ada di `customers` dan berformat `Mxxxxxx`; tidak ada order tanpa customer |
-| `ship_province` | 13 provinsi + 2.109 kosong (DQ-12). Sulawesi Selatan dan Kalimantan Timur berada di luar enam region -> `Lainnya` |
+| `ship_province` | 13 provinsi + 2.109 kosong (DQ-12). Sulawesi Selatan dan Kalimantan Timur berada di luar enam region → `Lainnya` |
 | Duplikat kunci | 232 grup, semuanya salinan persis (DQ-10), tidak ada konflik nilai/status |
 | Order distinct | 140.573 `order_no` (sebelum pembersihan) |
 | Metode bayar | E-Wallet 73.445; Virtual Account 63.194; COD 26.972; Credit Card 25.138; Paylater 20.877 |

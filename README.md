@@ -3,7 +3,7 @@
 ![DuckDB](https://img.shields.io/badge/DuckDB-SQL%20pipeline-FFF000?logo=duckdb&logoColor=black)
 ![Metabase](https://img.shields.io/badge/Metabase-dashboard-509EE3?logo=metabase&logoColor=white)
 ![Model](https://img.shields.io/badge/model-star%20schema-4c9a2a)
-![Status](https://img.shields.io/badge/status-in%20progress-orange)
+![Status](https://img.shields.io/badge/status-selesai-green)
 
 Solusi Business Intelligence end-to-end untuk peritel omnichannel fiktif **KIRANA Home & Living**:
 dari ±474 ribu baris transaksi mentah di beberapa sistem yang tidak terhubung, menjadi
@@ -52,7 +52,7 @@ Marketplace). Selama Januari 2024 – Juni 2026 penjualan tumbuh, tetapi:
 | **Idempoten** | Satu entry point membangun ulang database dari `raw_data/`; dua kali run menghasilkan angka identik |
 | **Tidak ada baris hilang tanpa jejak** | Baris tertolak masuk tabel quarantine; rekonsiliasi raw → fakta ditutup sampai selisih 0 |
 | **Satu definisi per metrik** | KPI hidup sebagai view SQL; Metabase hanya membaca view |
-| **Histori yang benar** | HPP, tarif biaya channel, dan region toko dihitung *as-of* tanggal transaksi |
+| **Histori yang benar** | HPP dan tarif biaya channel *as-of* tanggal transaksi; region untuk achievement = region awal tahun target |
 | **Privasi sejak desain** | Kolom PII tidak masuk model analitik; ada uji otomatis yang memeriksanya |
 
 ## Arsitektur
@@ -62,13 +62,13 @@ flowchart LR
     A["raw_data/<br/>CSV + XLSX"] --> B["raw<br/>load apa adanya"]
     B --> C["stg<br/>cleaning, tipe, normalisasi"]
     C --> D["dw<br/>star schema"]
-    C -.-> Q[("stg_*_rejected<br/>quarantine")]
+    C -.-> Q[("stg: disposition<br/>REJECT_* (quarantine)")]
     D --> T{{"dq<br/>uji kualitas + rekonsiliasi"}}
     D --> M["metrics<br/>view KPI"]
     M --> MB["Metabase<br/>dashboard"]
 ```
 
-Database tunggal `kirana.duckdb` dengan schema `raw → stg → dw → dq → metrics`.
+Database tunggal `kirana.duckdb` dengan schema `stg → dw → dq → metrics` (+ enam schema akses `acc_<region>`); `raw` hanya TEMP view dan tidak disimpan.
 
 ## Model Data
 
@@ -97,12 +97,12 @@ erDiagram
 **Keputusan SCD**
 
 - **HPP produk** (`product_cost_history`): COGS memakai HPP yang berlaku pada tanggal transaksi, bukan HPP terkini, agar margin historis tidak bias.
-- **Region toko** (`store_region_history`): achievement dibandingkan dengan region *saat transaksi* karena target ditetapkan per region; toko tanpa riwayat memakai region di master.
+- **Region toko** (`store_region_history`): SCD2 di `dim_store`; achievement memakai `region_target_basis` (region toko pada awal tahun target), karena target FY2025 tidak disesuaikan saat BGR-01 pindah Jawa Barat → Jabodetabek (1 Jul 2025). Region saat transaksi (`region_asof`) hanya deskriptif. Lihat A4 §5b.
 - **Biaya channel**: tarif *as-of* tanggal (komisi Marketplace naik dari 9,0% ke 11,5% per 1 April 2025).
 
 ## Tantangan Kualitas Data
 
-Hasil pemindaian awal pada data mentah (akan dikuantifikasi penuh, termasuk dampak Rupiah, di Issue Log):
+Ringkasan dari Data Quality Issue Log (`reports/A3_issue_log.md`, lengkap dengan baris dan Rupiah terdampak):
 
 | Temuan | Skala |
 | --- | --- |
@@ -132,12 +132,14 @@ sehingga rasio tetap benar ketika difilter atau di-drill-down di dashboard.
 | Active Members | Member distinct yang bertransaksi pada periode |
 | Repeat Rate | Member dengan ≥ 2 transaksi ÷ active members |
 | Promo Lift | Kenaikan penjualan terhadap baseline, beserta dampak margin |
+| Cancellation & Void Rate | Rp batal/void ÷ (valid + batal/void) |
+| Promo Budget Utilization | Diskon yang diberikan ÷ `budget_idr` promo |
 
-Kamus metrik lengkap (grain, aturan inklusi/eksklusi, pemilik, ambang) dilampirkan pada laporan teknis.
+Kamus metrik lengkap (12 KPI: grain, aturan inklusi/eksklusi, pemilik, ambang) ada di [A7](reports/A7_kamus_metrik.md), dihasilkan dari tabel `metrics.kpi_dictionary`.
 
 ## Dashboard
 
-Dashboard Metabase self-hosted dengan empat tab dan satu halaman storyline:
+Dashboard Metabase self-hosted dengan lima tab (empat analitis + Storyline) dan dashboard drill-through **Detail Toko**, dibangun dari kode (`dashboard/provision.py`):
 
 1. **Executive Overview**: KPI vs target dan tren
 2. **Channel, Region & Store Performance**: drill-through sampai toko
@@ -164,11 +166,11 @@ indikator kesegaran data dan status sinkronisasi POS, serta penanda periode/toko
 ├── sql/          # pipeline berurutan: load → staging → model → reconciliation → metrics → tests
 ├── dashboard/    # wireframe, SQL tiap kartu Metabase, skrip pembuat dan ekspor dashboard
 ├── reports/      # laporan teknis, insight brief (+ insights/: template, fakta SQL), evaluasi & tata kelola
-├── scripts/      # build, uji mutasi, ekspor kamus metrik, pembuat insight brief
+├── scripts/      # build, uji idempotensi & mutasi, ekspor kamus metrik, pembuat insight brief, paket pengumpulan
+├── laporan_akhir/ # sumber LaTeX laporan akhir (PDF yang dikumpulkan)
 └── raw_data/     # data mentah (tidak disertakan di repo)
 ```
 
-Folder ditambahkan seiring pekerjaan berjalan.
 
 ## Cara Menjalankan
 
@@ -205,12 +207,22 @@ Folder ditambahkan seiring pekerjaan berjalan.
    Bila driver DuckDB bermasalah, `docker compose --profile fallback up -d` menyalakan PostgreSQL
    sebagai alternatif koneksi.
 
+5. Bangun dashboard dan hak akses dari kode (kredensial admin hanya lewat variabel lingkungan), lalu ekspor PDF:
+
+   ```bash
+   export METABASE_URL=http://localhost:3000 METABASE_USER=<email-admin> METABASE_PASSWORD=<password>
+   python3 dashboard/provision.py --verify   # 39 kartu, 2 dashboard; uji semua kartu dan filter
+   python3 dashboard/access.py               # grup Finance, Direktur Komersial, Store Manager per region
+   python3 dashboard/export.py               # wireframe + tab + filter + drill-through -> dashboard/export/Dashboard_KIRANA.pdf
+   ```
+
 ## Tata Kelola dan Privasi
 
 - Kolom PII member (nama, telepon, email, tanggal lahir) tidak masuk model analitik maupun dashboard;
   `birth_date` hanya dipakai untuk turunan seperti kelompok usia.
 - Public sharing dan embedding Metabase dinonaktifkan. Pembatasan per region diimplementasikan sebagai view
-  `acc_<region>` (diuji T54); penerapan group Finance, Komersial, dan Store Manager di Metabase masih usulan.
+  `acc_<region>` (diuji T54) dan diikat ke grup Metabase oleh `dashboard/access.py` (Finance, Direktur Komersial, Store Manager per
+  region; diuji dengan pengguna uji per grup, lihat C2 §3).
 - Lineage, pemilik data, klasifikasi PII, hak akses, jadwal refresh, monitoring, dan retensi ada di
   [lampiran tata kelola](reports/C2_tata_kelola.md); penilaian solusi dan keputusan soal machine learning ada di
   [memo evaluasi](reports/C1_memo_evaluasi.md).
@@ -221,27 +233,28 @@ Folder ditambahkan seiring pekerjaan berjalan.
 - [x] Pipeline SQL idempoten dan star schema ([model, grain, SCD](reports/A4_data_model.md))
 - [x] Uji kualitas data dan rekonsiliasi ([hasil uji dan rekonsiliasi](reports/A5_quality_reconciliation.md))
 - [x] Metric views dan kamus metrik ([kamus metrik](reports/A7_kamus_metrik.md), [number registry](reports/number_registry.md))
-- [x] Dashboard Metabase ([panduan dashboard](dashboard/README.md), [wireframe](dashboard/wireframe/wireframe.md)); halaman Storyline diisi pada Task 5
+- [x] Dashboard Metabase ([panduan dashboard](dashboard/README.md), [wireframe](dashboard/wireframe/wireframe.md))
 - [x] Insight brief (5 hlm) dan rekomendasi: angka dihitung `reports/insights/facts.sql`, dirender `python3 scripts/build_insights.py` (brief, grafik, halaman Storyline, registri angka)
 - [x] Evaluasi dan tata kelola ([memo evaluasi](reports/C1_memo_evaluasi.md), [lampiran tata kelola](reports/C2_tata_kelola.md))
 
 Ringkasan hasil (semua dari `kirana.duckdb`, rinci di [insight brief](reports/B_insight_brief.md)): Net Sales mencapai
-99,5% target FY2025 dan 105,8% target H1 2026, tetapi margin kotor turun dari 46,11% (FY2024) menjadi 43,05% (H1 2026).
+99,5% target FY2025 dan 105,8% target H1 2026, tetapi margin kotor turun dari 46,1% (FY2024) menjadi 43,0% (H1 2026).
 
 ### Merakit paket pengumpulan
 
 ```bash
 python3 scripts/build_insights.py                      # brief, grafik, storyline (setelah build.sh)
-KIRANA_NIM=<NIM> KIRANA_NAMA="<Nama Lengkap>" python3 scripts/build_report.py   # dist/UAS_BI_<NIM>_<Nama>_Laporan.pdf
+cd laporan_akhir && latexmk -pdf UAS_BI_<NIM>_<Nama>_Laporan.tex && cd ..          # laporan akhir (sumber LaTeX, disunting langsung)
 KIRANA_NIM=<NIM> KIRANA_NAMA="<Nama Lengkap>" bash scripts/package_submission.sh # dist/..._SQL.zip dan ..._Dashboard.pdf
 ```
 
-`build_report.py` memeriksa batas 25 halaman di luar lampiran dan butuh internet untuk merender diagram Mermaid.
+Laporan akhir disunting langsung di `laporan_akhir/*.tex` (maks. 25 halaman di luar lampiran); Bagian B disisipkan dari
+`reports/B_insight_brief.pdf`. Dokumen di `reports/*.md` adalah versi baca-di-GitHub dari isi yang sama.
 
 ## Penggunaan AI
 
-Asisten AI digunakan untuk belajar dan debugging. Seluruh angka dihasilkan dari model data dalam
-repo ini.
+Asisten AI (Claude Code) dipakai untuk belajar, debugging, serta membantu menulis SQL, skrip, dan draf teks; rincian di
+[pernyataan penggunaan AI](reports/D_pernyataan_ai.md). Seluruh angka dihasilkan dari model data dalam repo ini.
 
 ## Penulis
 

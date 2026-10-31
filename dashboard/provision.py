@@ -162,7 +162,10 @@ def main():
                                   "size_y": ex["pos"][3], "visualization_settings": {}, "parameter_mappings": maps}); n -= 1
         mb.req("PUT", f"/dashboard/{d['id']}", json={"tabs": tabs, "dashcards": dashcards, "parameters": params, "width": "full"})
         print(f"Dashboard '{spec['name']}' -> {URL}/dashboard/{d['id']}  ({len(tabs)} tab, {len(dashcards)} elemen)")
-    json.dump({"dashboards": ids, "collection": cid, "database": dbid}, open(os.path.join(HERE, ".state.json"), "w"))
+    sp = os.path.join(HERE, ".state.json")
+    state = json.load(open(sp)) if os.path.exists(sp) else {}  # pertahankan kunci lain (mis. "access" dari access.py)
+    state.update({"dashboards": ids, "collection": cid, "database": dbid})
+    json.dump(state, open(sp, "w"))
 
     if verify:
         run_verify(mb, ids, cards)

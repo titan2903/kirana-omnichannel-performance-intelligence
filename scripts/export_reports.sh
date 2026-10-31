@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Hasilkan dokumen yang angkanya HARUS sama dengan dashboard langsung dari kirana.duckdb (tanpa ketik tangan):
+#   reports/A6_ringkasan_kpi.md  ringkasan KPI satu tabel (Bagian A laporan)
 #   reports/A7_kamus_metrik.md   dari metrics.kpi_dictionary + metrics.ref_status_threshold
 #   reports/number_registry.md   angka FY2024 / FY2025 / H1 2026 per channel dan region, dihitung ulang dari view metrics
 #   bash scripts/export_reports.sh        (DB=path untuk database lain)
@@ -9,6 +10,21 @@ cd "$(dirname "$0")/.."
 DB=${DB:-kirana.duckdb}
 q() { duckdb -readonly "$DB" -markdown -c "$1"; }
 P="CASE WHEN month_start < DATE '2025-01-01' THEN 'FY2024' WHEN month_start < DATE '2026-01-01' THEN 'FY2025' ELSE 'H1 2026' END"
+
+# ------------------------------------------------------------------ A6 ringkasan KPI (Bagian A laporan; versi lengkap = A7 di lampiran)
+{
+cat <<'E'
+# A6. Ringkasan KPI (kamus metrik)
+
+Dua belas KPI hidup sebagai view di schema `metrics`; kartu Metabase hanya `SELECT` dari view itu. Rasio dihitung ulang dari pembilang
+dan penyebut setelah filter (tidak pernah AVG kolom persen). Definisi bisnis dan aturan inklusi/eksklusi lengkap ada di Lampiran A7;
+tabel ini dihasilkan dari `metrics.kpi_dictionary` yang sama.
+
+E
+q "SELECT kpi_id AS \"#\", kpi_name AS KPI, '\`' || sql_formula || '\`' AS \"Rumus SQL\", grain AS Grain, owner AS Pemilik,
+          CASE WHEN target_threshold LIKE 'Tidak ada target%' THEN 'Tidak ada target resmi; pembanding historis' ELSE target_threshold END AS \"Target / ambang\"
+   FROM metrics.kpi_dictionary ORDER BY kpi_id"
+} > reports/A6_ringkasan_kpi.md
 
 # ------------------------------------------------------------------ A7 kamus metrik
 {
@@ -74,7 +90,7 @@ cat <<'E'
 
 FP&A hanya menetapkan target Store **per region**. Target toko di `v_store_target_alloc` adalah alokasi (asumsi, bukan target resmi):
 `target region bulan itu x pangsa toko`. Pangsa = penjualan toko (tanpa B2B) pada bulan yang sama tahun lalu dibagi total penjualan seluruh
-toko anggota region pada akhir bulan target (SCD2, sehingga perpindahan BGR-01 pada Juli 2025 diperlakukan benar). Region tanpa penjualan tahun
+toko anggota region menurut peta awal tahun target (`region_target_basis`; BGR-01 di Jawa Barat sepanjang 2025, Jabodetabek mulai 2026). Region tanpa penjualan tahun
 lalu (DPS-01 yang buka 15 Jan 2025) dibagi rata. Jumlah target toko selalu sama dengan target region (diuji, T44).
 
 ## Catatan metode: Promo Lift
@@ -116,7 +132,7 @@ q "SELECT $P AS periode, channel_name AS channel, sum(net_sales_idr) AS net_sale
 cat <<'E'
 
 ## 3. Achievement Store per region
-*View: `metrics.v_target_achievement` (channel Store, region as-of tanggal transaksi).*
+*View: `metrics.v_target_achievement` (channel Store, region dasar target `region_target_basis` = region awal tahun).*
 
 E
 q "SELECT $P AS periode, region, sum(net_sales_idr) AS net_sales_idr, sum(target_net_sales_idr) AS target_idr,
@@ -214,4 +230,4 @@ echo "*View: \`metrics.v_data_freshness\`.*"
 echo
 q "SELECT data_from_date, data_through_date, sync_success_pct, failed_store_days, closed_store_days, freshness_label FROM metrics.v_data_freshness"
 } > reports/number_registry.md
-echo "OK: reports/A7_kamus_metrik.md dan reports/number_registry.md dibuat dari $DB"
+echo "OK: reports/A6_ringkasan_kpi.md, reports/A7_kamus_metrik.md dan reports/number_registry.md dibuat dari $DB"

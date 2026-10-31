@@ -167,7 +167,7 @@
               "text": "Storyline: margin dan promo menentukan H2 2026, bukan volume"
             },
             {
-              "row": 1,
+              "row": 4,
               "col": 0,
               "w": 24,
               "h": 2,
@@ -175,7 +175,7 @@
               "text": "**Ringkasan.** Net Sales memenuhi target (99,5% FY2025, 105,8% H1 2026) tetapi margin kotor turun 3,1 pt dan contribution margin 4,2 pt. Keputusan 1 (promo): hentikan atau batasi Mega Sale, hentikan Clearance, ubah Member Day, alihkan ke App Payday. Keputusan 2 (toko): program intensif MDN-01, pantau SBY-02, MLG-01, SOL-01. Angka identik dengan `reports/B_insight_brief.pdf`. *Tanpa filter, kartu menampilkan seluruh periode (FY2025 + H1 2026); angka H1 2026 muncul bila Periode = 1 Jan - 30 Jun 2026.*"
             },
             {
-              "row": 3,
+              "row": 6,
               "col": 0,
               "w": 9,
               "h": 5,
@@ -183,7 +183,7 @@
               "text": "### 1. Margin kotor turun 3,1 pt: HPP per unit naik 5,9%, harga neto hanya 1,5%\n\nBila HPP tetap seperti akhir 2024, margin H1 2026 = **46,3%** (aktual 43,0%). Diskon hanya naik 0,43 pt. Setiap 1% harga neto = **Rp 252 juta** margin per semester."
             },
             {
-              "row": 8,
+              "row": 11,
               "col": 0,
               "w": 9,
               "h": 5,
@@ -191,7 +191,7 @@
               "text": "### 2. Contribution margin turun 4,2 pt: 3,3 pt margin dalam channel, 0,9 pt pergeseran ke Marketplace\n\nMarketplace 23,3% dari Net Sales dengan CM 30,6% (Store 43,6%). Komisi 9,0% -> 11,5% sejak Apr 2025 menambah biaya **Rp 330 juta**.\n\n*Filter Periode = 1 Jan 2026 - 30 Jun 2026 menampilkan angka H1 2026 di kartu.*"
             },
             {
-              "row": 13,
+              "row": 16,
               "col": 0,
               "w": 9,
               "h": 5,
@@ -199,7 +199,7 @@
               "text": "### 3. Target agregat tercapai hanya karena online: Marketplace 127,5% dan Mobile App 124,3% menutup Store (95,6%) dan Website (87,5%)\n\nH1 2026 total 105,8% (+Rp 1,39 miliar); FY2025 99,5%. Website bukan kehilangan pelanggan: dari 7.968 member FY2024, 2.538 pindah ke Mobile App.\n\n*Filter Periode = 1 Jan 2026 - 30 Jun 2026 menampilkan angka H1 2026 di kartu.*"
             },
             {
-              "row": 18,
+              "row": 21,
               "col": 0,
               "w": 9,
               "h": 5,
@@ -207,7 +207,7 @@
               "text": "### 4. Mega Sale dan Clearance menggerus margin; App Payday menambahnya di 27 dari 27 kode\n\nMega Sale (45%): margin kotor saat promo −12,0%, CM −Rp 145 juta. Estimasi dampak H2 2026 bila dihentikan dan dialihkan: **+Rp 99,5 juta s.d. +Rp 154 juta** CM."
             },
             {
-              "row": 23,
+              "row": 26,
               "col": 0,
               "w": 9,
               "h": 9,
@@ -215,7 +215,7 @@
               "text": "### 5. Hanya MDN-01 konsisten di bawah target tanpa penjelasan lain; SBY-02, MLG-01, SOL-01 memburuk; SBY-01, BDG-02, Jawa Barat bukan masalah kinerja\n\nMDN-01: 79,3% dan 83,5%, penjualan −6,3% YoY. SBY-01 tutup 49 hari (renovasi), BDG-02 sync gagal 7 hari (data), Jawa Barat FY2025 100,8% setelah koreksi region. Target toko = alokasi (asumsi).\n\n*Filter Periode = 1 Jan 2026 - 30 Jun 2026 menampilkan angka H1 2026 di kartu.*"
             },
             {
-              "row": 32,
+              "row": 35,
               "col": 0,
               "w": 9,
               "h": 5,
@@ -223,7 +223,7 @@
               "text": "### 6. Fashion online mengembalikan 15,1% penjualannya (Store 2,8%); 57% refund Fashion karena ukuran\n\nFashion = 40,5% dari seluruh refund. Menurunkan Return Rate Fashion online ke level Store menghindari sekitar **Rp 388 juta** refund per tahun."
             },
             {
-              "row": 37,
+              "row": 40,
               "col": 0,
               "w": 24,
               "h": 2,
@@ -272,7 +272,7 @@
       {
         "card": "executive__gm_cm_bulanan",
         "pos": [
-          3,
+          6,
           9,
           15,
           5
@@ -281,7 +281,7 @@
       {
         "card": "margin_promo__margin_bridge_channel",
         "pos": [
-          8,
+          11,
           9,
           15,
           5
@@ -290,7 +290,7 @@
       {
         "card": "executive__achievement_per_channel",
         "pos": [
-          13,
+          16,
           9,
           15,
           5
@@ -299,7 +299,7 @@
       {
         "card": "margin_promo__promo_incremental_gm_bar",
         "pos": [
-          18,
+          21,
           9,
           15,
           5
@@ -308,7 +308,7 @@
       {
         "card": "channel_region_store__store_ranking",
         "pos": [
-          23,
+          26,
           9,
           15,
           9
@@ -317,7 +317,7 @@
       {
         "card": "returns_customers__return_rate_per_kategori",
         "pos": [
-          32,
+          35,
           9,
           15,
           5

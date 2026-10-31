@@ -17,7 +17,7 @@ Legenda status: **[Sudah]** diimplementasikan dan dapat diperiksa di repo; **[Us
 | `pos_sync_log.csv` | IT | Status sinkronisasi harian (DQ-23) | `fact_pos_sync`, penanda kelengkapan |
 | `stores.csv`, `store_region_history.csv`, `store_events.csv` | Store Operations | Master toko, riwayat region, kejadian (renovasi) | `dim_store`, penanda data |
 
-Pemilik **metrik** (bukan sumber): Net Sales dan GM/CM Finance Controller; Achievement dan Promo Lift Direktur Komersial; Return Rate Head of Store Operations (Store) dan Head of E-Commerce (online). Rinciannya ada di `A7_kamus_metrik.md` **[Sudah]**. Penetapan pemilik di atas adalah usulan analis berdasarkan kolom "Sumber" paket data **[Usulan]** sampai disetujui masing-masing.
+Pemilik **metrik** (bukan sumber): Net Sales dan GM/CM Finance Controller; Achievement dan Promo Lift Direktur Komersial; Return Rate Head of Store Operations (Store) dan Head of E-Commerce (online). Rinciannya ada di Kamus Metrik (A6 dan Lampiran A7) **[Sudah]**. Penetapan pemilik di atas adalah usulan analis berdasarkan kolom "Sumber" paket data **[Usulan]** sampai disetujui masing-masing.
 
 ## 2. Klasifikasi PII dan perlakuannya
 
@@ -29,20 +29,37 @@ Pemilik **metrik** (bukan sumber): Net Sales dan GM/CM Finance Controller; Achie
 | `customer_id` / `member_id` | Pseudonim | Boleh sebagai kunci; tidak ditampilkan sebagai daftar di dashboard | **[Sudah]** |
 | `member_tier`, `join_date`, `join_channel` | Non-PII | Boleh dipakai | **[Sudah]** |
 
-Pengendali: (1) `01_load` hanya membuat TEMP view sehingga PII tidak tersimpan di `kirana.duckdb`; (2) uji **T12** (BLOCKING) memeriksa `information_schema.columns` pada `stg`, `dw`, `dq`, `metrics`, dan `acc_*` dan sudah terbukti mendeteksi cacat yang disuntik (mutasi M06); (3) `.env`, `raw_data/`, dan `docs/` ada di `.gitignore` **[Sudah]**. Catatan: dua member dapat berbagi email (DQ-19, 491 grup); karena email tidak dibawa, kedua `customer_id` tetap terpisah dan tidak digabung.
+Pengendali: (1) `01_load` hanya membuat TEMP view sehingga PII tidak tersimpan di `kirana.duckdb`; (2) uji **T12** (BLOCKING) memeriksa `information_schema.columns` pada `stg`, `dw`, `dq`, `metrics`, dan `acc_*` dan sudah terbukti mendeteksi kolom PII yang disuntik (uji mutasi, A5 §2b); (3) `.env`, `raw_data/`, dan `docs/` ada di `.gitignore` **[Sudah]**. Catatan: dua member dapat berbagi email (DQ-19, 491 grup); karena email tidak dibawa, kedua `customer_id` tetap terpisah dan tidak digabung.
 
 ## 3. Desain hak akses
 
-| Peran | Akses yang dirancang | Status |
+| Peran | Akses | Status |
 | --- | --- | --- |
-| Finance (Finance Controller) | Semua schema `metrics` dan `dw` non-PII | **[Usulan]** group Metabase "Finance" |
-| Direktur Komersial | Semua agregat di `metrics`, tanpa `dw` baris detail | **[Usulan]** group "Komersial" |
-| Store Manager | Hanya region-nya melalui schema `acc_<region>` | View **[Sudah]**; group dan izin Metabase **[Usulan]** |
+| Finance (Finance Controller) | Koleksi *KIRANA BI* (lihat); query builder pada schema `metrics` dan `dw` (non-PII); tanpa SQL native | **[Sudah]** grup "Finance" |
+| Direktur Komersial | Koleksi *KIRANA BI* (lihat), dashboard saja; tidak membuat query | **[Sudah]** grup "Direktur Komersial" |
+| Store Manager | Hanya koleksi regionnya: dashboard "KIRANA Store Manager - `<region>`" yang membaca `acc_<region>`; query builder hanya pada schema `acc_<region>` | **[Sudah]** 6 grup "Store Manager `<region>`" |
+| All Users (setiap akun) | Tidak melihat koleksi KIRANA dan tidak dapat membuat query; akses hanya lewat grup di atas | **[Sudah]** |
 | Siapa pun | Tidak ada akses ke PII (data tidak ada di model) | **[Sudah]** |
 
-**Yang sudah diimplementasikan.** Enam schema `acc_jabodetabek`, `acc_jawa_barat`, `acc_jateng_diy`, `acc_jawa_timur`, `acc_bali_nusra`, `acc_sumatera` (di `sql/05_metrics.sql`), masing-masing berisi `v_sales_monthly` dan `v_store_performance_monthly` yang sudah difilter ke satu region, memakai definisi region yang sama dengan dashboard (`region_target_basis`). Uji **T54** (BLOCKING) memastikan tiap view hanya memuat regionnya dan gabungan seluruh region (ditambah `Lainnya` untuk pesanan online di luar enam region) sama dengan view induk; mutasi M35 membuktikan uji ini mendeteksi kebocoran. Region `Lainnya` sengaja tidak punya schema.
+**Lapisan data.** Enam schema `acc_jabodetabek`, `acc_jawa_barat`, `acc_jateng_diy`, `acc_jawa_timur`, `acc_bali_nusra`, `acc_sumatera` (di `sql/05_metrics.sql`), masing-masing berisi `v_sales_monthly` dan `v_store_performance_monthly` yang sudah difilter ke satu region, memakai definisi region yang sama dengan dashboard (`region_target_basis`). Uji **T54** (BLOCKING) memastikan tiap view hanya memuat regionnya dan gabungan seluruh region (ditambah `Lainnya` untuk pesanan online di luar enam region) sama dengan view induk; uji mutasi (A5 §2b) membuktikan uji ini mendeteksi kebocoran. Region `Lainnya` sengaja tidak punya schema.
 
-**Cara menerapkan di Metabase (usulan, belum dijalankan di instance ini).** Metabase edisi OSS tidak punya row-level sandboxing, jadi pembatasan dilakukan di data: (1) Admin > People > Groups: buat "Finance", "Komersial", dan satu group "Store Manager <region>"; (2) Admin > Permissions > Data: untuk group Store Manager, set izin data hanya pada schema `acc_<region>` miliknya (view data: dapat diakses; schema lain: diblokir; query native: dimatikan); (3) buat dashboard turunan untuk Store Manager yang kartunya membaca `acc_<region>`. Keterbatasan: dashboard utama memakai kartu SQL native sehingga tidak dapat dibuka oleh group yang diblokir pada schema `metrics`; perilaku izin ini belum saya verifikasi di Metabase.
+**Lapisan Metabase.** Metabase edisi OSS tidak punya row-level security, jadi batas baris ada di view `acc_<region>` dan Metabase membatasi koleksi serta schema yang boleh dibuka. `dashboard/access.py` (dijalankan setelah `provision.py`, aman diulang) membuat grup, satu koleksi dan dashboard per region, lalu mengatur izin koleksi dan izin data. Anggota grup ditambahkan admin lewat Admin > People. Hasil uji dengan satu pengguna uji per grup pada instance Metabase uji (konfigurasi sama dengan instance proyek):
+
+| Pengguna uji | Dibuka | Hasil |
+| --- | --- | --- |
+| Store Manager Sumatera | Dashboard regionnya | Berhasil; hanya toko MDN-01 dan PLM-01 yang tampil |
+| Store Manager Sumatera | Dashboard utama; dashboard Store Manager Jabodetabek | Ditolak (403) |
+| Store Manager Sumatera | Query builder `acc_sumatera` / `acc_jawa_timur` / `metrics` / `dw`; SQL native | Berhasil / ditolak / ditolak / ditolak; ditolak |
+| Finance | Dashboard utama; query builder `metrics` dan `dw` | Berhasil |
+| Finance | Query builder `stg` dan `acc_*`; SQL native; dashboard Store Manager | Ditolak |
+| Direktur Komersial | Dashboard utama | Berhasil |
+| Direktur Komersial | Membuat query (query builder atau SQL native) | Ditolak |
+
+![Izin koleksi KIRANA BI per grup](img/akses_izin_koleksi.png)
+
+![Izin data grup Store Manager Sumatera: hanya acc_sumatera](img/akses_izin_data_sm_sumatera.png)
+
+![Dashboard yang dilihat pengguna Store Manager Sumatera](img/akses_dashboard_sm_sumatera.png)
 
 Pengaman lain **[Sudah]**: public sharing dimatikan (`MB_ENABLE_PUBLIC_SHARING=false` di `compose.yaml`), tidak ada embedding, Metabase hanya mendengarkan `127.0.0.1`, koneksi DuckDB read-only, dan kredensial hanya lewat variabel lingkungan atau `.env` yang di-ignore.
 
@@ -50,7 +67,7 @@ Pengaman lain **[Sudah]**: public sharing dimatikan (`MB_ENABLE_PUBLIC_SHARING=f
 
 ![Lineage](img/lineage.png)
 
-Sumber (`reports/img/lineage.drawio` dapat disunting di draw.io; dibuat ulang oleh `reports/img/build_lineage.py`) **[Sudah]**. Rantai penuh: 13 file di `raw_data/` → `raw` (TEMP view) → `stg` (`disposition` FACT / EXCLUDE / REJECT) → `dw` (star schema) → `dq` (rekonsiliasi, uji) → `metrics` dan `acc_*` → 39 kartu Metabase (`dashboard/questions/*.sql`) → 5 tab + Detail Toko → `B_insight_brief` (angka dari `reports/insights/facts.sql`). Setiap angka di laporan dapat ditelusuri lewat `number_registry.md` dan `insight_registry.md` ke view dan filter sumbernya **[Sudah]**. Alat lineage otomatis (mis. dbt docs) adalah pengembangan **[Usulan]**.
+Sumber (`reports/img/lineage.drawio` dapat disunting di draw.io; dibuat ulang oleh `reports/img/build_lineage.py`) **[Sudah]**. Rantai penuh: 13 file di `raw_data/` → `raw` (TEMP view) → `stg` (`disposition` FACT / EXCLUDE / REJECT) → `dw` (star schema) → `dq` (rekonsiliasi, uji) → `metrics` dan `acc_*` → 39 kartu Metabase (`dashboard/questions/*.sql`) → 5 tab + Detail Toko → `B_insight_brief` (angka dari `reports/insights/facts.sql`). Setiap angka di laporan dapat ditelusuri lewat Lampiran Number Registry dan `reports/insights/insight_registry.md` ke view dan filter sumbernya **[Sudah]**. Alat lineage otomatis (mis. dbt docs) adalah pengembangan **[Usulan]**.
 
 ## 5. Refresh
 
@@ -72,7 +89,7 @@ Sumber (`reports/img/lineage.drawio` dapat disunting di draw.io; dibuat ulang ol
 | Uji mutasi | 35 cacat disuntik, semua terdeteksi; jalankan setelah mengubah model | **[Sudah]** |
 | Sync POS FAILED | Notifikasi ke IT bila ada toko-hari FAILED atau lebih dari 1 hari berturut-turut; dashboard menandai toko sebagai data tidak lengkap | Penanda **[Sudah]**; notifikasi **[Usulan]** |
 | Freshness | Peringatan bila tanggal data terakhir lebih dari 2 hari dari tanggal rebuild | **[Usulan]** |
-| Log akses Metabase | Tinjau bulanan siapa membuka dashboard dan perubahan group | **[Usulan]** |
+| Log akses Metabase | Tinjau bulanan siapa membuka dashboard dan perubahan grup | **[Usulan]** |
 
 ## 7. Retensi (semuanya usulan dan asumsi, menunggu kebijakan perusahaan)
 
