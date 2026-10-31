@@ -7,7 +7,7 @@
 -- filter: channel = v_return_rate_monthly.channel_name
 -- filter: region = v_return_rate_monthly.region_target_basis
 -- filter: category = v_return_rate_monthly.category
--- viz: {"scalar.field":"return_rate_pct","column_settings":{"[\"name\", \"return_rate_pct\"]":{"prefix":"","suffix":" %","decimals":2}}}
+-- viz: {"scalar.field":"return_rate_pct","column_settings":{"[\"name\", \"return_rate_pct\"]":{"prefix":"","suffix":" %","decimals":1}}}
 -- note: Return Rate = refund / Net Sales; retur menurut tanggal retur.
 SELECT round(100.0 * sum(refund_idr) / NULLIF(sum(net_sales_idr), 0), 2) AS return_rate_pct
 FROM metrics.v_return_rate_monthly
