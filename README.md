@@ -245,16 +245,18 @@ Ringkasan hasil (semua dari `kirana.duckdb`, rinci di [insight brief](reports/B_
 ```bash
 python3 scripts/build_insights.py                      # brief, grafik, storyline (setelah build.sh)
 cd laporan_akhir && latexmk -pdf UAS_BI_<NIM>_<Nama>_Laporan.tex && cd ..          # laporan akhir (sumber LaTeX, disunting langsung)
-KIRANA_NIM=<NIM> KIRANA_NAMA="<Nama Lengkap>" bash scripts/package_submission.sh # dist/..._SQL.zip dan ..._Dashboard.pdf
+./scripts/package_submission.sh                        # dist/: _Laporan.pdf (+ tautan GitHub di halaman brief), _Dashboard.pdf, _SQL.zip
 ```
 
 Laporan akhir disunting langsung di `laporan_akhir/*.tex` (maks. 25 halaman di luar lampiran); Bagian B disisipkan dari
-`reports/B_insight_brief.pdf`. Dokumen di `reports/*.md` adalah versi baca-di-GitHub dari isi yang sama.
+`reports/B_insight_brief.pdf`. Dokumen di `reports/*.md` adalah versi baca-di-GitHub dari isi yang sama. Penyebutan file repo di PDF laporan
+dapat diklik menuju file di GitHub. Unggah ketiga berkas di `dist/` untuk pengumpulan.
 
 ## Penggunaan AI
 
-Asisten AI (Claude Code) dipakai untuk belajar, debugging, serta membantu menulis SQL, skrip, dan draf teks; rincian di
-[pernyataan penggunaan AI](reports/D_pernyataan_ai.md). Seluruh angka dihasilkan dari model data dalam repo ini.
+Asisten AI (Claude Code) membantu menulis SQL, skrip, dan draf teks; arah kerja, setup infrastruktur, verifikasi, dan
+publikasi dikerjakan mahasiswa. Pembagian peran lengkap ada di [pernyataan penggunaan AI](reports/D_pernyataan_ai.md).
+Seluruh angka dihasilkan dari model data dalam repo ini.
 
 ## Penulis
 
