@@ -5,7 +5,7 @@ Dihasilkan oleh `sql/04_reconciliation.sql` dan `sql/06_tests.sql`; tabel hasil 
 
 ```bash
 bash scripts/build.sh                                          # bangun ke file sementara; kirana.duckdb diganti HANYA bila semua uji BLOCKING lolos
-bash scripts/mutation_test.sh                                  # 35 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
+bash scripts/mutation_test.sh                                  # 39 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
 duckdb -readonly kirana.duckdb -markdown -c "SELECT * FROM dq.test_results ORDER BY test_id"
 bash scripts/idempotency_check.sh   # IDEMPOTENT: 62 objek identik di dua run
 ```
@@ -84,7 +84,7 @@ Hasil disimpan di `dq.test_results_demo`. Ini membuktikan uji benar-benar mendet
 ## 2b. Uji punya gigi: mutation test
 
 `scripts/mutation_test.sh` menyuntik **satu cacat per percobaan** ke salinan `kirana.duckdb`, menjalankan ulang rekonsiliasi dan uji,
-lalu memastikan uji yang tepat gagal. Hasil: **35 dari 35 cacat terdeteksi** (sekitar 1 menit; 20 cacat data/staging dan 15 cacat semantic layer, region, dan akses). Ini menutup celah bahwa hanya
+lalu memastikan uji yang tepat gagal. Hasil: **39 dari 39 cacat terdeteksi** (sekitar 1 menit; 24 cacat data/staging dan 15 cacat semantic layer, region, dan akses). Empat uji yang tidak pernah gagal pada data asli (T11, T23, T24, T25) juga diberi cacat masing-masing; T01 dibuktikan lewat demo, dan T21, T22, T29 sudah gagal pada data asli. Ini menutup celah bahwa hanya
 T01–T05 yang pernah terbukti bisa gagal.
 
 | Cacat yang disuntik | Uji yang gagal |
@@ -124,6 +124,10 @@ T01–T05 yang pernah terbukti bisa gagal.
 | Join kelengkapan menggandakan baris toko | T52 |
 | Region dasar target salah pada 1 baris POS | T53 |
 | View region memuat baris region lain | T54 |
+| Net Sales fakta bergeser Rp 1 dari jembatan | T11 |
+| Tabrakan nomor struk tidak tertandai | T23 |
+| Void tanpa baris asli di toko master | T24 |
+| Provinsi order online tidak dikenal | T25 |
 
 ## 3. Rekonsiliasi raw → tabel bersih (baris)
 

@@ -86,7 +86,7 @@ Sumber (`reports/img/lineage.drawio` dapat disunting di draw.io; dibuat ulang ol
 | Uji BLOCKING (29 uji) | Satu uji gagal menghentikan build; `kirana.duckdb` lama tetap dipakai | **[Sudah]** |
 | Uji WARNING (14 uji, 3 temuan dikenal: T21, T22, T29) | Dicatat; temuan baru ditinjau pemilik sumber | **[Sudah]** |
 | Rekonsiliasi raw → fakta | Selisih ≠ 0 membuat T10 dan T11 gagal | **[Sudah]** |
-| Uji mutasi | 35 cacat disuntik, semua terdeteksi; jalankan setelah mengubah model | **[Sudah]** |
+| Uji mutasi | 39 cacat disuntik, semua terdeteksi; jalankan setelah mengubah model | **[Sudah]** |
 | Sync POS FAILED | Notifikasi ke IT bila ada toko-hari FAILED atau lebih dari 1 hari berturut-turut; dashboard menandai toko sebagai data tidak lengkap | Penanda **[Sudah]**; notifikasi **[Usulan]** |
 | Freshness | Peringatan bila tanggal data terakhir lebih dari 2 hari dari tanggal rebuild | **[Usulan]** |
 | Log akses Metabase | Tinjau bulanan siapa membuka dashboard dan perubahan grup | **[Usulan]** |

@@ -61,6 +61,10 @@ run_mut "M32 kamus merujuk view yang tidak ada"        T40 "UPDATE metrics.kpi_d
 run_mut "M33 join kelengkapan menggandakan baris toko"   T52 "$(wrap v_store_performance_monthly "SELECT * FROM metrics.v_store_performance_monthly_orig UNION ALL SELECT * FROM metrics.v_store_performance_monthly_orig WHERE store_code = 'JKT-01'")"
 run_mut "M34 region dasar target salah untuk 1 baris POS"  T53 "UPDATE dw.fact_sales SET region_target_basis = 'Sumatera' WHERE sales_key = (SELECT min(sales_key) FROM dw.fact_sales WHERE source_system = 'POS' AND region_target_basis <> 'Sumatera');"
 run_mut "M35 view region memuat baris region lain"       T54 "CREATE OR REPLACE VIEW acc_sumatera.v_sales_monthly AS SELECT * FROM metrics.v_sales_monthly WHERE region_target_basis IN ('Sumatera', 'Jawa Timur');"
+run_mut "M36 Net Sales fakta bergeser Rp 1 dari jembatan"  T11 "UPDATE dw.fact_sales SET net_sales = net_sales + 1 WHERE sales_key = 5;"
+run_mut "M37 tabrakan nomor struk tidak tertandai"     T23 "UPDATE dw.fact_sales SET key_collision = true WHERE sales_key = (SELECT min(sales_key) FROM dw.fact_sales WHERE NOT key_collision);"
+run_mut "M38 void tanpa baris asli di toko master"     T24 "UPDATE stg.pos_line SET disposition = 'REJECT_VOID_WITHOUT_ORIGINAL' WHERE pos_rid = (SELECT min(pos_rid) FROM stg.pos_line WHERE disposition = 'EXCLUDE_VOID');"
+run_mut "M39 provinsi order online tidak dikenal"      T25 "UPDATE stg.online_line SET province_source = 'MISSING' WHERE online_rid = (SELECT min(online_rid) FROM stg.online_line WHERE disposition = 'FACT');"
 echo "---"
 echo "$((n - miss)) dari $n cacat terdeteksi"
 [ "$miss" -eq 0 ]

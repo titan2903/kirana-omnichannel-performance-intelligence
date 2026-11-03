@@ -1183,7 +1183,7 @@ Dihasilkan oleh \href{https://github.com/titan2903/kirana-omnichannel-performanc
 
 \begin{Verbatim}[commandchars=\\\{\},breaklines,fontsize=\scriptsize]
 bash \gh{scripts/build.sh}                                          # bangun ke file sementara; kirana.duckdb diganti HANYA bila semua uji BLOCKING lolos
-bash \gh{scripts/mutation_test.sh}                                  # 35 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
+bash \gh{scripts/mutation_test.sh}                                  # 39 cacat disuntik ke salinan (data, staging, semantic layer, region, dan akses); semua harus terdeteksi
 duckdb -readonly kirana.duckdb -markdown -c "SELECT * FROM dq.test_results ORDER BY test_id"
 bash \gh{scripts/idempotency_check.sh}   # IDEMPOTENT: 62 objek identik di dua run
 \end{Verbatim}
@@ -1311,7 +1311,7 @@ Hasil disimpan di \texttt{dq.test\_\allowbreak{}results\_\allowbreak{}demo}. Ini
 \subsection{2b. Uji punya gigi: mutation test}\label{b.-uji-punya-gigi-mutation-test}
 
 \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/scripts/mutation_test.sh}{\texttt{scripts/mutation\_\allowbreak{}test.sh}} menyuntik \textbf{satu cacat per percobaan} ke salinan \texttt{kirana.duckdb}, menjalankan ulang rekonsiliasi dan uji,
-lalu memastikan uji yang tepat gagal. Hasil: \textbf{35 dari 35 cacat terdeteksi} (sekitar 1 menit; 20 cacat data/staging dan 15 cacat semantic layer, region, dan akses). Ini menutup celah bahwa hanya
+lalu memastikan uji yang tepat gagal. Hasil: \textbf{39 dari 39 cacat terdeteksi} (sekitar 1 menit; 24 cacat data/staging dan 15 cacat semantic layer, region, dan akses). Empat uji yang tidak pernah gagal pada data asli (T11, T23, T24, T25) juga diberi cacat masing-masing; T01 dibuktikan lewat demo, dan T21, T22, T29 sudah gagal pada data asli. Ini menutup celah bahwa hanya
 T01--T05 yang pernah terbukti bisa gagal.
 
 {\def\LTcaptype{none} % do not increment counter
@@ -1363,6 +1363,10 @@ Kamus merujuk view yang tidak ada & T40 \\
 Join kelengkapan menggandakan baris toko & T52 \\
 Region dasar target salah pada 1 baris POS & T53 \\
 View region memuat baris region lain & T54 \\
+Net Sales fakta bergeser Rp 1 dari jembatan & T11 \\
+Tabrakan nomor struk tidak tertandai & T23 \\
+Void tanpa baris asli di toko master & T24 \\
+Provinsi order online tidak dikenal & T25 \\
 \end{longtable}
 }
 
@@ -1716,7 +1720,7 @@ Publikasi & Mengelola repositori Git (commit dan push ke GitHub) dan mengumpulka
 \item
   \textbf{Angka tidak diketik manual.} Setiap angka di brief dan storyline dihitung oleh \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/facts.sql}{\texttt{reports/insights/facts.sql}} dari \texttt{kirana.duckdb} dan tercatat di \href{https://github.com/titan2903/kirana-omnichannel-performance-intelligence/blob/master/reports/insights/insight_registry.md}{\texttt{reports/insights/insight\_\allowbreak{}registry.md}}; kunci angka yang tidak ada membuat build gagal. Angka kamus dan pencapaian tercatat di Lampiran Number Registry.
 \item
-  \textbf{Pemeriksaan otomatis.} 43 uji kualitas data (29 BLOCKING, semuanya lolos), rekonsiliasi dengan selisih 0, 35 cacat yang sengaja disuntik (semuanya terdeteksi), dan uji idempotensi (dua build menghasilkan 62 objek identik).
+  \textbf{Pemeriksaan otomatis.} 43 uji kualitas data (29 BLOCKING, semuanya lolos), rekonsiliasi dengan selisih 0, 39 cacat yang sengaja disuntik (semuanya terdeteksi), dan uji idempotensi (dua build menghasilkan 62 objek identik).
 \item
   \textbf{Angka dashboard dicocokkan.} Angka utama brief dicocokkan langsung dengan kartu Metabase pada filter periode yang sama.
 \item
@@ -2298,7 +2302,7 @@ Status
 Uji BLOCKING (29 uji) & Satu uji gagal menghentikan build; \texttt{kirana.duckdb} lama tetap dipakai & \textbf{{[}Sudah{]}} \\
 Uji WARNING (14 uji, 3 temuan dikenal: T21, T22, T29) & Dicatat; temuan baru ditinjau pemilik sumber & \textbf{{[}Sudah{]}} \\
 Rekonsiliasi raw → fakta & Selisih ≠ 0 membuat T10 dan T11 gagal & \textbf{{[}Sudah{]}} \\
-Uji mutasi & 35 cacat disuntik, semua terdeteksi; jalankan setelah mengubah model & \textbf{{[}Sudah{]}} \\
+Uji mutasi & 39 cacat disuntik, semua terdeteksi; jalankan setelah mengubah model & \textbf{{[}Sudah{]}} \\
 Sync POS FAILED & Notifikasi ke IT bila ada toko-hari FAILED atau lebih dari 1 hari berturut-turut; dashboard menandai toko sebagai data tidak lengkap & Penanda \textbf{{[}Sudah{]}}; notifikasi \textbf{{[}Usulan{]}} \\
 Freshness & Peringatan bila tanggal data terakhir lebih dari 2 hari dari tanggal rebuild & \textbf{{[}Usulan{]}} \\
 Log akses Metabase & Tinjau bulanan siapa membuka dashboard dan perubahan grup & \textbf{{[}Usulan{]}} \\

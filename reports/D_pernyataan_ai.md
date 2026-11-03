@@ -23,7 +23,7 @@
 **Cara keluaran AI diperiksa**
 
 - **Angka tidak diketik manual.** Setiap angka di brief dan storyline dihitung oleh `reports/insights/facts.sql` dari `kirana.duckdb` dan tercatat di `reports/insights/insight_registry.md`; kunci angka yang tidak ada membuat build gagal. Angka kamus dan pencapaian tercatat di Lampiran Number Registry.
-- **Pemeriksaan otomatis.** 43 uji kualitas data (29 BLOCKING, semuanya lolos), rekonsiliasi dengan selisih 0, 35 cacat yang sengaja disuntik (semuanya terdeteksi), dan uji idempotensi (dua build menghasilkan 62 objek identik).
+- **Pemeriksaan otomatis.** 43 uji kualitas data (29 BLOCKING, semuanya lolos), rekonsiliasi dengan selisih 0, 39 cacat yang sengaja disuntik (semuanya terdeteksi), dan uji idempotensi (dua build menghasilkan 62 objek identik).
 - **Angka dashboard dicocokkan.** Angka utama brief dicocokkan langsung dengan kartu Metabase pada filter periode yang sama.
 - **Kesalahan AI yang ditemukan dan dikoreksi secara terbuka.** Keputusan awal memakai region saat transaksi untuk achievement membuat Jawa Barat tampak anjlok dari 98,1% ke 73,4%. Ini artefak ukur karena target FY2025 tidak disesuaikan saat BGR-01 pindah region. Koreksi (`region_target_basis`), uji T53, dan dampaknya dijelaskan di Bagian A4 dan A3 (DQ-15).
 - **Data pribadi.** Kolom PII `customers.csv` tidak dibawa ke model, dashboard, laporan, atau SQL (uji T12 memeriksanya); pemeriksaan akhir tidak menemukan nama, telepon, atau email member di berkas keluaran.
