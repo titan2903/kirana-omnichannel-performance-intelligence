@@ -12,6 +12,14 @@
 | Insight dan laporan | Menentukan bentuk akhir laporan (LaTeX, satu berkas), struktur folder repo, tautan berkas ke GitHub, dan penamaan berkas pengumpulan | Menyusun kueri fakta (`reports/insights/facts.sql`), skrip pembuat brief, serta draf teks brief, memo evaluasi, dan lampiran tata kelola |
 | Publikasi | Mengelola repositori Git (commit dan push ke GitHub) dan mengumpulkan berkas | Menyiapkan skrip paket pengumpulan |
 
+**Contoh tinjauan dan keputusan mahasiswa atas keluaran AI**
+
+- Meminta peninjauan ulang menyeluruh setelah Task 1, Task 2, dan di akhir pekerjaan sebelum melanjutkan, lalu menilai temuannya.
+- Mempertanyakan keluaran yang janggal, misalnya mengapa berkas laporan di `dist/` berbeda dari hasil kompilasi LaTeX, dan meminta tanda penulisan (`->`) yang belum rapi diperbaiki.
+- Menolak struktur yang diusulkan AI dan menetapkan sendiri: nama folder `laporan_akhir/` (bukan `latex/`), laporan sebagai satu berkas LaTeX, dan penamaan berkas sesuai panduan.
+- Menentukan agar setiap penyebutan berkas di laporan dapat diklik menuju repositori GitHub.
+- Menjalankan sendiri langkah yang menyentuh sistem miliknya (pemasangan hak akses Metabase, penghapusan skrip lama, commit dan push).
+
 **Cara keluaran AI diperiksa**
 
 - **Angka tidak diketik manual.** Setiap angka di brief dan storyline dihitung oleh `reports/insights/facts.sql` dari `kirana.duckdb` dan tercatat di `reports/insights/insight_registry.md`; kunci angka yang tidak ada membuat build gagal. Angka kamus dan pencapaian tercatat di Lampiran Number Registry.
