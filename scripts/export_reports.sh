@@ -216,11 +216,12 @@ q "SELECT $P AS periode,
 cat <<'E'
 
 ## 12. Promo: Lift dan dampak margin per jenis
-*View: `metrics.v_promo_performance`. Lift jenis = rata-rata lift per kode (informasi); nilai Rupiah dijumlahkan. Baseline simetris +/-1 sampai 4 minggu.*
+*View: `metrics.v_promo_performance`. Lift dan perubahan GM per jenis = rasio gabungan (jumlah pembilang / jumlah penyebut), sama dengan kartu Metabase dan brief; min/maks = rentang lift per kode; nilai Rupiah dijumlahkan. Baseline simetris +/-1 sampai 4 minggu.*
 
 E
-q "SELECT promo_type AS jenis, count(*) AS kode, round(avg(lift_net_pct), 1) AS lift_net_rata2_pct, round(min(lift_net_pct), 1) AS lift_min_pct, round(max(lift_net_pct), 1) AS lift_maks_pct,
-          round(avg(lift_qty_pct), 1) AS lift_unit_rata2_pct, round(avg(gm_change_pt), 2) AS perubahan_gm_rata2_pt,
+q "SELECT promo_type AS jenis, count(*) AS kode, round(100.0 * (sum(net_sales_idr)::DOUBLE / sum(baseline_net_sales_idr) - 1), 1) AS lift_net_pct, round(min(lift_net_pct), 1) AS lift_min_pct, round(max(lift_net_pct), 1) AS lift_maks_pct,
+          round(100.0 * (sum(qty)::DOUBLE / sum(baseline_qty) - 1), 1) AS lift_unit_pct,
+          round(100.0 * (sum(gross_margin_idr)::DOUBLE / sum(net_sales_idr) - sum(baseline_gross_margin_idr)::DOUBLE / sum(baseline_net_sales_idr)), 2) AS perubahan_gm_pt,
           sum(incremental_net_sales_idr) AS incremental_net_sales_idr, sum(incremental_gross_margin_idr) AS incremental_gross_margin_idr,
           sum(discount_idr) AS diskon_idr, sum(budget_idr) AS anggaran_idr, round(100.0 * sum(discount_idr) / sum(budget_idr), 1) AS pemakaian_anggaran_pct
    FROM metrics.v_promo_performance GROUP BY 1 ORDER BY 1"

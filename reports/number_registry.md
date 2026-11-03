@@ -182,16 +182,16 @@ Rupiah, tanpa pajak. Rasio dihitung ulang dari pembilang/penyebut. Data sampai: 
 | H1 2026 | 6.09                         | 0.66              |
 
 ## 12. Promo: Lift dan dampak margin per jenis
-*View: `metrics.v_promo_performance`. Lift jenis = rata-rata lift per kode (informasi); nilai Rupiah dijumlahkan. Baseline simetris +/-1 sampai 4 minggu.*
+*View: `metrics.v_promo_performance`. Lift dan perubahan GM per jenis = rasio gabungan (jumlah pembilang / jumlah penyebut), sama dengan kartu Metabase dan brief; min/maks = rentang lift per kode; nilai Rupiah dijumlahkan. Baseline simetris +/-1 sampai 4 minggu.*
 
-|   jenis    | kode | lift_net_rata2_pct | lift_min_pct | lift_maks_pct | lift_unit_rata2_pct | perubahan_gm_rata2_pt | incremental_net_sales_idr | incremental_gross_margin_idr | diskon_idr | anggaran_idr | pemakaian_anggaran_pct |
-|------------|-----:|-------------------:|-------------:|--------------:|--------------------:|----------------------:|--------------------------:|-----------------------------:|-----------:|-------------:|-----------------------:|
-| App Payday | 27   | 64.9               | 19.2         | 153.7         | 82.4                | -6.07                 | 1151713694                | 325748866                    | 307011000  | 3240000000   | 9.5                    |
-| Clearance  | 3    | -32.2              | -40.3        | -19.4         | -1.7                | -19.3                 | -177099692                | -166112193                   | 153764800  | 1200000000   | 12.8                   |
-| Harbolnas  | 2    | 65.8               | 51.8         | 79.8          | 127.0               | -14.86                | 11998050                  | 918125                       | 9898500    | 500000000    | 2.0                    |
-| Mega Sale  | 8    | 457.8              | 372.0        | 561.3         | 877.7               | -50.54                | 417072602                 | -101117490                   | 417236500  | 7200000000   | 5.8                    |
-| Member Day | 30   | 14.0               | -12.6        | 138.0         | 25.1                | -5.99                 | 155762693                 | -13650510                    | 152345000  | 4500000000   | 3.4                    |
-| Ramadan    | 3    | 31.7               | 29.9         | 34.4          | 55.9                | -8.28                 | 1223347756                | 225282835                    | 901986700  | 4500000000   | 20.0                   |
+|   jenis    | kode | lift_net_pct | lift_min_pct | lift_maks_pct | lift_unit_pct | perubahan_gm_pt | incremental_net_sales_idr | incremental_gross_margin_idr | diskon_idr | anggaran_idr | pemakaian_anggaran_pct |
+|------------|-----:|-------------:|-------------:|--------------:|--------------:|----------------:|--------------------------:|-----------------------------:|-----------:|-------------:|-----------------------:|
+| App Payday | 27   | 66.4         | 19.2         | 153.7         | 84.0          | -6.14           | 1151713694                | 325748866                    | 307011000  | 3240000000   | 9.5                    |
+| Clearance  | 3    | -33.1        | -40.3        | -19.4         | -2.8          | -19.3           | -177099692                | -166112193                   | 153764800  | 1200000000   | 12.8                   |
+| Harbolnas  | 2    | 67.8         | 51.8         | 79.8          | 122.6         | -15.11          | 11998050                  | 918125                       | 9898500    | 500000000    | 2.0                    |
+| Mega Sale  | 8    | 449.6        | 372.0        | 561.3         | 872.0         | -50.64          | 417072602                 | -101117490                   | 417236500  | 7200000000   | 5.8                    |
+| Member Day | 30   | 12.1         | -12.6        | 138.0         | 22.6          | -5.98           | 155762693                 | -13650510                    | 152345000  | 4500000000   | 3.4                    |
+| Ramadan    | 3    | 31.5         | 29.9         | 34.4          | 55.8          | -8.28           | 1223347756                | 225282835                    | 901986700  | 4500000000   | 20.0                   |
 
 ## 13. Kesegaran data
 *View: `metrics.v_data_freshness`.*
