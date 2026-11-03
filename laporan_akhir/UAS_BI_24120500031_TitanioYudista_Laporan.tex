@@ -915,6 +915,14 @@ uji & \href{https://github.com/titan2903/kirana-omnichannel-performance-intellig
 
 \texttt{kirana.duckdb} memuat schema \texttt{stg}, \texttt{dw}, \texttt{dq}, \texttt{metrics}, dan enam schema akses \texttt{acc\_\allowbreak{}\textless{}region\textgreater{}} (Task 6). Tidak ada kolom PII di database ini.
 
+Metabase membaca file ini lewat driver DuckDB (koneksi \emph{KIRANA DB}, file \texttt{/data/kirana.duckdb} di container) dengan \textbf{koneksi read-only}, sehingga dashboard tidak dapat mengubah model; rebuild dilakukan setelah Metabase dihentikan (DuckDB hanya satu penulis).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{img/metabase_koneksi_duckdb.png}
+\caption{Koneksi Metabase ke DuckDB: status Connected, file \texttt{/data/kirana.duckdb}, read-only aktif}
+\end{figure}
+
 \subsection{2. Star schema}\label{star-schema}
 
 \begin{figure}

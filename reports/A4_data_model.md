@@ -29,6 +29,10 @@ flowchart LR
 
 `kirana.duckdb` memuat schema `stg`, `dw`, `dq`, `metrics`, dan enam schema akses `acc_<region>` (Task 6). Tidak ada kolom PII di database ini.
 
+Metabase membaca file ini lewat driver DuckDB (koneksi *KIRANA DB*, file `/data/kirana.duckdb` di container) dengan **koneksi read-only**, sehingga dashboard tidak dapat mengubah model; rebuild dilakukan setelah Metabase dihentikan (DuckDB hanya satu penulis).
+
+![Koneksi Metabase ke DuckDB: status Connected, file /data/kirana.duckdb, read-only aktif](img/metabase_koneksi_duckdb.png)
+
 ## 2. Star schema
 
 ![Star schema](img/star_schema.png)
