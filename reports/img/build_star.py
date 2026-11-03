@@ -6,11 +6,11 @@ from xml.sax.saxutils import escape
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-HELP = [("dim_product_cost", "HPP SCD2 (as-of)", "dim_product"), ("ref_channel_fee", "tarif as-of", "dim_channel")]
+HELP = [("dim_product_cost", "HPP SCD2 (as-of)", "dim_product"), ("ref_channel_fee", "tarif as-of", "dim_channel"), ("dim_store_event", "renovasi SBY-01", "dim_store")]
 DIMS = [("dim_date", "date_key"), ("dim_promo", "promo_key"), ("dim_customer", "customer_key (tanpa PII)"), ("dim_product", "product_key, sku"), ("dim_store", "store_key (SCD2 region)"), ("dim_channel", "channel_key")]
 FACTS = [("fact_sales", ["grain: 1 item baris valid", "POS + online"], ["date", "product", "store", "channel", "customer", "promo"]),
-         ("fact_sales_excluded", ["void, order batal", "(untuk rekonsiliasi)"], ["store", "product"]),
-         ("fact_returns", ["grain: 1 return_id"], ["date", "product", "store", "channel"]),
+         ("fact_sales_excluded", ["void, order batal", "(untuk rekonsiliasi)"], ["date", "product", "store", "channel", "customer"]),
+         ("fact_returns", ["grain: 1 return_id"], ["date", "product", "store", "channel", "customer"]),
          ("fact_target", ["bulan x channel x region"], ["date", "channel"]),
          ("fact_pos_sync", ["toko x tanggal sync"], ["date", "store"])]
 COL = {"date": "#2a78d6", "promo": "#7a5bd0", "customer": "#c0408a", "product": "#1baf7a", "store": "#eb6834", "channel": "#c89200"}
