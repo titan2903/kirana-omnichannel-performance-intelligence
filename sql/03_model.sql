@@ -64,7 +64,7 @@ SELECT row_number() OVER (ORDER BY c.sku, c.valid_from) AS product_cost_key, p.p
        c.valid_from, c.valid_to, c.valid_to = DATE '9999-12-31' AS is_current
 FROM stg.product_cost c LEFT JOIN dw.dim_product p USING (sku);
 
--- Tanpa PII. customer_key -1 = bukan member.
+-- Tanpa PII. customer_key -1 = bukan member. DQ-20: member tanpa transaksi tetap disimpan; Active Members dihitung dari transaksi.
 CREATE OR REPLACE TABLE dw.dim_customer AS
 SELECT row_number() OVER (ORDER BY customer_id) AS customer_key, customer_id, member_tier, join_date, join_channel, age_band, possible_duplicate_member
 FROM stg.customer
@@ -80,6 +80,7 @@ SELECT row_number() OVER (ORDER BY promo_code) AS promo_key, * FROM p
 UNION ALL
 SELECT -1, 'NONE', 'Tanpa promo', 'Tanpa promo', 'ALL', 'ALL', 0, NULL, NULL, NULL, false;
 
+-- DQ-24: renovasi SBY-01 (STORE_CLOSED 4 Agu - 21 Sep 2025) = kejadian bisnis; disimpan sebagai event, penjualan tidak dikoreksi.
 CREATE OR REPLACE TABLE dw.dim_store_event AS
 SELECT row_number() OVER (ORDER BY store_code, start_date) AS event_key, store_code, event, start_date, end_date FROM stg.store_event;
 

@@ -335,7 +335,7 @@ SELECT st.store_code, st.store_name, max(sy.business_date) AS last_business_date
 FROM dw.fact_pos_sync sy JOIN dw.dim_store st ON st.store_key = sy.store_key
 GROUP BY st.store_code, st.store_name;
 
--- Penanda data tidak lengkap per toko-bulan: sync GAGAL (data hilang, bukan nol) atau toko TUTUP (kejadian bisnis, mis. renovasi).
+-- Penanda data tidak lengkap per toko-bulan: sync GAGAL (DQ-23; data hilang, bukan nol) atau toko TUTUP (DQ-24; kejadian bisnis, mis. renovasi).
 CREATE OR REPLACE VIEW metrics.v_data_completeness AS
 WITH d AS (
   SELECT dd.month_start, sy.store_code, count(*) AS days_logged,

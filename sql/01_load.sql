@@ -30,4 +30,4 @@ SELECT * FROM read_xlsx('raw_data/sales_targets_2025_2026.xlsx', sheet = 'Target
 CREATE OR REPLACE TEMP VIEW raw_target_2026 AS
 SELECT * FROM read_xlsx('raw_data/sales_targets_2025_2026.xlsx', sheet = 'Target Net Sales H1 2026', range = 'A3:H20', header = true) WHERE Channel IS NOT NULL;
 CREATE OR REPLACE TEMP VIEW raw_target_gm AS
-SELECT * FROM read_xlsx('raw_data/sales_targets_2025_2026.xlsx', sheet = 'Target GM', header = true);
+SELECT * FROM read_xlsx('raw_data/sales_targets_2025_2026.xlsx', sheet = 'Target GM', range = 'A1:C5', header = true);

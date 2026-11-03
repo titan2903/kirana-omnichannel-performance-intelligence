@@ -72,8 +72,9 @@ WITH r AS (
          (SELECT count(*) FROM dw.dim_promo WHERE promo_key > 0 AND promo_code <> 'B2B-CORP'), NULL, 'B2B-CORP dan NONE ditambahkan manual, tidak dihitung')
 SELECT source_name, raw_rows, dup_dropped_rows, rejected_rows, excluded_rows, fact_rows,
        raw_rows - dup_dropped_rows - rejected_rows - excluded_rows - fact_rows AS diff_rows,
-       raw_rp, dup_dropped_rp, rejected_rp, excluded_rp, fact_rp,
-       CASE WHEN raw_rp IS NULL THEN NULL ELSE raw_rp - dup_dropped_rp - rejected_rp - excluded_rp - fact_rp END AS diff_rp,
+       -- uang tidak boleh DOUBLE: target Excel terbaca DOUBLE sehingga kolom gabungan ikut DOUBLE; DECIMAL(18,2) menjaga nilai pecahan bila ada
+       raw_rp::DECIMAL(18, 2) AS raw_rp, dup_dropped_rp, rejected_rp, excluded_rp, fact_rp,
+       CASE WHEN raw_rp IS NULL THEN NULL ELSE raw_rp::DECIMAL(18, 2) - dup_dropped_rp - rejected_rp - excluded_rp - fact_rp END AS diff_rp,
        note
 FROM r ORDER BY ord;
 
