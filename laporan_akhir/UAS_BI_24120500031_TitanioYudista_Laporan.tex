@@ -1609,7 +1609,7 @@ Status
 \item
   \textbf{Baseline promo.} Promo Lift memakai jendela ±1 sampai 4 minggu tanpa hari yang tercakup promo lain. Pengaruh musim yang tidak tampak dari tanggal belum dikendalikan; Ramadan dan Clearance diuji konsisten antar tahun.
 \item
-  \textbf{Void, cancelled, TRN-99.} Void kasir dan pasangannya, serta order CANCELLED, dikeluarkan dari Net Sales tetapi dilaporkan (cancellation dan void rate). \texttt{TRN-99} (324 baris, Rp 77,5 juta, 0,12\% nilai POS) dikarantina karena tidak ada di master toko, sync log, maupun target.
+  \textbf{Void, cancelled, TRN-99.} Void kasir dan pasangannya, serta order CANCELLED, dikeluarkan dari Net Sales tetapi dilaporkan (cancellation dan void rate). \texttt{TRN-99} (324 baris mentah atau 320 setelah duplikat dihapus; Rp 76,4 juta, 0,12\% nilai POS, sesuai rekonsiliasi A5) dikarantina karena tidak ada di master toko, sync log, maupun target.
 \item
   \textbf{Hari sync FAILED.} BDG-02 gagal 7 hari (3--9 Nov 2025) dan tidak diimputasi; estimasi hilang Rp 20,8 juta hanya indikatif. Penutupan SBY-01 (49 hari) adalah kejadian bisnis, bukan masalah data.
 \item
@@ -2222,6 +2222,8 @@ Direktur Komersial & Dashboard utama & Berhasil \\
 Direktur Komersial & Membuat query (query builder atau SQL native) & Ditolak \\
 \end{longtable}
 }
+
+Grafik izin yang sama juga diperiksa ulang langsung di instance proyek (port 3001) pada 3 Nov 2026: Finance hanya \texttt{metrics} dan \texttt{dw}, Direktur Komersial tanpa query, Store Manager Sumatera hanya \texttt{acc\_\allowbreak{}sumatera} dan koleksinya, All Users tanpa akses koleksi KIRANA BI, dan tidak ada dashboard dengan link publik.
 
 \begin{figure}
 \centering

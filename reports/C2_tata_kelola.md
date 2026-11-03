@@ -55,6 +55,8 @@ Pengendali: (1) `01_load` hanya membuat TEMP view sehingga PII tidak tersimpan d
 | Direktur Komersial | Dashboard utama | Berhasil |
 | Direktur Komersial | Membuat query (query builder atau SQL native) | Ditolak |
 
+Grafik izin yang sama juga diperiksa ulang langsung di instance proyek (port 3001) pada 3 Nov 2026: Finance hanya `metrics` dan `dw`, Direktur Komersial tanpa query, Store Manager Sumatera hanya `acc_sumatera` dan koleksinya, All Users tanpa akses koleksi KIRANA BI, dan tidak ada dashboard dengan link publik.
+
 ![Izin koleksi KIRANA BI per grup](img/akses_izin_koleksi.png)
 
 ![Izin data grup Store Manager Sumatera: hanya acc_sumatera](img/akses_izin_data_sm_sumatera.png)
