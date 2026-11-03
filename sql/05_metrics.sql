@@ -396,7 +396,7 @@ SELECT * FROM (VALUES
   'Head of E-Commerce (online); Head of Store Operations (Store)', 'Tidak ada target resmi. Pembanding: periode yang sama tahun lalu.'),
  (10, 'Promo Lift dan Dampak Margin', 'Kenaikan Net Sales (dan unit) pada jendela promo terhadap baseline, beserta perubahan margin dan margin tambahan dalam Rupiah.',
   'lift_net_pct = 100 * (net_sales_idr / baseline_net_sales_idr - 1); incremental_gross_margin_idr = gross_margin_idr - baseline_gross_margin_idr', 'satu kode promo (73)', 'metrics.v_promo_performance',
-  'Scope = channel, kategori, dan (bila member-only) penjualan member; B2B bulk dikecualikan. Baseline = hari yang sama pada +/-1 sampai 4 minggu, tanpa hari yang tercakup promo beririsan; pembanding YoY +/-364 hari. Net Sales sudah dikurangi diskon. Tidak mengendalikan musiman.',
+  'Scope = channel, kategori, dan (bila member-only) penjualan member; B2B bulk dikecualikan. Baseline = hari yang sama pada +/-1 sampai 4 minggu, tanpa hari yang tercakup promo beririsan; pembanding YoY +/-364 hari. Net Sales sudah dikurangi diskon. Tidak mengendalikan musiman. Ringkasan per jenis promo memakai rasio gabungan (jumlah pembilang / jumlah penyebut), bukan rata-rata lift per kode.',
   'Direktur Komersial (Marketing)', 'Tidak ada target resmi. Kriteria usulan: promo menguntungkan bila incremental_gross_margin_idr > 0; baseline_quality harus BAIK.'),
  (11, 'Cancellation Rate dan Void Rate', 'Cancellation Rate: Rp order CANCELLED dibagi (COMPLETED + CANCELLED) pada online. Void Rate: Rp baris asli yang di-void dibagi (valid + di-void) pada POS.',
   '100 * SUM(cancelled_net_sales_idr) / NULLIF(SUM(valid_net_sales_idr) + SUM(cancelled_net_sales_idr), 0)', 'bulan x channel x region', 'metrics.v_cancellation_void_monthly',

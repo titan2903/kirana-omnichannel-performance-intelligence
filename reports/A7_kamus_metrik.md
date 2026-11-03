@@ -111,7 +111,7 @@ sama persis dengan yang dipakai view. Semua kartu Metabase hanya `SELECT` dari s
 - **Rumus SQL:** `lift_net_pct = 100 * (net_sales_idr / baseline_net_sales_idr - 1); incremental_gross_margin_idr = gross_margin_idr - baseline_gross_margin_idr`
 - **Grain:** satu kode promo (73)
 - **View sumber:** `metrics.v_promo_performance`
-- **Aturan inklusi/eksklusi:** Scope = channel, kategori, dan (bila member-only) penjualan member; B2B bulk dikecualikan. Baseline = hari yang sama pada +/-1 sampai 4 minggu, tanpa hari yang tercakup promo beririsan; pembanding YoY +/-364 hari. Net Sales sudah dikurangi diskon. Tidak mengendalikan musiman.
+- **Aturan inklusi/eksklusi:** Scope = channel, kategori, dan (bila member-only) penjualan member; B2B bulk dikecualikan. Baseline = hari yang sama pada +/-1 sampai 4 minggu, tanpa hari yang tercakup promo beririsan; pembanding YoY +/-364 hari. Net Sales sudah dikurangi diskon. Tidak mengendalikan musiman. Ringkasan per jenis promo memakai rasio gabungan (jumlah pembilang / jumlah penyebut), bukan rata-rata lift per kode.
 - **Pemilik metrik:** Direktur Komersial (Marketing)
 - **Target / ambang:** Tidak ada target resmi. Kriteria usulan: promo menguntungkan bila incremental_gross_margin_idr > 0; baseline_quality harus BAIK.
 

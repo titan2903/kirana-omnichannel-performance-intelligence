@@ -130,10 +130,11 @@ INSERT INTO facts SELECT k || '_' || t, v, 'metrics.v_promo_performance' FROM (
   UNION ALL SELECT t, 'p_net', sum(incremental_net_sales_idr)::DOUBLE FROM pp GROUP BY t
   UNION ALL SELECT t, 'p_disc', sum(discount_idr)::DOUBLE FROM pp GROUP BY t
   UNION ALL SELECT t, 'p_budget', sum(budget_idr)::DOUBLE FROM pp GROUP BY t
-  UNION ALL SELECT t, 'p_lift', avg(lift_net_pct) FROM pp GROUP BY t
-  UNION ALL SELECT t, 'p_lift_unit', avg(lift_qty_pct) FROM pp GROUP BY t
-  UNION ALL SELECT t, 'p_gmpct_promo', avg(gm_pct_promo) FROM pp GROUP BY t
-  UNION ALL SELECT t, 'p_gmpct_base', avg(gm_pct_baseline) FROM pp GROUP BY t
+  -- rasio gabungan dari pembilang/penyebut (bukan AVG rasio per kode), sama dengan kartu promo_per_jenis
+  UNION ALL SELECT t, 'p_lift', 100.0 * (sum(net_sales_idr)::DOUBLE / sum(baseline_net_sales_idr) - 1) FROM pp GROUP BY t
+  UNION ALL SELECT t, 'p_lift_unit', 100.0 * (sum(qty)::DOUBLE / sum(baseline_qty) - 1) FROM pp GROUP BY t
+  UNION ALL SELECT t, 'p_gmpct_promo', 100.0 * sum(gross_margin_idr)::DOUBLE / sum(net_sales_idr) FROM pp GROUP BY t
+  UNION ALL SELECT t, 'p_gmpct_base', 100.0 * sum(baseline_gross_margin_idr)::DOUBLE / sum(baseline_net_sales_idr) FROM pp GROUP BY t
   UNION ALL SELECT t, 'p_pos', count(*) FILTER (WHERE incremental_gross_margin_idr > 0)::DOUBLE FROM pp GROUP BY t
   UNION ALL SELECT t, 'p_neg', count(*) FILTER (WHERE incremental_gross_margin_idr <= 0)::DOUBLE FROM pp GROUP BY t);
 INSERT INTO facts SELECT 'p_h225_' || k || '_' || t, v, 'metrics.v_promo_performance (promo mulai Jul-Des 2025)' FROM (
@@ -147,7 +148,7 @@ INSERT INTO facts SELECT 'p_disc_total', sum(discount_idr), 'metrics.v_promo_per
 INSERT INTO facts SELECT 'p_util_total_pct', 100.0 * sum(discount_idr) / sum(budget_idr), 'metrics.v_promo_performance' FROM pp;
 INSERT INTO facts SELECT 'mega_gmpct_promo_min', min(gm_pct_promo), 'metrics.v_promo_performance (Mega Sale)' FROM pp WHERE t = 'mega';
 INSERT INTO facts SELECT 'mega_discount_pct', max(discount_pct), 'dw.dim_promo' FROM pp WHERE t = 'mega';
-INSERT INTO facts SELECT 'mega_gmpct_base_2025', avg(gm_pct_baseline), 'metrics.v_promo_performance (Mega Sale 2025)' FROM pp WHERE t = 'mega' AND start_date >= DATE '2025-01-01';
+INSERT INTO facts SELECT 'mega_gmpct_base_2025', 100.0 * sum(baseline_gross_margin_idr)::DOUBLE / sum(baseline_net_sales_idr), 'metrics.v_promo_performance (Mega Sale 2025)' FROM pp WHERE t = 'mega' AND start_date >= DATE '2025-01-01';
 -- kedalaman diskon maksimum agar CM promo >= 0 (tanpa memperhitungkan lift): d* = 1 - (1 - GM_baseline) / (1 - fee)
 INSERT INTO facts SELECT 'mega_depth_breakeven_cm_pct', 100.0 * (1 - (1 - (SELECT v FROM facts WHERE k = 'mega_gmpct_base_2025') / 100.0) / (1 - 0.115)), 'd* = 1 - (1 - GM baseline) / (1 - 11,5%)';
 INSERT INTO facts SELECT 'mega_depth_breakeven_gm_pct', (SELECT v FROM facts WHERE k = 'mega_gmpct_base_2025'), 'd* = GM baseline (GM promo = 0)';

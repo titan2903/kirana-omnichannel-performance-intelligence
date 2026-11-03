@@ -78,7 +78,7 @@ storyline dashboard, dan grafik ada di tabel ini beserta sumbernya. Nilai mentah
 | `hpp_idx_h126` | 105.8673 | dw.fact_sales: HPP per unit, SKU sama, FY2024 = 100 |
 | `hpp_naik_jan26_pct` | 3.9951 | rata-rata kenaikan HPP SKU yang berubah 2026-01-01 |
 | `hpp_naik_jul25_pct` | 17.9997 | rata-rata kenaikan HPP SKU yang berubah 2025-07-01 |
-| `mega_depth_breakeven_cm_pct` | 26.0537 | d* = 1 - (1 - GM baseline) / (1 - 11,5%) |
+| `mega_depth_breakeven_cm_pct` | 26.058 | d* = 1 - (1 - GM baseline) / (1 - 11,5%) |
 | `mega_discount_pct` | 45 | dw.dim_promo |
 | `mp_fee_extra_h126_rp` | 146638762.5 | Net Sales Marketplace H1 2026 x 2,5% |
 | `mp_fee_extra_total_rp` | 330147422.5 | Net Sales Marketplace sejak 2025-04-01 x (11,5% - 9,0%) |
@@ -98,13 +98,13 @@ storyline dashboard, dan grafik ada di tabel ini beserta sumbernya. Nilai mentah
 | `p_gm_mbr` | -13650510 | metrics.v_promo_performance |
 | `p_gm_mega` | -101117490 | metrics.v_promo_performance |
 | `p_gm_rmd` | 225282835 | metrics.v_promo_performance |
-| `p_gmpct_base_mega` | 38.4937 | metrics.v_promo_performance |
-| `p_gmpct_promo_mega` | -12.0437 | metrics.v_promo_performance |
+| `p_gmpct_base_mega` | 37.6635 | metrics.v_promo_performance |
+| `p_gmpct_promo_mega` | -12.9798 | metrics.v_promo_performance |
 | `p_h225_cm_mega` | -99526864 | metrics.v_promo_performance (promo mulai Jul-Des 2025) |
 | `p_h225_disc_mega` | 240196100 | metrics.v_promo_performance (promo mulai Jul-Des 2025) |
 | `p_h225_net_mega` | 237350988 | metrics.v_promo_performance (promo mulai Jul-Des 2025) |
-| `p_lift_clr` | -32.2333 | metrics.v_promo_performance |
-| `p_lift_mega` | 457.7625 | metrics.v_promo_performance |
+| `p_lift_clr` | -33.0557 | metrics.v_promo_performance |
+| `p_lift_mega` | 449.5741 | metrics.v_promo_performance |
 | `p_n_ap` | 27 | metrics.v_promo_performance |
 | `p_n_mbr` | 30 | metrics.v_promo_performance |
 | `p_neg_ap` | 0 | metrics.v_promo_performance |

@@ -45,8 +45,8 @@ Baseline promo adalah hari yang sama pada 1 s.d. 4 minggu sebelum dan sesudah je
 
 <div class="figs"><img src="insights/img/c4_promo.png" alt="Margin kotor tambahan per jenis promo dan jumlah kode positif"></div>
 
-- **Mega Sale** (Marketplace, diskon 45%): Net Sales melonjak 458% tetapi **margin kotor saat promo rata-rata −12,0%** (baseline 38,5%). Margin tambahan −Rp 101 juta dan contribution margin −Rp 145 juta setelah komisi; makin buruk pada 2025 (−Rp 99,5 juta hanya pada H2 2025) karena HPP dan komisi naik. Diskon di atas **26%** sudah merugikan contribution margin sebelum memperhitungkan lonjakan penjualan.
-- **Clearance:** lift Net Sales −32,2% dan margin tambahan −Rp 166 juta, negatif pada ketiga tahun; hanya berjalan pada Januari sehingga relevan untuk perencanaan H1 2027.
+- **Mega Sale** (Marketplace, diskon 45%): Net Sales melonjak 450% tetapi **margin kotor saat promo −13,0%** (baseline 37,7%). Margin tambahan −Rp 101 juta dan contribution margin −Rp 145 juta setelah komisi; makin buruk pada 2025 (−Rp 99,5 juta hanya pada H2 2025) karena HPP dan komisi naik. Diskon di atas **26%** sudah merugikan contribution margin sebelum memperhitungkan lonjakan penjualan.
+- **Clearance:** lift Net Sales −33,1% dan margin tambahan −Rp 166 juta, negatif pada ketiga tahun; hanya berjalan pada Januari sehingga relevan untuk perencanaan H1 2027.
 - **Member Day:** hanya 10 dari 30 kode positif; margin tambahan −Rp 13,7 juta dengan diskon Rp 152 juta.
 - **App Payday:** 27 dari 27 kode positif, margin tambahan Rp 326 juta dan CM Rp 300 juta untuk diskon Rp 307 juta: sekitar **0,91** Rupiah CM per Rupiah diskon pada H2 2025. Ramadan juga positif (Rp 225 juta).
 - **Anggaran:** diskon yang benar-benar diberikan hanya **9,2%** dari anggaran promo (Rp 1,94 miliar dari Rp 21,14 miliar), sehingga anggaran bukan batasan yang mengikat; mekanisme promolah yang menentukan hasil.
